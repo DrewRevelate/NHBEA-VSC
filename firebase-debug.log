@@ -1,0 +1,48 @@
+[debug] [2025-07-27T22:09:02.952Z] ----------------------------------------------------------------------
+[debug] [2025-07-27T22:09:02.954Z] Command:       /Users/drewlambert/.nvm/versions/node/v20.19.2/bin/node /Users/drewlambert/.nvm/versions/node/v20.19.2/bin/firebase init
+[debug] [2025-07-27T22:09:02.954Z] CLI Version:   14.11.1
+[debug] [2025-07-27T22:09:02.955Z] Platform:      darwin
+[debug] [2025-07-27T22:09:02.955Z] Node Version:  v20.19.2
+[debug] [2025-07-27T22:09:02.955Z] Time:          Sun Jul 27 2025 18:09:02 GMT-0400 (Eastern Daylight Time)
+[debug] [2025-07-27T22:09:02.955Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-27T22:09:02.958Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-27T22:09:02.959Z] > authorizing via signed-in user (nhbeaorg@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/drewlambert/Desktop/NHBEA
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 
+[debug] [2025-07-27T22:09:28.938Z] Checked if tokens are valid: true, expires at: 1753657649107
+[debug] [2025-07-27T22:09:28.938Z] Checked if tokens are valid: true, expires at: 1753657649107
+[debug] [2025-07-27T22:09:28.941Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1/projects:checkProjectId [none]
+[debug] [2025-07-27T22:09:28.941Z] >>> [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"proposedId":"NHBEA_website"}
+[debug] [2025-07-27T22:09:29.209Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1/projects:checkProjectId 400
+[debug] [2025-07-27T22:09:29.209Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"error":{"code":400,"message":"Request contains an invalid argument.","status":"INVALID_ARGUMENT"}}
+[debug] [2025-07-27T22:09:29.209Z] Couldn't check if project ID NHBEA_website is available. Original error: FirebaseError: Failed to check if project ID is available. See firebase-debug.log for more info.
+[debug] [2025-07-27T22:09:31.051Z] Checked if tokens are valid: true, expires at: 1753657649107
+[debug] [2025-07-27T22:09:31.051Z] Checked if tokens are valid: true, expires at: 1753657649107
+[debug] [2025-07-27T22:09:31.052Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2025-07-27T22:09:31.052Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"NHBEA_website","name":"NHBEA_website"}
+[debug] [2025-07-27T22:09:31.598Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 400
+[debug] [2025-07-27T22:09:31.598Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"error":{"code":400,"message":"Request contains an invalid argument.","status":"INVALID_ARGUMENT","details":[{"@type":"type.googleapis.com/google.rpc.BadRequest","fieldViolations":[{"field":"project_id","description":"project_id contains invalid characters"},{"field":"display_name","description":"project display name contains invalid characters"}]},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"url":"https://cloud.google.com/resource-manager/reference/rest/v1/projects"}]}]}}
+[debug] [2025-07-27T22:09:31.600Z] FirebaseError: Request to https://cloudresourcemanager.googleapis.com/v1/projects had HTTP Error: 400, Request contains an invalid argument.
+    at responseToError (/Users/drewlambert/.nvm/versions/node/v20.19.2/lib/node_modules/firebase-tools/lib/responseToError.js:52:12)
+    at RetryOperation._fn (/Users/drewlambert/.nvm/versions/node/v20.19.2/lib/node_modules/firebase-tools/lib/apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[error] 
+[error] Error: Failed to create project. See firebase-debug.log for more info.
