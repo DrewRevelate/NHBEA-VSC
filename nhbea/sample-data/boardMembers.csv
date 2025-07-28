@@ -1,0 +1,7 @@
+id,name,title,bio,imageURL,order
+board-001,"Sarah Johnson","President","Sarah has been an advocate for business education for over 15 years, bringing innovative teaching methods to the classroom and mentoring new educators throughout New Hampshire.","",1
+board-002,"Michael Chen","Vice President","Michael specializes in entrepreneurship education and has helped launch numerous student business ventures. He brings real-world business experience to the classroom.","",2
+board-003,"Jennifer Rodriguez","Secretary","Jennifer focuses on curriculum development and has authored several business education textbooks. She leads professional development workshops across the state.","",3
+board-004,"David Thompson","Treasurer","David brings financial expertise and has been instrumental in securing funding for educational programs. He manages the association's budget and strategic planning.","",4
+board-005,"Lisa Anderson","Director of Professional Development","Lisa coordinates training programs and certification opportunities for business educators. She has 12 years of experience in corporate training.","",5
+board-006,"Robert Martinez","Director of Communications","Robert manages the association's communications and outreach efforts. He oversees the website, newsletter, and social media presence.","",6

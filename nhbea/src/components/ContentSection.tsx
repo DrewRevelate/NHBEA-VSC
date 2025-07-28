@@ -20,12 +20,12 @@ export default function ContentSection({ title, content, imageURL, reverse = fal
             <div className="space-y-6">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight">
                 <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-                  {title}
+{title || "Content Title"}
                 </span>
               </h2>
               
               <div className="space-y-6 text-lg md:text-xl text-slate-600 leading-relaxed">
-                {content.split('\n').map((paragraph, index) => (
+                {(content || '').split('\n').map((paragraph, index) => (
                   paragraph.trim() && (
                     <p key={index} className="font-light">
                       {paragraph}

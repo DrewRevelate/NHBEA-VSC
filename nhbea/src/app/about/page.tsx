@@ -3,8 +3,9 @@ import { Metadata } from 'next';
 import BoardMembersSection from '@/components/BoardMembersSection';
 import PastPresidentsSection from '@/components/PastPresidentsSection';
 import { getHomepageContent, defaultHomepageContent } from '@/lib/content';
-import { getBoardMembers, defaultBoardMembers } from '@/lib/board';
+import { getBoardMembers as getLegacyBoardMembers, defaultBoardMembers } from '@/lib/board';
 import { getPastPresidents, defaultPastPresidents } from '@/lib/pastPresidents';
+import { getBoardMembers, convertToLegacyBoardMember } from '@/lib/members';
 
 export const metadata: Metadata = {
   title: 'About Us | New Hampshire Business Educators Association',
@@ -38,6 +39,7 @@ async function AboutPage() {
   let contentError = null;
   let boardError = null;
   let presidentsError = null;
+  
 
   try {
     const fetchedContent = await getHomepageContent();
@@ -50,18 +52,39 @@ async function AboutPage() {
   }
 
   try {
-    boardMembers = await getBoardMembers();
+    // Try new enhanced members API first
+    const enhancedBoardMembers = await getBoardMembers();
+    if (enhancedBoardMembers && enhancedBoardMembers.length > 0) {
+      // Convert to legacy format for existing component
+      boardMembers = enhancedBoardMembers.map((member, index) => ({
+        ...convertToLegacyBoardMember(member),
+        id: `member-${index}`
+      }));
+    } else {
+      // Fall back to legacy API if no enhanced members found
+      const legacyBoardMembers = await getLegacyBoardMembers();
+      if (legacyBoardMembers && legacyBoardMembers.length > 0) {
+        boardMembers = legacyBoardMembers;
+      }
+    }
   } catch (error) {
     boardError = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch board members:', error);
+    // Keep using defaultBoardMembers
   }
+  
 
   try {
-    pastPresidents = await getPastPresidents();
+    const fetchedPastPresidents = await getPastPresidents();
+    if (fetchedPastPresidents && fetchedPastPresidents.length > 0) {
+      pastPresidents = fetchedPastPresidents;
+    }
   } catch (error) {
     presidentsError = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch past presidents:', error);
+    // Keep using defaultPastPresidents
   }
+  
 
   return (
     <div className="min-h-screen">
@@ -122,7 +145,7 @@ async function AboutPage() {
                 </span>
               </h2>
               <div className="text-lg md:text-xl text-slate-600 leading-relaxed font-light space-y-6">
-                {aboutContent.missionContent.split('\n').map((paragraph, index) => (
+                {(aboutContent.missionContent || '').split('\n').map((paragraph, index) => (
                   paragraph.trim() && (
                     <p key={index}>
                       {paragraph}
@@ -147,7 +170,7 @@ async function AboutPage() {
                 </span>
               </h2>
               <div className="text-lg md:text-xl text-slate-600 leading-relaxed font-light space-y-6">
-                {aboutContent.aboutContent.split('\n').map((paragraph, index) => (
+                {(aboutContent.aboutContent || '').split('\n').map((paragraph, index) => (
                   paragraph.trim() && (
                     <p key={index}>
                       {paragraph}

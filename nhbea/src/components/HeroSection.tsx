@@ -42,7 +42,7 @@ export default function HeroSection({ content }: HeroSectionProps) {
           <div className="mb-8 opacity-0 animate-[fadeInUp_1s_ease-out_0.2s_forwards]">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
               <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-                {content.heroTitle}
+{content?.heroTitle || "New Hampshire Business Educators Association"}
               </span>
             </h1>
           </div>
@@ -50,7 +50,7 @@ export default function HeroSection({ content }: HeroSectionProps) {
           {/* Subtitle with better spacing */}
           <div className="mb-12 opacity-0 animate-[fadeInUp_1s_ease-out_0.4s_forwards]">
             <p className="text-xl md:text-2xl lg:text-3xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
-              {content.heroSubtitle}
+{content?.heroSubtitle || "Promoting excellence in business education throughout New Hampshire"}
             </p>
           </div>
 

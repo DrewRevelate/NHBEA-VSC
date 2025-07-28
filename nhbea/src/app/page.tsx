@@ -49,21 +49,24 @@ async function HomePage() {
     console.error('Failed to fetch sponsors:', error);
   }
 
+  // Ensure we always have valid content
+  const safeContent = homepageContent || defaultHomepageContent;
+
   return (
     <div className="min-h-screen">
       {contentError && <ErrorFallback error={contentError} />}
       
-      <HeroSection content={homepageContent} />
+      <HeroSection content={safeContent} />
       
       <main id="main-content" className="focus:outline-none" tabIndex={-1}>
         <ContentSection
-          title={homepageContent.missionTitle}
-          content={homepageContent.missionContent}
+          title={safeContent.missionTitle}
+          content={safeContent.missionContent}
         />
         
         <ContentSection
-          title={homepageContent.aboutTitle}
-          content={homepageContent.aboutContent}
+          title={safeContent.aboutTitle}
+          content={safeContent.aboutContent}
           reverse
         />
         

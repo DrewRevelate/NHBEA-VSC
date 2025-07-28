@@ -56,11 +56,6 @@ export default function SponsorsSection({ sponsors }: SponsorsSectionProps) {
                   width={160}
                   height={160}
                   className="relative z-10 object-contain max-w-full max-h-full grayscale group-hover:grayscale-0 transition-all duration-500"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    // Create a simple SVG placeholder instead of relying on external file
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgdmlld0JveD0iMCAwIDE2MCAxNjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik04MCA0MEMyMCA0MCA0MCA2MCA0MCA4MEM0MCAxMDAgNjAgMTIwIDgwIDEyMEMxMDAgMTIwIDEyMCAxMDAgMTIwIDgwQzEyMCA2MCAxMDAgNDAgODAgNDBaIiBmaWxsPSIjOTlBM0FlIi8+CjwvdWU+';
-                  }}
                 />
               </div>
               
