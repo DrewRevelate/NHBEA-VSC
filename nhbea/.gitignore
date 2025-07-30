@@ -30,6 +30,11 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# application logs
+*.log
+dev.log
+server*.log
+
 # env files (can opt-in for committing if needed)
 .env*
 
@@ -39,3 +44,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# firebase
+.firebase/hosting.*.cache
+
+# lighthouse reports
+lighthouse-*.json
+
+# test artifacts
+*.csv
+web-bundles/

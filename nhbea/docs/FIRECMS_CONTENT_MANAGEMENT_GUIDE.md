@@ -1,8 +1,14 @@
 # FireCMS Content Management Guide for NHBEA
 
-**Version**: 1.0  
+**Version**: 2.0  
 **Last Updated**: July 28, 2025  
 **Target Audience**: Content managers, developers, stakeholders
+
+## 🆕 What's New in v2.0
+- ✅ **Content Validation System**: Automatic validation prevents content issues
+- ✅ **Fallback Content Strategy**: Site never breaks due to missing content  
+- ✅ **Enhanced Error Handling**: Better troubleshooting and user experience
+- ✅ **Developer Warnings**: Development mode shows content quality warnings
 
 ## Overview
 
@@ -159,10 +165,16 @@ Before making any content changes:
 
 ## 🚨 Troubleshooting Common Issues
 
-### Homepage Shows "undefined" Text
+### Homepage Shows "undefined" Text ✅ RESOLVED
 **Symptoms**: Homepage displays `$undefined` instead of content  
-**Cause**: Missing or incorrectly named homepage document  
-**Solution**:
+**Previous Cause**: Missing or incorrectly named homepage document  
+**Current Status**: ✅ **FIXED** - Content validation system now prevents this issue
+**Automatic Solution**: 
+- System automatically uses fallback content if homepage document is missing
+- Validation ensures all required fields are present
+- Site will never show undefined text again
+
+**Manual Check** (if needed):
 1. Check `content` collection for document with ID "homepage"
 2. Verify all required fields are filled
 3. Ensure document ID is exactly "homepage" (no caps, spaces)
@@ -192,6 +204,30 @@ Before making any content changes:
 2. Ensure order 1 = most recent
 3. No duplicate order numbers
 4. Sequential numbering (1, 2, 3...)
+
+### Content Validation Warnings (Development Mode)
+**Symptoms**: Console warnings about content validation  
+**Cause**: Content doesn't meet quality standards but is still functional  
+**Examples**: 
+- "Mission content seems too short for effective communication"
+- "Image URL appears to be invalid or inaccessible"
+
+**Solution**:
+1. **For short content**: Expand content to be more descriptive (50+ characters recommended)
+2. **For invalid images**: Check image URL accessibility, use Firebase Storage for hosting
+3. **For missing fields**: Add optional fields like imageURL for better user experience
+
+**Note**: These are warnings, not errors - the site will still work with fallback content
+
+### Content Not Updating on Website
+**Symptoms**: Changed content in FireCMS but website still shows old content  
+**Cause**: Caching or validation issues  
+**Solution**:
+1. Wait 1-2 minutes for changes to propagate
+2. Hard refresh browser (Ctrl+F5 or Cmd+Shift+R)
+3. Check browser console for validation errors
+4. Verify all required fields are properly filled
+5. Clear browser cache if issue persists
 
 ## 🔐 Content Security & Backup
 
@@ -230,22 +266,64 @@ Before making any content changes:
 - **Content Structure**: Use proper heading hierarchy
 - **Image Alt Text**: Descriptive and keyword-relevant
 
+## ✅ Content Validation System
+
+### Automatic Validation
+The website now includes an automatic content validation system that:
+- **Validates required fields** before content is displayed
+- **Provides fallback content** if fields are missing or invalid
+- **Shows development warnings** when content has issues
+- **Ensures the site never breaks** due to invalid content
+
+### Validation Rules
+**Homepage Content (`content/homepage`)**:
+- `heroTitle`: Required, minimum 1 character
+- `heroSubtitle`: Required, minimum 1 character  
+- `heroImageURL`: Optional, must be valid URL if provided
+- `missionTitle`: Required, minimum 1 character
+- `missionContent`: Required, minimum 1 character
+- `aboutTitle`: Required, minimum 1 character
+- `aboutContent`: Required, minimum 1 character
+
+**Content Sections**:
+- `id`: Required, unique identifier
+- `title`: Required, minimum 1 character
+- `content`: Required, minimum 1 character
+- `imageURL`: Optional, must be valid URL if provided
+- `order`: Required, must be non-negative integer
+
+### Content Quality Warnings
+The system will show development warnings for:
+- Content that's too short (under 50 characters for mission/about)
+- Invalid or inaccessible image URLs
+- Missing optional but recommended fields
+
+### Fallback Content Strategy
+If content fails validation or is missing:
+- **Homepage**: Uses default NHBEA content
+- **Sections**: Invalid sections are skipped
+- **Images**: Invalid URLs are handled gracefully
+- **Site never breaks**: Always shows meaningful content
+
 ## 🛠️ Technical Integration Notes
 
 ### Static Site Generation
 - Content changes appear immediately on live site
 - No rebuild required for content updates
 - Fallback content ensures site never breaks
+- Content validation prevents display issues
 
 ### Development Workflow
 - Developers: Test with staging Firestore database
 - Content: Always use production FireCMS for real changes
 - Coordination: Communicate major content changes
+- Validation: System automatically validates all content
 
 ### Performance Considerations
 - Large images may slow page loading
 - Too many board members may need pagination
 - Consider image optimization for better performance
+- Validation adds minimal performance overhead
 
 ## 📞 Support & Escalation
 

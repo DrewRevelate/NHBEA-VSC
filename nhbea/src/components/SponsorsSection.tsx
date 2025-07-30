@@ -12,28 +12,16 @@ export default function SponsorsSection({ sponsors }: SponsorsSectionProps) {
   }
 
   return (
-    <section className="py-20 lg:py-32 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-blue-50/30 to-indigo-50/30"></div>
-      
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -right-1/4 w-96 h-96 bg-gradient-to-br from-blue-400/5 to-indigo-400/5 rounded-full"></div>
-        <div className="absolute -bottom-1/4 -left-1/4 w-96 h-96 bg-gradient-to-br from-indigo-400/5 to-purple-400/5 rounded-full"></div>
-      </div>
-
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16 lg:mb-20">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-              Our Sponsors
-            </span>
+    <section className="py-20 bg-[var(--color-bg-secondary)]">
+      <div className="container mx-auto px-6 lg:px-8">
+        {/* Header with brand styling */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-[var(--nhbea-royal-blue-deeper)] mb-6">
+            Our Sponsors
           </h2>
-          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
+          <p className="text-xl text-[var(--color-text-secondary)] max-w-3xl mx-auto leading-relaxed">
             We are grateful to our sponsors who support business education in New Hampshire
           </p>
-          <div className="mt-8 w-24 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mx-auto"></div>
         </div>
         
         {/* Sponsors Grid */}
@@ -46,40 +34,51 @@ export default function SponsorsSection({ sponsors }: SponsorsSectionProps) {
               rel="noopener noreferrer"
               className={`group relative block opacity-0 animate-[fadeInUp_0.6s_ease-out_${index * 100}ms_forwards]`}
             >
-              <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg shadow-blue-900/10 border border-white/20 p-8 aspect-square flex items-center justify-center group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-blue-900/20 transition-all duration-500">
-                {/* Hover background effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-indigo-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative bg-white rounded-2xl shadow-lg border-2 border-[var(--color-border-primary)] p-8 aspect-square flex items-center justify-center group-hover:scale-105 group-hover:shadow-xl group-hover:border-[var(--nhbea-royal-blue)]/30 transition-all duration-500">
+                {/* Brand-consistent hover background effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--nhbea-royal-blue)]/5 to-[var(--nhbea-royal-blue-light)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
-                <Image
-                  src={sponsor.logoURL}
-                  alt={`${sponsor.name} logo`}
-                  width={160}
-                  height={160}
-                  className="relative z-10 object-contain max-w-full max-h-full grayscale group-hover:grayscale-0 transition-all duration-500"
-                />
+                {sponsor.logoURL && sponsor.logoURL.trim() !== '' ? (
+                  <Image
+                    src={sponsor.logoURL}
+                    alt={`${sponsor.name} logo`}
+                    width={160}
+                    height={160}
+                    className="relative z-10 object-contain max-w-full max-h-full grayscale group-hover:grayscale-0 transition-all duration-500"
+                  />
+                ) : (
+                  <div className="relative z-10 text-center">
+                    <div className="text-4xl font-bold text-slate-400 mb-2">
+                      {sponsor.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="text-xs text-slate-500">
+                      {sponsor.name}
+                    </div>
+                  </div>
+                )}
               </div>
               
-              {/* Tooltip */}
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-slate-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-lg">
+              {/* Brand-consistent tooltip */}
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-[var(--nhbea-royal-blue-dark)] text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-lg">
                 {sponsor.name}
-                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45"></div>
+                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-[var(--nhbea-royal-blue-dark)] rotate-45"></div>
               </div>
             </Link>
           ))}
         </div>
         
-        {/* Call to Action */}
+        {/* Brand-consistent Call to Action */}
         <div className="text-center">
-          <div className="inline-flex flex-col items-center space-y-6 bg-white/60 backdrop-blur-sm rounded-3xl p-8 lg:p-12 shadow-xl shadow-blue-900/10 border border-white/20">
-            <h3 className="text-2xl md:text-3xl font-bold text-slate-900">
+          <div className="inline-flex flex-col items-center space-y-6 bg-white rounded-3xl p-8 lg:p-12 shadow-xl border-2 border-[var(--color-border-primary)] hover:border-[var(--nhbea-royal-blue)]/30 transition-all duration-300">
+            <h3 className="text-2xl md:text-3xl font-bold text-[var(--nhbea-royal-blue-deeper)]">
               Interested in becoming a sponsor?
             </h3>
-            <p className="text-lg text-slate-600 max-w-md">
+            <p className="text-lg text-[var(--color-text-secondary)] max-w-md leading-relaxed">
               Join our community of supporters and help shape the future of business education.
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-2xl hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-blue-600/30"
+              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[var(--nhbea-accent-orange)] to-[var(--nhbea-accent-orange-dark)] text-white font-semibold rounded-2xl hover:from-[var(--nhbea-accent-orange-dark)] hover:to-[var(--nhbea-accent-orange)] transform hover:scale-105 transition-all duration-300 shadow-lg"
             >
               Contact Us
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

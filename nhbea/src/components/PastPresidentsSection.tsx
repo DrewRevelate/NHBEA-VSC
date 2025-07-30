@@ -5,9 +5,20 @@ interface PastPresidentsSectionProps {
 }
 
 export default function PastPresidentsSection({ pastPresidents }: PastPresidentsSectionProps) {
-  if (!pastPresidents || pastPresidents.length === 0) {
-    return null;
-  }
+  console.log('🔍 PastPresidentsSection: Rendering with', pastPresidents?.length || 0, 'presidents');
+  console.log('🔍 PastPresidentsSection: Data:', JSON.stringify(pastPresidents, null, 2));
+  
+  // Always render something to test UI
+  const testData = pastPresidents && pastPresidents.length > 0 ? pastPresidents : [
+    {
+      id: 'test-1',
+      name: 'Test Past President',
+      term: '2023-2024',
+      order: 1
+    }
+  ];
+  
+  console.log('🔍 PastPresidentsSection: Using data:', testData);
 
   return (
     <section className="py-20 lg:py-32 relative overflow-hidden">
@@ -42,7 +53,7 @@ export default function PastPresidentsSection({ pastPresidents }: PastPresidents
             
             {/* Presidents List */}
             <div className="space-y-12">
-              {pastPresidents.map((president, index) => (
+              {testData.map((president, index) => (
                 <div
                   key={president.id}
                   className={`relative flex items-center ${

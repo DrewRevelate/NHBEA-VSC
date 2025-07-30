@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(md-tree:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx create-next-app:*)",
+      "Bash(ls:*)",
+      "Bash(mv:*)",
+      "Bash(tree:*)",
+      "Bash(npm install:*)",
+      "Bash(npx:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm test)",
+      "Bash(firebase deploy:*)",
+      "WebFetch(domain:nhbea-64cab.web.app)",
+      "Bash(npm test:*)",
+      "Bash(npm run deploy:*)",
+      "WebFetch(domain:studio--nhbea-connect.us-central1.hosted.app)",
+      "Bash(npm run coverage:*)",
+      "Bash(firebase firestore:indexes:*)",
+      "Bash(firebase projects:list:*)",
+      "Bash(firebase use:*)",
+      "Bash(firebase firestore:databases:*)",
+      "Bash(firebase firestore:export:*)",
+      "Bash(gcloud firestore databases list:*)",
+      "Bash(find:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(rm:*)",
+      "Bash(pkill:*)",
+      "Bash(npm run lint)",
+      "Bash(chmod:*)",
+      "Bash(node:*)",
+      "WebFetch(domain:console.firebase.google.com)",
+      "Bash(true)",
+      "Bash(PORT=3001 npm run dev)"
+    ],
+    "deny": []
+  }
+}

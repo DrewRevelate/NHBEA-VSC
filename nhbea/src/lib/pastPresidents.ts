@@ -1,9 +1,88 @@
 import { db } from './firebase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
 import { PastPresident } from '@/types/pastPresidents';
+import { Member } from '@/types/dataModels';
 
+// Enhanced function to get past presidents from the members collection
+export async function getPastPresidentsFromMembers(): Promise<PastPresident[]> {
+  try {
+    console.log('🔍 Querying for past presidents with new nested structure...');
+    const q = query(
+      collection(db, 'members'), 
+      where('profile.past_president.past_president', '==', true)
+    );
+    const querySnapshot = await getDocs(q);
+    console.log('🔍 Past presidents query returned:', querySnapshot.size, 'documents');
+    
+    const pastPresidents: PastPresident[] = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      console.log('🔍 Past president document:', doc.id, 'Data:', JSON.stringify(data.profile?.past_president, null, 2));
+      const member = {
+        id: doc.id,
+        ...data,
+        // Convert Firestore timestamps to Date objects  
+        metadata: {
+          ...data.metadata,
+          createdAt: data.metadata?.createdAt?.toDate() || new Date(),
+          updatedAt: data.metadata?.updatedAt?.toDate() || new Date()
+        }
+      } as Member;
+      
+      // Transform Member to PastPresident format
+      const yearStarted = member.profile?.past_president?.year_started;
+      const yearEnded = member.profile?.past_president?.year_ended;
+      let term = 'Unknown';
+      
+      if (yearStarted && yearEnded) {
+        term = `${yearStarted}-${yearEnded}`;
+      } else if (yearStarted) {
+        term = `${yearStarted}-Present`;
+      }
+      
+      const pastPresident: PastPresident = {
+        id: member.id,
+        name: `${member.personalInfo?.firstName || ''} ${member.personalInfo?.lastName || ''}`.trim(),
+        term: term,
+        order: member.profile?.presidencyOrder || yearStarted || 1,
+        bio: member.profile?.bio,
+        imageUrl: undefined, // Not in nested structure yet
+        achievements: member.profile?.achievements
+      };
+      
+      pastPresidents.push(pastPresident);
+    });
+    
+    // Sort by year_started (descending - most recent first)
+    return pastPresidents.sort((a, b) => {
+      // Extract year from order (which contains year_started)
+      const yearA = a.order || 0;
+      const yearB = b.order || 0;
+      
+      // Sort descending (most recent first)
+      if (yearA !== yearB) {
+        return yearB - yearA;
+      }
+      return a.name.localeCompare(b.name);
+    });
+  } catch (error) {
+    console.error('Error fetching past presidents from members collection:', error);
+    // Return empty array instead of throwing to avoid breaking the page
+    return [];
+  }
+}
+
+// Legacy function for backward compatibility (uses old pastPresidents collection)
 export async function getPastPresidents(): Promise<PastPresident[]> {
   try {
+    // Try enhanced members collection first
+    const enhancedResults = await getPastPresidentsFromMembers();
+    console.log('🔍 getPastPresidents: Enhanced results:', enhancedResults.length);
+    if (enhancedResults.length > 0) {
+      return enhancedResults;
+    }
+    
+    // Fall back to legacy collection
     const q = query(collection(db, 'pastPresidents'), orderBy('order', 'desc'));
     const querySnapshot = await getDocs(q);
     

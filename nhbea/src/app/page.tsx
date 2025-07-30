@@ -1,30 +1,20 @@
-import { Suspense } from 'react';
-import HeroSection from '@/components/HeroSection';
-import ContentSection from '@/components/ContentSection';
-import SponsorsSection from '@/components/SponsorsSection';
+import { Suspense, lazy } from 'react';
+import { StandardPageLayout } from '@/components/StandardPageLayout';
+import { FlexibleHero } from '@/components/FlexibleHero';
+import { LoadingSpinner, LoadingSkeleton } from '@/components/LoadingSpinner';
+import { StandardErrorBoundary } from '@/components/StandardErrorBoundary';
+import { ResponsiveGrid } from '@/components/ResponsiveGrid';
+import StatisticsSection from '@/components/StatisticsSection';
+import EnhancedMissionSection from '@/components/EnhancedMissionSection';
+import EnhancedAboutSection from '@/components/EnhancedAboutSection';
 import { getHomepageContent, defaultHomepageContent } from '@/lib/content';
 import { getSponsors, defaultSponsors } from '@/lib/sponsors';
 
-function LoadingSpinner() {
-  return (
-    <div className="flex items-center justify-center py-12">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-    </div>
-  );
-}
+// Lazy load non-critical sections for better performance
+const TrustBadgesSection = lazy(() => import('@/components/TrustBadgesSection'));
+const SponsorsSection = lazy(() => import('@/components/SponsorsSection'));
+const NewsletterSignup = lazy(() => import('@/components/NewsletterSignup'));
 
-function ErrorFallback({ error }: { error: string }) {
-  // For production, we'll hide errors and silently use fallback content
-  // Only show in development mode
-  if (process.env.NODE_ENV === 'development') {
-    return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 m-4 text-sm">
-        <p className="text-yellow-800">⚠️ Development Notice: Using fallback content ({error})</p>
-      </div>
-    );
-  }
-  return null;
-}
 
 async function HomePage() {
   let homepageContent = defaultHomepageContent;
@@ -49,37 +39,79 @@ async function HomePage() {
     console.error('Failed to fetch sponsors:', error);
   }
 
-  // Ensure we always have valid content
-  const safeContent = homepageContent || defaultHomepageContent;
+  // Ensure we always have valid content with all required fields
+  const safeContent = homepageContent ? {
+    ...defaultHomepageContent,
+    ...homepageContent
+  } : defaultHomepageContent;
 
   return (
-    <div className="min-h-screen">
-      {contentError && <ErrorFallback error={contentError} />}
-      
-      <HeroSection content={safeContent} />
-      
-      <main id="main-content" className="focus:outline-none" tabIndex={-1}>
-        <ContentSection
-          title={safeContent.missionTitle}
-          content={safeContent.missionContent}
-        />
+    <StandardPageLayout
+      hero={{
+        component: FlexibleHero,
+        props: {
+          variant: 'home' as const,
+          content: safeContent
+        }
+      }}
+      error={{ boundary: true }}
+      loading={{ enabled: true }}
+      meta={{
+        title: 'New Hampshire Business Educators Association - NHBEA',
+        description: safeContent.heroSubtitle || 'Promoting excellence in business education throughout New Hampshire through professional development, networking, and career advancement opportunities.',
+        openGraph: true,
+        twitterCard: true
+      }}
+    >
+      <ResponsiveGrid 
+        gap="lg" 
+        breakpoints={{ mobile: 1, tablet: 1, desktop: 1, wide: 1 }}
+        className="space-y-16"
+      >
+        <StandardErrorBoundary>
+          <StatisticsSection />
+        </StandardErrorBoundary>
         
-        <ContentSection
-          title={safeContent.aboutTitle}
-          content={safeContent.aboutContent}
-          reverse
-        />
+        <StandardErrorBoundary>
+          <EnhancedMissionSection
+            title={safeContent.missionTitle}
+            content={safeContent.missionContent}
+          />
+        </StandardErrorBoundary>
         
-        {sponsorsError && <ErrorFallback error={sponsorsError} />}
-        <SponsorsSection sponsors={sponsors} />
-      </main>
-    </div>
+        <StandardErrorBoundary>
+          <EnhancedAboutSection
+            title={safeContent.aboutTitle}
+            content={safeContent.aboutContent}
+            imageURL={safeContent.aboutImageURL}
+          />
+        </StandardErrorBoundary>
+        
+        <StandardErrorBoundary>
+          <Suspense fallback={<LoadingSkeleton variant="content" />}>
+            <TrustBadgesSection />
+          </Suspense>
+        </StandardErrorBoundary>
+        
+        <StandardErrorBoundary>
+          <Suspense fallback={<LoadingSkeleton variant="grid" count={3} />}>
+            <SponsorsSection sponsors={sponsors} />
+          </Suspense>
+        </StandardErrorBoundary>
+        
+        <StandardErrorBoundary>
+          <Suspense fallback={<LoadingSkeleton variant="content" />}>
+            <NewsletterSignup />
+          </Suspense>
+        </StandardErrorBoundary>
+      </ResponsiveGrid>
+    </StandardPageLayout>
   );
 }
 
 export default function Home() {
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<LoadingSpinner variant="page" message="Loading homepage..." />}>
       <HomePage />
     </Suspense>
   );

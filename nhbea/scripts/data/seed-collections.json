@@ -1,0 +1,143 @@
+{
+  "organizations": {
+    "keene-state": {
+      "name": "Keene State College",
+      "type": "college",
+      "address": {
+        "street": "229 Main Street",
+        "city": "Keene",
+        "state": "NH",
+        "zipCode": "03435"
+      },
+      "contact": {
+        "phone": "(603) 352-1909",
+        "email": "info@keene.edu",
+        "website": "https://www.keene.edu"
+      },
+      "isActive": true,
+      "notes": "Public liberal arts college in Keene, New Hampshire"
+    }
+  },
+  "members": {
+    "sarah-johnson": {
+      "memberNumber": "NHBEA-2025-0001",
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "email": "sarah.johnson@keene.edu",
+      "phone": "(603) 555-1234",
+      "organizationId": "keene-state",
+      "position": "Business Education Professor",
+      "yearsExperience": 15,
+      "address": "123 Elm Street",
+      "city": "Keene",
+      "state": "NH",
+      "zipCode": "03431",
+      "membershipType": "professional",
+      "status": "active",
+      "isBoardMember": true,
+      "boardPosition": "President",
+      "communicationPreferences": {
+        "newsletter": true,
+        "updates": true,
+        "events": true,
+        "mailings": true
+      },
+      "notes": "Current board president, excellent leader"
+    }
+  },
+  "conference": {
+    "annual-2025": {
+      "title": "2025 NHBEA Annual Conference",
+      "theme": "Innovation in Business Education",
+      "description": "Join us for our annual conference featuring the latest trends and best practices in business education.",
+      "timezone": "America/New_York",
+      "isVirtual": false,
+      "venue": {
+        "name": "Keene State College Student Center",
+        "address": "229 Main Street",
+        "city": "Keene",
+        "state": "NH",
+        "zipCode": "03435",
+        "directions": "Main entrance, second floor ballroom"
+      },
+      "registrationFee": 75.00,
+      "currency": "USD",
+      "maxCapacity": 150,
+      "isRegistrationOpen": true,
+      "isActive": true,
+      "notes": "Annual flagship conference event"
+    }
+  },
+  "content": {
+    "homepage": {
+      "heroTitle": "New Hampshire Business Educators Association",
+      "heroSubtitle": "Empowering educators, inspiring students, and strengthening business education across New Hampshire",
+      "heroImageURL": "",
+      "missionTitle": "Our Mission",
+      "missionContent": "NHBEA is dedicated to promoting excellence in business education through professional development, networking, and advocacy for business educators and students throughout New Hampshire.",
+      "aboutTitle": "About NHBEA",
+      "aboutContent": "The New Hampshire Business Educators Association serves as the premier professional organization for business educators in the state. We provide resources, support, and opportunities for growth to help our members deliver exceptional business education to their students."
+    }
+  },
+  "boardMembers": {
+    "president": {
+      "name": "Sarah Johnson",
+      "title": "President",
+      "bio": "Sarah has been an advocate for business education for over 15 years, bringing innovative teaching methods to the classroom.",
+      "imageURL": "",
+      "order": 1
+    }
+  },
+  "pastPresidents": {
+    "robert-williams": {
+      "name": "Robert Williams",
+      "term": "2022-2023",
+      "order": 1
+    }
+  },
+  "sponsors": {
+    "sample-partner": {
+      "name": "Sample Business Partner",
+      "logoURL": "",
+      "website": "https://example.com",
+      "order": 1
+    }
+  },
+  "studentApplicants": {
+    "emma-wilson": {
+      "personalInfo": {
+        "firstName": "Emma",
+        "lastName": "Wilson",
+        "email": "emma.wilson@student.keene.edu",
+        "phone": "(603) 555-9876"
+      },
+      "academicInfo": {
+        "institution": "Keene State College",
+        "major": "Business Administration",
+        "graduationYear": 2026,
+        "gpa": 3.7
+      },
+      "essay": "I am passionate about business education and want to contribute to the future of the field...",
+      "references": [
+        {
+          "name": "Dr. Smith",
+          "email": "dr.smith@keene.edu",
+          "relationship": "Professor"
+        },
+        {
+          "name": "Jane Doe",
+          "email": "jane.doe@keene.edu",
+          "relationship": "Academic Advisor"
+        }
+      ],
+      "status": "pending"
+    }
+  },
+  "newsletterSubscribers": {
+    "demo-subscriber": {
+      "email": "newsletter@example.com",
+      "status": "active",
+      "source": "website"
+    }
+  }
+}

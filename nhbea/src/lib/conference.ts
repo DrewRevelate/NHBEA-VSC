@@ -1,14 +1,158 @@
 import { db } from './firebase';
-import { collection, doc, getDoc, getDocs, query, where, orderBy, addDoc, updateDoc, deleteDoc, increment } from 'firebase/firestore';
-import { Conference, Registrant, CreateConferenceData, UpdateConferenceData, CreateRegistrantData, UpdateRegistrantData } from '@/types/conference';
+import { collection, doc, getDoc, getDocs, query, where, orderBy, addDoc, updateDoc, deleteDoc, increment, serverTimestamp } from 'firebase/firestore';
+import { Conference, ConferenceRegistrant } from '@/types/dataModels';
+// Legacy types for backward compatibility
+import { Conference as LegacyConference, Registrant as LegacyRegistrant } from '@/types/conference';
 
 /**
- * Conference and Registration Management API for NHBEA Phase 1
- * Handles conference events and attendee registration
+ * Conference and Registration Management API for NHBEA
+ * Enhanced to support new data models with virtual conferences and proper references
  */
 
+// ===============================
+// ENHANCED DATA MODEL FUNCTIONS
+// ===============================
+
+// Get current active conference using enhanced data model
+export async function getCurrentConferenceEnhanced(): Promise<Conference | null> {
+  try {
+    const currentYear = new Date().getFullYear();
+    const q = query(
+      collection(db, 'conference'),
+      where('isActive', '==', true),
+      where('isRegistrationOpen', '==', true),
+      orderBy('startDate', 'desc')
+    );
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        // Convert Firestore timestamps to Date objects
+        startDate: data.startDate?.toDate() || new Date(),
+        endDate: data.endDate?.toDate() || new Date(),
+        registrationDeadline: data.registrationDeadline?.toDate() || new Date(),
+        createdAt: data.createdAt?.toDate() || new Date(),
+        updatedAt: data.updatedAt?.toDate() || new Date(),
+        agenda: data.agenda?.map((session: any) => ({
+          ...session,
+          startTime: session.startTime?.toDate() || new Date(),
+          endTime: session.endTime?.toDate() || new Date()
+        })) || []
+      } as LegacyConference;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error fetching current conference (enhanced):', error);
+    throw new Error('Failed to fetch current conference');
+  }
+}
+
+// Get all conference registrants using enhanced data model
+export async function getConferenceRegistrantsEnhanced(conferenceId: string): Promise<ConferenceRegistrant[]> {
+  try {
+    const q = query(
+      collection(db, 'registrants'),
+      where('conferenceId', '==', conferenceId),
+      orderBy('registrationDate', 'desc')
+    );
+    const querySnapshot = await getDocs(q);
+    
+    const registrants: ConferenceRegistrant[] = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      registrants.push({
+        id: doc.id,
+        ...data,
+        // Convert Firestore timestamps to Date objects
+        registrationDate: data.registrationDate?.toDate() || new Date(),
+        paymentDate: data.paymentDate?.toDate(),
+        checkInTime: data.checkInTime?.toDate(),
+        createdAt: data.createdAt?.toDate() || new Date(),
+        updatedAt: data.updatedAt?.toDate() || new Date()
+      } as ConferenceRegistrant);
+    });
+    
+    return registrants;
+  } catch (error) {
+    console.error('Error fetching conference registrants (enhanced):', error);
+    throw new Error('Failed to fetch conference registrants');
+  }
+}
+
+// Create conference registrant using enhanced data model
+export async function createConferenceRegistrantEnhanced(
+  registrantData: Omit<ConferenceRegistrant, 'id' | 'createdAt' | 'updatedAt'>
+): Promise<string> {
+  try {
+    const now = new Date();
+    const registrantWithMetadata = {
+      ...registrantData,
+      registrationStatus: 'pending',
+      paymentStatus: 'pending',
+      checkedIn: false,
+      createdAt: now,
+      updatedAt: now
+    };
+    
+    const docRef = await addDoc(collection(db, 'registrants'), registrantWithMetadata);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating conference registrant (enhanced):', error);
+    throw new Error('Failed to create conference registrant');
+  }
+}
+
+// Create conference using enhanced data model
+export async function createConferenceEnhanced(
+  conferenceData: Omit<Conference, 'id' | 'createdAt' | 'updatedAt'>
+): Promise<string> {
+  try {
+    const now = new Date();
+    const conferenceWithMetadata = {
+      ...conferenceData,
+      createdAt: now,
+      updatedAt: now,
+      isActive: true
+    };
+    
+    const docRef = await addDoc(collection(db, 'conference'), conferenceWithMetadata);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating conference (enhanced):', error);
+    throw new Error('Failed to create conference');
+  }
+}
+
+// Update conference using enhanced data model
+export async function updateConferenceEnhanced(
+  conferenceId: string, 
+  updateData: Partial<Omit<Conference, 'id' | 'createdAt'>>
+): Promise<void> {
+  try {
+    const updateWithMetadata = {
+      ...updateData,
+      updatedAt: new Date()
+    };
+    
+    const docRef = doc(db, 'conference', conferenceId);
+    await updateDoc(docRef, updateWithMetadata);
+  } catch (error) {
+    console.error('Error updating conference (enhanced):', error);
+    throw new Error('Failed to update conference');
+  }
+}
+
+// ===============================
+// LEGACY FUNCTIONS (for backward compatibility)
+// ===============================
+
 // Get current active conference
-export async function getCurrentConference(): Promise<Conference | null> {
+export async function getCurrentConference(): Promise<LegacyConference | null> {
   try {
     const currentYear = new Date().getFullYear();
     const q = query(
@@ -45,7 +189,7 @@ export async function getCurrentConference(): Promise<Conference | null> {
           createdAt: data.metadata?.createdAt?.toDate() || new Date(),
           updatedAt: data.metadata?.updatedAt?.toDate() || new Date()
         }
-      } as Conference;
+      } as LegacyConference;
     }
     
     return null;
@@ -56,12 +200,12 @@ export async function getCurrentConference(): Promise<Conference | null> {
 }
 
 // Get all conferences
-export async function getAllConferences(): Promise<Conference[]> {
+export async function getAllConferences(): Promise<LegacyConference[]> {
   try {
     const q = query(collection(db, 'conference'), orderBy('year', 'desc'));
     const querySnapshot = await getDocs(q);
     
-    const conferences: Conference[] = [];
+    const conferences: LegacyConference[] = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       conferences.push({
@@ -99,7 +243,7 @@ export async function getAllConferences(): Promise<Conference[]> {
 }
 
 // Get conference by ID
-export async function getConferenceById(conferenceId: string): Promise<Conference | null> {
+export async function getConferenceById(conferenceId: string): Promise<LegacyConference | null> {
   try {
     const docRef = doc(db, 'conference', conferenceId);
     const docSnap = await getDoc(docRef);
@@ -130,7 +274,7 @@ export async function getConferenceById(conferenceId: string): Promise<Conferenc
           createdAt: data.metadata?.createdAt?.toDate() || new Date(),
           updatedAt: data.metadata?.updatedAt?.toDate() || new Date()
         }
-      } as Conference;
+      } as LegacyConference;
     }
     
     return null;
@@ -141,7 +285,7 @@ export async function getConferenceById(conferenceId: string): Promise<Conferenc
 }
 
 // Create a new conference
-export async function createConference(conferenceData: CreateConferenceData): Promise<string> {
+export async function createConference(conferenceData: Omit<LegacyConference, 'id' | 'metadata'> & {metadata?: Partial<LegacyConference['metadata']>}): Promise<string> {
   try {
     const now = new Date();
     const conferenceWithMetadata = {
@@ -167,7 +311,7 @@ export async function createConference(conferenceData: CreateConferenceData): Pr
 }
 
 // Update an existing conference
-export async function updateConference(conferenceId: string, updateData: UpdateConferenceData): Promise<void> {
+export async function updateConference(conferenceId: string, updateData: Partial<Omit<LegacyConference, 'id' | 'metadata'>> & {metadata?: Partial<LegacyConference['metadata']>}): Promise<void> {
   try {
     const docRef = doc(db, 'conference', conferenceId);
     const updateWithMetadata = {
@@ -188,7 +332,7 @@ export async function updateConference(conferenceId: string, updateData: UpdateC
 // REGISTRANT MANAGEMENT
 
 // Get all registrants for a specific conference
-export async function getConferenceRegistrants(conferenceId: string): Promise<Registrant[]> {
+export async function getConferenceRegistrants(conferenceId: string): Promise<LegacyRegistrant[]> {
   try {
     const q = query(
       collection(db, 'registrants'),
@@ -197,7 +341,7 @@ export async function getConferenceRegistrants(conferenceId: string): Promise<Re
     );
     const querySnapshot = await getDocs(q);
     
-    const registrants: Registrant[] = [];
+    const registrants: LegacyRegistrant[] = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       registrants.push({
@@ -220,7 +364,7 @@ export async function getConferenceRegistrants(conferenceId: string): Promise<Re
           createdAt: data.metadata?.createdAt?.toDate() || new Date(),
           updatedAt: data.metadata?.updatedAt?.toDate() || new Date()
         }
-      } as Registrant);
+      } as LegacyRegistrant);
     });
     
     return registrants;
@@ -231,7 +375,7 @@ export async function getConferenceRegistrants(conferenceId: string): Promise<Re
 }
 
 // Register a participant for a conference
-export async function registerForConference(registrantData: CreateRegistrantData): Promise<string> {
+export async function registerForConference(registrantData: Omit<LegacyRegistrant, 'id' | 'metadata'> & {metadata?: Partial<LegacyRegistrant['metadata']>}): Promise<string> {
   try {
     const now = new Date();
     const registrantWithMetadata = {
@@ -263,7 +407,7 @@ export async function registerForConference(registrantData: CreateRegistrantData
 }
 
 // Update registrant information
-export async function updateRegistrant(registrantId: string, updateData: UpdateRegistrantData): Promise<void> {
+export async function updateRegistrant(registrantId: string, updateData: Partial<Omit<LegacyRegistrant, 'id' | 'metadata'>> & {metadata?: Partial<LegacyRegistrant['metadata']>}): Promise<void> {
   try {
     const docRef = doc(db, 'registrants', registrantId);
     const updateWithMetadata = {
@@ -303,7 +447,7 @@ export async function cancelRegistration(registrantId: string): Promise<void> {
 }
 
 // Get registrant by ID
-export async function getRegistrantById(registrantId: string): Promise<Registrant | null> {
+export async function getRegistrantById(registrantId: string): Promise<LegacyRegistrant | null> {
   try {
     const docRef = doc(db, 'registrants', registrantId);
     const docSnap = await getDoc(docRef);
@@ -330,7 +474,7 @@ export async function getRegistrantById(registrantId: string): Promise<Registran
           createdAt: data.metadata?.createdAt?.toDate() || new Date(),
           updatedAt: data.metadata?.updatedAt?.toDate() || new Date()
         }
-      } as Registrant;
+      } as LegacyRegistrant;
     }
     
     return null;
@@ -414,8 +558,368 @@ export async function checkRegistrationAvailability(conferenceId: string): Promi
   }
 }
 
+// Registrant creation and management for new registration flow
+export async function createRegistrantWithPendingPayment(
+  conferenceId: string,
+  registrationData: any
+): Promise<string> {
+  try {
+    const now = new Date();
+    
+    // Create registrant record using the new enhanced data model
+    const registrantData: Omit<LegacyRegistrant, 'id' | 'metadata'> = {
+      conferenceId,
+      conferenceTitle: '', // Will be populated by the API
+      conferenceYear: new Date().getFullYear(),
+      participant: {
+        fullName: registrationData.fullName,
+        email: registrationData.email,
+        phone: registrationData.phone || '',
+        institution: registrationData.institution,
+        membershipId: registrationData.membershipId,
+        membershipStatus: registrationData.membershipStatus
+      },
+      registration: {
+        registrationDate: now,
+        registrationType: registrationData.registrationType,
+        paymentStatus: 'pending',
+        totalAmount: 0, // Will be updated by the API based on pricing
+        discountApplied: registrationData.registrationType === 'early_bird' ? 'Early Bird' : undefined
+      },
+      preferences: {
+        dietaryRestrictions: registrationData.dietaryRestrictions,
+        accessibilityNeeds: registrationData.accessibilityNeeds,
+        sessionPreferences: registrationData.sessionPreferences || [],
+        networkingOptIn: registrationData.networkingOptIn || false
+      },
+      status: 'registered',
+      communications: {
+        confirmationSent: false,
+        remindersSent: 0
+      }
+    };
+
+    const registrantId = await registerForConference(registrantData);
+    return registrantId;
+  } catch (error) {
+    console.error('Error creating registrant with pending payment:', error);
+    throw new Error('Failed to create registration record');
+  }
+}
+
+// Update registrant payment status after successful payment
+export async function updateRegistrantPaymentStatus(
+  registrantId: string,
+  paymentDetails: {
+    squareOrderId?: string;
+    transactionId?: string;
+    paymentMethod: string;
+    paidAt: Date;
+  }
+): Promise<void> {
+  try {
+    await updateRegistrant(registrantId, {
+      registration: {
+        paymentStatus: 'paid',
+        paymentDetails
+      } as any,
+      status: 'registered',
+      communications: {
+        confirmationSent: true,
+        remindersSent: 0,
+        lastContactDate: new Date()
+      }
+    });
+  } catch (error) {
+    console.error('Error updating registrant payment status:', error);
+    throw new Error('Failed to update payment status');
+  }
+}
+
+// Find registrant by payment metadata for confirmation workflow
+export async function findRegistrantByPaymentMetadata(
+  conferenceId: string,
+  searchCriteria: {
+    email?: string;
+    orderReference?: string;
+  }
+): Promise<LegacyRegistrant | null> {
+  try {
+    const registrants = await getConferenceRegistrants(conferenceId);
+    
+    // Search by email first
+    if (searchCriteria.email) {
+      const found = registrants.find(r => 
+        r.participant.email.toLowerCase() === searchCriteria.email.toLowerCase()
+      );
+      if (found) return found;
+    }
+    
+    // Search by order reference if provided
+    if (searchCriteria.orderReference) {
+      const found = registrants.find(r => 
+        r.registration.paymentDetails?.squareOrderId === searchCriteria.orderReference ||
+        r.registration.paymentDetails?.transactionId === searchCriteria.orderReference
+      );
+      if (found) return found;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error finding registrant by payment metadata:', error);
+    return null;
+  }
+}
+
+// Cache management for conference data (1-minute caching as specified)
+const CACHE_TIMES = {
+  CONFERENCE: 60 // 1 minute in seconds
+};
+
+let conferenceCache: {
+  data: LegacyConference | null;
+  timestamp: number;
+} | null = null;
+
+export async function getCachedCurrentConference(): Promise<LegacyConference | null> {
+  const now = Date.now();
+  
+  // Return cached data if it's still valid
+  if (conferenceCache && (now - conferenceCache.timestamp) < (CACHE_TIMES.CONFERENCE * 1000)) {
+    return conferenceCache.data;
+  }
+  
+  // Fetch fresh data
+  try {
+    const conference = await getCurrentConference();
+    conferenceCache = {
+      data: conference,
+      timestamp: now
+    };
+    return conference;
+  } catch (error) {
+    console.error('Error fetching cached conference:', error);
+    // Return stale cache if available, otherwise null
+    return conferenceCache?.data || null;
+  }
+}
+
+// Clear conference cache (useful for admin operations)
+export function clearConferenceCache(): void {
+  conferenceCache = null;
+}
+
+// ===============================
+// ENHANCED CONFERENCE FEATURES (Story 3.4)
+// ===============================
+
+import { 
+  ConferenceAgenda, 
+  ConferenceSpeaker, 
+  ConferenceFAQ, 
+  VenueDetails, 
+  SocialMediaConfig,
+  ConferenceTheme,
+  ConferenceSession
+} from '@/types/conference';
+
+// Get conference speakers
+export async function getConferenceSpeakers(conferenceId: string): Promise<ConferenceSpeaker[]> {
+  try {
+    const q = query(
+      collection(db, `conference/${conferenceId}/speakers`),
+      orderBy('featured', 'desc'),
+      orderBy('name', 'asc')
+    );
+    const querySnapshot = await getDocs(q);
+    
+    const speakers: ConferenceSpeaker[] = [];
+    querySnapshot.forEach((doc) => {
+      speakers.push({
+        id: doc.id,
+        ...doc.data()
+      } as ConferenceSpeaker);
+    });
+    
+    return speakers;
+  } catch (error) {
+    console.error('Error fetching conference speakers:', error);
+    // Return empty array instead of throwing to avoid breaking the page
+    return [];
+  }
+}
+
+// Get conference agenda/sessions
+export async function getConferenceAgenda(conferenceId: string): Promise<ConferenceAgenda | null> {
+  try {
+    const sessionsQuery = query(
+      collection(db, `conference/${conferenceId}/sessions`),
+      orderBy('startTime', 'asc')
+    );
+    const sessionsSnapshot = await getDocs(sessionsQuery);
+    
+    const sessions: ConferenceSession[] = [];
+    const tracks = new Set<string>();
+    const timeSlots = new Set<string>();
+    
+    sessionsSnapshot.forEach((doc) => {
+      const data = doc.data();
+      const session: ConferenceSession = {
+        id: doc.id,
+        ...data,
+        startTime: data.startTime?.toDate() || new Date(),
+        endTime: data.endTime?.toDate() || new Date()
+      };
+      
+      sessions.push(session);
+      tracks.add(session.track);
+      
+      // Extract time slot
+      const startTime = session.startTime;
+      const timeSlot = startTime.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        hour12: true 
+      });
+      timeSlots.add(timeSlot);
+    });
+    
+    return {
+      sessions,
+      tracks: Array.from(tracks).sort(),
+      timeSlots: Array.from(timeSlots).sort()
+    };
+  } catch (error) {
+    console.error('Error fetching conference agenda:', error);
+    return null;
+  }
+}
+
+// Get conference FAQs
+export async function getConferenceFAQs(conferenceId: string): Promise<ConferenceFAQ[]> {
+  try {
+    const q = query(
+      collection(db, `conference/${conferenceId}/faqs`),
+      orderBy('order', 'asc')
+    );
+    const querySnapshot = await getDocs(q);
+    
+    const faqs: ConferenceFAQ[] = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      faqs.push({
+        id: doc.id,
+        ...data,
+        lastUpdated: data.lastUpdated?.toDate() || new Date()
+      } as ConferenceFAQ);
+    });
+    
+    return faqs;
+  } catch (error) {
+    console.error('Error fetching conference FAQs:', error);
+    return [];
+  }
+}
+
+// Get venue details
+export async function getVenueDetails(conferenceId: string): Promise<VenueDetails | null> {
+  try {
+    const docRef = doc(db, `conference/${conferenceId}/venue`, 'details');
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return {
+        ...data,
+        nearbyAccommodations: data.nearbyAccommodations?.map((acc: any) => ({
+          ...acc,
+          bookingDeadline: acc.bookingDeadline?.toDate()
+        })) || []
+      } as VenueDetails;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error fetching venue details:', error);
+    return null;
+  }
+}
+
+// Get social media configuration
+export async function getSocialMediaConfig(conferenceId: string): Promise<SocialMediaConfig | null> {
+  try {
+    const docRef = doc(db, `conference/${conferenceId}/settings`, 'social');
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return docSnap.data() as SocialMediaConfig;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error fetching social media config:', error);
+    return null;
+  }
+}
+
+// Get conference theme
+export async function getConferenceTheme(conferenceId: string): Promise<ConferenceTheme | null> {
+  try {
+    const docRef = doc(db, `conference/${conferenceId}/settings`, 'theme');
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return docSnap.data() as ConferenceTheme;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error fetching conference theme:', error);
+    return null;
+  }
+}
+
+// Get complete enhanced conference data
+export async function getEnhancedConferenceData(conferenceId: string): Promise<LegacyConference & {
+  agenda?: ConferenceAgenda;
+  speakers?: ConferenceSpeaker[];
+  faqs?: ConferenceFAQ[];
+  venueDetails?: VenueDetails;
+  socialMedia?: SocialMediaConfig;
+  theme?: ConferenceTheme;
+} | null> {
+  try {
+    // Get base conference data
+    const conference = await getConferenceById(conferenceId);
+    if (!conference) return null;
+    
+    // Fetch all enhanced features in parallel
+    const [agenda, speakers, faqs, venueDetails, socialMedia, theme] = await Promise.all([
+      getConferenceAgenda(conferenceId),
+      getConferenceSpeakers(conferenceId),
+      getConferenceFAQs(conferenceId),
+      getVenueDetails(conferenceId),
+      getSocialMediaConfig(conferenceId),
+      getConferenceTheme(conferenceId)
+    ]);
+    
+    return {
+      ...conference,
+      agenda: agenda || undefined,
+      speakers: speakers.length > 0 ? speakers : undefined,
+      faqs: faqs.length > 0 ? faqs : undefined,
+      venueDetails: venueDetails || undefined,
+      socialMedia: socialMedia || undefined,
+      theme: theme || undefined
+    };
+  } catch (error) {
+    console.error('Error fetching enhanced conference data:', error);
+    return null;
+  }
+}
+
 // Default fallback conference for development/testing
-export const defaultConference: Conference = {
+export const defaultConference: LegacyConference = {
   id: 'conference-2025',
   title: '2025 NHBEA Annual Conference',
   description: 'Join us for our annual conference featuring the latest in business education trends, networking opportunities, and professional development sessions.',
@@ -464,5 +968,171 @@ export const defaultConference: Conference = {
     updatedAt: new Date(),
     createdBy: 'system',
     featured: true
+  }
+};
+
+// ===============================
+// REGISTRANTS REPOSITORY (for FireCMS integration)
+// ===============================
+
+export interface ConferenceRegistrantData {
+  conferenceId: string;
+  participantInfo: {
+    fullName: string;
+    email: string;
+    phone?: string;
+    institution: string;
+    jobTitle?: string;
+    membershipId?: string;
+    membershipStatus: 'member' | 'non-member' | 'student';
+  };
+  registrationType: 'regular' | 'early_bird' | 'student' | 'speaker';
+  addressInfo?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+  };
+  emergencyContact?: {
+    name?: string;
+    phone?: string;
+    relationship?: string;
+  };
+  dietaryRestrictions?: string;
+  accessibilityNeeds?: string;
+  sessionPreferences?: string[];
+  specialRequests?: string;
+  networkingOptIn: boolean;
+  marketingConsent: boolean;
+  agreeToTerms: boolean;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  paymentStatus: 'pending' | 'paid' | 'refunded';
+}
+
+/**
+ * Registrants repository for managing conference registrations in FireCMS
+ */
+export const registrantsRepository = {
+  /**
+   * Submit a new conference registration
+   */
+  async createRegistrant(registrantData: ConferenceRegistrantData): Promise<string> {
+    try {
+      const registrantsRef = collection(db, 'registrants');
+      
+      // Clean the data to remove undefined values that might cause Firestore issues
+      const cleanData = {
+        conferenceId: registrantData.conferenceId,
+        participantInfo: {
+          fullName: registrantData.participantInfo.fullName,
+          email: registrantData.participantInfo.email,
+          institution: registrantData.participantInfo.institution,
+          membershipStatus: registrantData.participantInfo.membershipStatus,
+          ...(registrantData.participantInfo.phone && { phone: registrantData.participantInfo.phone }),
+          ...(registrantData.participantInfo.jobTitle && { jobTitle: registrantData.participantInfo.jobTitle }),
+          ...(registrantData.participantInfo.membershipId && { membershipId: registrantData.participantInfo.membershipId })
+        },
+        registrationType: registrantData.registrationType,
+        ...(registrantData.addressInfo && {
+          addressInfo: {
+            ...(registrantData.addressInfo.street && { street: registrantData.addressInfo.street }),
+            ...(registrantData.addressInfo.city && { city: registrantData.addressInfo.city }),
+            ...(registrantData.addressInfo.state && { state: registrantData.addressInfo.state }),
+            ...(registrantData.addressInfo.zipCode && { zipCode: registrantData.addressInfo.zipCode })
+          }
+        }),
+        ...(registrantData.emergencyContact && {
+          emergencyContact: {
+            ...(registrantData.emergencyContact.name && { name: registrantData.emergencyContact.name }),
+            ...(registrantData.emergencyContact.phone && { phone: registrantData.emergencyContact.phone }),
+            ...(registrantData.emergencyContact.relationship && { relationship: registrantData.emergencyContact.relationship })
+          }
+        }),
+        ...(registrantData.dietaryRestrictions && { dietaryRestrictions: registrantData.dietaryRestrictions }),
+        ...(registrantData.accessibilityNeeds && { accessibilityNeeds: registrantData.accessibilityNeeds }),
+        sessionPreferences: registrantData.sessionPreferences || [],
+        ...(registrantData.specialRequests && { specialRequests: registrantData.specialRequests }),
+        networkingOptIn: registrantData.networkingOptIn,
+        marketingConsent: registrantData.marketingConsent,
+        agreeToTerms: registrantData.agreeToTerms,
+        status: registrantData.status,
+        paymentStatus: registrantData.paymentStatus,
+        submissionDate: serverTimestamp()
+      };
+      
+      const docRef = await addDoc(registrantsRef, cleanData);
+      return docRef.id;
+    } catch (error) {
+      console.error('Error creating registrant:', error);
+      console.error('Error details:', {
+        name: error instanceof Error ? error.name : 'Unknown',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        code: (error as any)?.code
+      });
+      throw new Error('Failed to submit registration');
+    }
+  },
+
+  /**
+   * Get all registrants for a conference
+   */
+  async getRegistrantsByConference(conferenceId: string): Promise<ConferenceRegistrantData[]> {
+    try {
+      const registrantsRef = collection(db, 'registrants');
+      const q = query(
+        registrantsRef,
+        where('conferenceId', '==', conferenceId),
+        orderBy('submissionDate', 'desc')
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const registrants: ConferenceRegistrantData[] = [];
+      
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        registrants.push({
+          ...data,
+          submissionDate: data.submissionDate?.toDate() || new Date()
+        } as ConferenceRegistrantData);
+      });
+      
+      return registrants;
+    } catch (error) {
+      console.error('Error fetching registrants:', error);
+      throw new Error('Failed to fetch registrants');
+    }
+  },
+
+  /**
+   * Update registrant status (for admin use)
+   */
+  async updateRegistrantStatus(registrantId: string, status: ConferenceRegistrantData['status']): Promise<void> {
+    try {
+      const docRef = doc(db, 'registrants', registrantId);
+      await updateDoc(docRef, {
+        status,
+        updatedAt: serverTimestamp()
+      });
+    } catch (error) {
+      console.error('Error updating registrant status:', error);
+      throw new Error('Failed to update registrant status');
+    }
+  },
+
+  /**
+   * Update payment status (for payment processing)
+   */
+  async updatePaymentStatus(registrantId: string, paymentStatus: ConferenceRegistrantData['paymentStatus']): Promise<void> {
+    try {
+      const docRef = doc(db, 'registrants', registrantId);
+      await updateDoc(docRef, {
+        paymentStatus,
+        updatedAt: serverTimestamp()
+      });
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      throw new Error('Failed to update payment status');
+    }
   }
 };

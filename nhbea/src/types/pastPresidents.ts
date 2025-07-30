@@ -3,4 +3,7 @@ export interface PastPresident {
   name: string;
   term: string;
   order?: number;
+  bio?: string;
+  imageUrl?: string;
+  achievements?: string[];
 }

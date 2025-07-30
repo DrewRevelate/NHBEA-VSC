@@ -1,9 +1,10 @@
 import { db } from './firebase';
 import { collection, doc, getDoc, getDocs, query, where, orderBy, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { Member, CreateMemberData, UpdateMemberData, LegacyBoardMember } from '@/types/members';
+import { Member, Organization } from '@/types/dataModels';
+import { LegacyBoardMember } from '@/types/members';
 
 /**
- * Enhanced Members API for NHBEA Phase 1 Implementation
+ * Enhanced Members API for NHBEA - Updated for new data model
  * Provides comprehensive member management functionality
  */
 
@@ -12,26 +13,29 @@ export async function getActiveMembers(): Promise<Member[]> {
   try {
     const q = query(
       collection(db, 'members'),
-      where('membership.status', '==', 'active'),
-      orderBy('personalInfo.lastName')
+      where('status', '==', 'active'),
+      orderBy('lastName')
     );
     const querySnapshot = await getDocs(q);
     
     const members: Member[] = [];
     querySnapshot.forEach((doc) => {
+      const data = doc.data();
       members.push({
-        ...doc.data(),
-        metadata: {
-          ...doc.data().metadata,
-          createdAt: doc.data().metadata?.createdAt?.toDate() || new Date(),
-          updatedAt: doc.data().metadata?.updatedAt?.toDate() || new Date(),
-          lastLoginAt: doc.data().metadata?.lastLoginAt?.toDate()
-        },
-        membership: {
-          ...doc.data().membership,
-          joinDate: doc.data().membership?.joinDate?.toDate() || new Date(),
-          renewalDate: doc.data().membership?.renewalDate?.toDate() || new Date()
-        }
+        id: doc.id,
+        ...data,
+        // Convert Firestore timestamps to Date objects
+        joinDate: data.joinDate?.toDate() || new Date(),
+        renewalDate: data.renewalDate?.toDate() || new Date(),
+        expirationDate: data.expirationDate?.toDate() || new Date(),
+        boardStartDate: data.boardStartDate?.toDate(),
+        boardEndDate: data.boardEndDate?.toDate(),
+        createdAt: data.createdAt?.toDate() || new Date(),
+        updatedAt: data.updatedAt?.toDate() || new Date(),
+        paymentHistory: data.paymentHistory?.map((payment: any) => ({
+          ...payment,
+          paymentDate: payment.paymentDate?.toDate() || new Date()
+        })) || []
       } as Member);
     });
     
@@ -42,35 +46,51 @@ export async function getActiveMembers(): Promise<Member[]> {
   }
 }
 
-// Get current board members (backward compatible with existing BoardMembersSection)
+// Get current board members using nested data structure
 export async function getBoardMembers(): Promise<Member[]> {
   try {
     const q = query(
       collection(db, 'members'),
       where('profile.activeBoardMember', '==', true),
-      orderBy('profile.boardOrder')
+      where('membership.status', '==', 'active')
     );
     const querySnapshot = await getDocs(q);
     
     const boardMembers: Member[] = [];
     querySnapshot.forEach((doc) => {
+      const data = doc.data();
       boardMembers.push({
-        ...doc.data(),
-        metadata: {
-          ...doc.data().metadata,
-          createdAt: doc.data().metadata?.createdAt?.toDate() || new Date(),
-          updatedAt: doc.data().metadata?.updatedAt?.toDate() || new Date(),
-          lastLoginAt: doc.data().metadata?.lastLoginAt?.toDate()
-        },
+        id: doc.id,
+        ...data,
+        // Convert Firestore timestamps to Date objects
         membership: {
-          ...doc.data().membership,
-          joinDate: doc.data().membership?.joinDate?.toDate() || new Date(),
-          renewalDate: doc.data().membership?.renewalDate?.toDate() || new Date()
+          ...data.membership,
+          renewalDate: data.membership?.renewalDate?.toDate(),
+          joinDate: data.membership?.joinDate?.toDate()
+        },
+        metadata: {
+          ...data.metadata,
+          createdAt: data.metadata?.createdAt?.toDate() || new Date(),
+          updatedAt: data.metadata?.updatedAt?.toDate() || new Date()
         }
       } as Member);
     });
     
-    return boardMembers;
+    // Sort by board position order
+    return boardMembers.sort((a, b) => {
+      const orderMap: Record<string, number> = {
+        'President': 1,
+        'Vice President': 2,
+        'Secretary': 3,
+        'Treasurer': 4,
+        'Board Member': 6
+      };
+      
+      const orderA = a.profile?.boardOrder || orderMap[a.profile?.boardPosition || 'Board Member'] || 6;
+      const orderB = b.profile?.boardOrder || orderMap[b.profile?.boardPosition || 'Board Member'] || 6;
+      
+      return orderA - orderB;
+    });
   } catch (error) {
     console.error('Error fetching board members:', error);
     throw new Error('Failed to fetch board members');
@@ -82,27 +102,30 @@ export async function getPublicDirectoryMembers(): Promise<Member[]> {
   try {
     const q = query(
       collection(db, 'members'),
-      where('membership.status', '==', 'active'),
-      where('preferences.directoryListing', '==', true),
-      orderBy('personalInfo.lastName')
+      where('status', '==', 'active'),
+      where('communicationPreferences.mailings', '==', true), // Using mailings as directory listing preference
+      orderBy('lastName')
     );
     const querySnapshot = await getDocs(q);
     
     const members: Member[] = [];
     querySnapshot.forEach((doc) => {
+      const data = doc.data();
       members.push({
-        ...doc.data(),
-        metadata: {
-          ...doc.data().metadata,
-          createdAt: doc.data().metadata?.createdAt?.toDate() || new Date(),
-          updatedAt: doc.data().metadata?.updatedAt?.toDate() || new Date(),
-          lastLoginAt: doc.data().metadata?.lastLoginAt?.toDate()
-        },
-        membership: {
-          ...doc.data().membership,
-          joinDate: doc.data().membership?.joinDate?.toDate() || new Date(),
-          renewalDate: doc.data().membership?.renewalDate?.toDate() || new Date()
-        }
+        id: doc.id,
+        ...data,
+        // Convert Firestore timestamps to Date objects
+        joinDate: data.joinDate?.toDate() || new Date(),
+        renewalDate: data.renewalDate?.toDate() || new Date(),
+        expirationDate: data.expirationDate?.toDate() || new Date(),
+        boardStartDate: data.boardStartDate?.toDate(),
+        boardEndDate: data.boardEndDate?.toDate(),
+        createdAt: data.createdAt?.toDate() || new Date(),
+        updatedAt: data.updatedAt?.toDate() || new Date(),
+        paymentHistory: data.paymentHistory?.map((payment: any) => ({
+          ...payment,
+          paymentDate: payment.paymentDate?.toDate() || new Date()
+        })) || []
       } as Member);
     });
     
@@ -122,18 +145,20 @@ export async function getMemberById(memberId: string): Promise<Member | null> {
     if (docSnap.exists()) {
       const data = docSnap.data();
       return {
+        id: docSnap.id,
         ...data,
-        metadata: {
-          ...data.metadata,
-          createdAt: data.metadata?.createdAt?.toDate() || new Date(),
-          updatedAt: data.metadata?.updatedAt?.toDate() || new Date(),
-          lastLoginAt: data.metadata?.lastLoginAt?.toDate()
-        },
-        membership: {
-          ...data.membership,
-          joinDate: data.membership?.joinDate?.toDate() || new Date(),
-          renewalDate: data.membership?.renewalDate?.toDate() || new Date()
-        }
+        // Convert Firestore timestamps to Date objects
+        joinDate: data.joinDate?.toDate() || new Date(),
+        renewalDate: data.renewalDate?.toDate() || new Date(),
+        expirationDate: data.expirationDate?.toDate() || new Date(),
+        boardStartDate: data.boardStartDate?.toDate(),
+        boardEndDate: data.boardEndDate?.toDate(),
+        createdAt: data.createdAt?.toDate() || new Date(),
+        updatedAt: data.updatedAt?.toDate() || new Date(),
+        paymentHistory: data.paymentHistory?.map((payment: any) => ({
+          ...payment,
+          paymentDate: payment.paymentDate?.toDate() || new Date()
+        })) || []
       } as Member;
     } else {
       return null;
@@ -144,17 +169,14 @@ export async function getMemberById(memberId: string): Promise<Member | null> {
   }
 }
 
-// Create a new member
-export async function createMember(memberData: CreateMemberData): Promise<string> {
+// Create a new member using new data model
+export async function createMember(memberData: Omit<Member, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
   try {
     const now = new Date();
     const memberWithMetadata = {
       ...memberData,
-      metadata: {
-        createdAt: now,
-        updatedAt: now,
-        ...memberData.metadata
-      }
+      createdAt: now,
+      updatedAt: now
     };
     
     const docRef = await addDoc(collection(db, 'members'), memberWithMetadata);
@@ -165,16 +187,13 @@ export async function createMember(memberData: CreateMemberData): Promise<string
   }
 }
 
-// Update an existing member
-export async function updateMember(memberId: string, updateData: UpdateMemberData): Promise<void> {
+// Update an existing member using new data model
+export async function updateMember(memberId: string, updateData: Partial<Omit<Member, 'id' | 'createdAt'>>): Promise<void> {
   try {
     const docRef = doc(db, 'members', memberId);
     const updateWithMetadata = {
       ...updateData,
-      metadata: {
-        ...updateData.metadata,
-        updatedAt: new Date()
-      }
+      updatedAt: new Date()
     };
     
     await updateDoc(docRef, updateWithMetadata);
@@ -188,8 +207,7 @@ export async function updateMember(memberId: string, updateData: UpdateMemberDat
 export async function deactivateMember(memberId: string): Promise<void> {
   try {
     await updateMember(memberId, {
-      membership: { status: 'inactive' },
-      metadata: { updatedAt: new Date() }
+      status: 'inactive'
     });
   } catch (error) {
     console.error('Error deactivating member:', error);
@@ -209,126 +227,135 @@ export async function deleteMember(memberId: string): Promise<void> {
 }
 
 // Migration utility: Convert legacy board member to new member format
-export function convertLegacyBoardMember(legacyMember: LegacyBoardMember): CreateMemberData {
+export function convertLegacyBoardMember(legacyMember: LegacyBoardMember): Omit<Member, 'id' | 'createdAt' | 'updatedAt'> {
   const nameParts = legacyMember.name.split(' ');
   const firstName = nameParts[0] || '';
   const lastName = nameParts.slice(1).join(' ') || '';
   
   return {
-    personalInfo: {
-      firstName,
-      lastName,
-      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@nhbea.org`,
+    memberNumber: `NHBEA-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`,
+    firstName,
+    lastName,
+    email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@nhbea.org`,
+    phone: '',
+    organizationId: 'default-org', // Would need to be set properly
+    position: legacyMember.title,
+    yearsExperience: 5, // Default value
+    address: '',
+    city: '',
+    state: 'NH',
+    zipCode: '',
+    membershipType: 'professional',
+    status: 'active',
+    joinDate: new Date(),
+    renewalDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+    expirationDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+    isBoardMember: true,
+    boardPosition: legacyMember.title,
+    boardStartDate: new Date(),
+    communicationPreferences: {
+      newsletter: true,
+      updates: true,
+      events: true,
+      mailings: true
     },
-    membership: {
-      type: 'individual',
-      status: 'active',
-      joinDate: new Date(),
-      renewalDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
-      membershipYear: new Date().getFullYear().toString(),
-      autoRenewal: false
-    },
-    organization: {
-      name: 'NHBEA',
-      position: legacyMember.title
-    },
-    profile: {
-      imageURL: legacyMember.imageURL,
-      bio: legacyMember.bio,
-      activeBoardMember: true,
-      boardPosition: legacyMember.title,
-      boardOrder: legacyMember.order || 999
-    },
-    preferences: {
-      emailNotifications: true,
-      directoryListing: true,
-      newsletterSubscription: true
-    }
+    paymentHistory: [],
+    notes: legacyMember.bio
   };
 }
 
 // Default fallback members for development/testing
 export const defaultMembers: Member[] = [
   {
-    personalInfo: {
-      firstName: 'Sarah',
-      lastName: 'Johnson',
-      email: 'sarah.johnson@nhbea.org'
+    id: '1',
+    memberNumber: 'NHBEA-2020-0001',
+    firstName: 'Sarah',
+    lastName: 'Johnson',
+    email: 'sarah.johnson@nhbea.org',
+    phone: '(603) 555-0001',
+    organizationId: 'org-1',
+    position: 'Business Teacher',
+    yearsExperience: 15,
+    address: '123 Main St',
+    city: 'Manchester',
+    state: 'NH',
+    zipCode: '03101',
+    membershipType: 'professional',
+    status: 'active',
+    joinDate: new Date('2020-01-01'),
+    renewalDate: new Date('2025-12-31'),
+    expirationDate: new Date('2025-12-31'),
+    isBoardMember: true,
+    boardPosition: 'President',
+    boardStartDate: new Date('2023-01-01'),
+    communicationPreferences: {
+      newsletter: true,
+      updates: true,
+      events: true,
+      mailings: true
     },
-    membership: {
-      type: 'individual',
-      status: 'active',
-      joinDate: new Date('2020-01-01'),
-      renewalDate: new Date('2025-12-31'),
-      membershipYear: '2025',
-      autoRenewal: true
-    },
-    organization: {
-      name: 'Manchester High School',
-      position: 'Business Teacher'
-    },
-    profile: {
-      activeBoardMember: true,
-      boardPosition: 'President',
-      boardOrder: 1,
-      bio: 'Sarah has been an advocate for business education for over 15 years, bringing innovative teaching methods to the classroom.'
-    },
-    preferences: {
-      emailNotifications: true,
-      directoryListing: true,
-      newsletterSubscription: true
-    },
-    metadata: {
-      createdAt: new Date('2020-01-01'),
-      updatedAt: new Date(),
-      createdBy: 'system'
-    }
+    paymentHistory: [],
+    createdAt: new Date('2020-01-01'),
+    updatedAt: new Date(),
+    notes: 'Sarah has been an advocate for business education for over 15 years, bringing innovative teaching methods to the classroom.'
   },
   {
-    personalInfo: {
-      firstName: 'Michael',
-      lastName: 'Chen',
-      email: 'michael.chen@nhbea.org'
+    id: '2',
+    memberNumber: 'NHBEA-2019-0002',
+    firstName: 'Michael',
+    lastName: 'Chen',
+    email: 'michael.chen@nhbea.org',
+    phone: '(603) 555-0002',
+    organizationId: 'org-2',
+    position: 'Associate Professor',
+    yearsExperience: 12,
+    address: '456 Oak Ave',
+    city: 'Nashua',
+    state: 'NH',
+    zipCode: '03060',
+    membershipType: 'professional',
+    status: 'active',
+    joinDate: new Date('2019-06-15'),
+    renewalDate: new Date('2025-12-31'),
+    expirationDate: new Date('2025-12-31'),
+    isBoardMember: true,
+    boardPosition: 'Vice President',
+    boardStartDate: new Date('2023-01-01'),
+    communicationPreferences: {
+      newsletter: true,
+      updates: true,
+      events: true,
+      mailings: true
     },
-    membership: {
-      type: 'individual',
-      status: 'active',
-      joinDate: new Date('2019-06-15'),
-      renewalDate: new Date('2025-12-31'),
-      membershipYear: '2025',
-      autoRenewal: true
-    },
-    organization: {
-      name: 'Nashua Community College',
-      position: 'Associate Professor'
-    },
-    profile: {
-      activeBoardMember: true,
-      boardPosition: 'Vice President',
-      boardOrder: 2,
-      bio: 'Michael specializes in entrepreneurship education and has helped launch numerous student business ventures.'
-    },
-    preferences: {
-      emailNotifications: true,
-      directoryListing: true,
-      newsletterSubscription: true
-    },
-    metadata: {
-      createdAt: new Date('2019-06-15'),
-      updatedAt: new Date(),
-      createdBy: 'system'
-    }
+    paymentHistory: [],
+    createdAt: new Date('2019-06-15'),
+    updatedAt: new Date(),
+    notes: 'Michael specializes in entrepreneurship education and has helped launch numerous student business ventures.'
   }
 ];
 
 // Backward compatibility: Convert new Member to legacy BoardMember format
 export function convertToLegacyBoardMember(member: Member): LegacyBoardMember {
   return {
-    id: '', // Will be set by the calling function
-    name: `${member.personalInfo.firstName} ${member.personalInfo.lastName}`,
-    title: member.profile.boardPosition || member.organization.position,
-    bio: member.profile.bio || '',
-    imageURL: member.profile.imageURL,
-    order: member.profile.boardOrder
+    id: member.id,
+    name: `${member.personalInfo?.firstName || ''} ${member.personalInfo?.lastName || ''}`,
+    title: member.profile?.boardPosition || member.organization?.title || 'Board Member',
+    bio: member.profile?.bio || '',
+    imageURL: undefined, // imageURL not in nested model yet
+    order: member.profile?.boardOrder || getBoardPositionOrder(member.profile?.boardPosition)
   };
+}
+
+// Helper function to determine display order based on board position
+function getBoardPositionOrder(position?: string): number {
+  const orderMap: Record<string, number> = {
+    'President': 1,
+    'Vice President': 2,
+    'Secretary': 3,
+    'Treasurer': 4,
+    'Past President': 5,
+    'Board Member': 6
+  };
+  
+  return orderMap[position || 'Board Member'] || 6;
 }

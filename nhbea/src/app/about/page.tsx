@@ -1,62 +1,45 @@
-import { Suspense } from 'react';
-import { Metadata } from 'next';
+import { Suspense, lazy } from 'react';
+import { StandardPageLayout } from '@/components/StandardPageLayout';
+import { StandardErrorBoundary } from '@/components/StandardErrorBoundary';
+import { LoadingSkeleton } from '@/components/LoadingSpinner';
+import AboutHeroSection from '@/components/AboutHeroSection';
+import EnhancedAboutSection from '@/components/EnhancedAboutSection';
 import BoardMembersSection from '@/components/BoardMembersSection';
 import PastPresidentsSection from '@/components/PastPresidentsSection';
 import { getHomepageContent, defaultHomepageContent } from '@/lib/content';
 import { getBoardMembers as getLegacyBoardMembers, defaultBoardMembers } from '@/lib/board';
 import { getPastPresidents, defaultPastPresidents } from '@/lib/pastPresidents';
 import { getBoardMembers, convertToLegacyBoardMember } from '@/lib/members';
+import { Member } from '@/types/dataModels';
 
-export const metadata: Metadata = {
-  title: 'About Us | New Hampshire Business Educators Association',
-  description: 'Learn about NHBEA\'s mission, history, and leadership. Meet our current board members and honor our past presidents.',
-  keywords: 'NHBEA, business education, New Hampshire, board members, past presidents, mission',
-};
+// Lazy load sections for better performance
+const EnhancedMissionSection = lazy(() => import('@/components/EnhancedMissionSection'));
+const StatisticsSection = lazy(() => import('@/components/StatisticsSection'));
+const TrustBadgesSection = lazy(() => import('@/components/TrustBadgesSection'));
 
-function LoadingSpinner() {
-  return (
-    <div className="flex items-center justify-center py-12">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-    </div>
-  );
-}
-
-function ErrorFallback({ error }: { error: string }) {
-  if (process.env.NODE_ENV === 'development') {
-    return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 m-4 text-sm">
-        <p className="text-yellow-800">⚠️ Development Notice: Using fallback content ({error})</p>
-      </div>
-    );
-  }
-  return null;
-}
-
-async function AboutPage() {
+async function EnhancedAboutPage() {
   let aboutContent = defaultHomepageContent;
   let boardMembers = defaultBoardMembers;
+  let enhancedBoardMembers: Member[] | undefined = undefined;  
   let pastPresidents = defaultPastPresidents;
-  let contentError = null;
-  let boardError = null;
-  let presidentsError = null;
-  
 
+  // Fetch content with error handling
   try {
     const fetchedContent = await getHomepageContent();
     if (fetchedContent) {
       aboutContent = fetchedContent;
     }
   } catch (error) {
-    contentError = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch about content:', error);
   }
 
   try {
     // Try new enhanced members API first
-    const enhancedBoardMembers = await getBoardMembers();
-    if (enhancedBoardMembers && enhancedBoardMembers.length > 0) {
-      // Convert to legacy format for existing component
-      boardMembers = enhancedBoardMembers.map((member, index) => ({
+    const fetchedEnhancedMembers = await getBoardMembers();
+    if (fetchedEnhancedMembers && fetchedEnhancedMembers.length > 0) {
+      enhancedBoardMembers = fetchedEnhancedMembers;
+      // Also convert to legacy format as fallback
+      boardMembers = fetchedEnhancedMembers.map((member, index) => ({
         ...convertToLegacyBoardMember(member),
         id: `member-${index}`
       }));
@@ -68,137 +51,140 @@ async function AboutPage() {
       }
     }
   } catch (error) {
-    boardError = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch board members:', error);
-    // Keep using defaultBoardMembers
   }
-  
 
   try {
     const fetchedPastPresidents = await getPastPresidents();
     if (fetchedPastPresidents && fetchedPastPresidents.length > 0) {
       pastPresidents = fetchedPastPresidents;
+    } else {
+      pastPresidents = defaultPastPresidents;
     }
   } catch (error) {
-    presidentsError = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch past presidents:', error);
-    // Keep using defaultPastPresidents
   }
-  
 
   return (
-    <div className="min-h-screen">
-      {/* Skip to content link for accessibility */}
-      <a 
-        href="#about-main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50"
-      >
-        Skip to main content
-      </a>
+    <StandardPageLayout
+      error={{ boundary: true }}
+      loading={{ enabled: true }}
+      meta={{
+        title: 'About - NHBEA',
+        description: 'Discover NHBEA\'s 64-year legacy of advancing business education excellence in New Hampshire. Learn about our mission, impact, and dedicated community of educators.',
+        openGraph: true,
+        twitterCard: true
+      }}
+      main={{ id: 'about-main-content', focusable: true }}
+      className="min-h-screen"
+    >
+      {/* Enhanced Hero Section */}
+      <StandardErrorBoundary>
+        <AboutHeroSection
+          title="About NHBEA"
+          subtitle="Dedicated to advancing business education excellence in New Hampshire since 1960"
+          boardCount={boardMembers?.length || 15}
+          establishedYear={1960}
+          memberCount={500}
+          schoolCount={50}
+        />
+      </StandardErrorBoundary>
 
-      {/* Hero Section */}
-      <section 
-        className="relative py-20 lg:py-32 overflow-hidden"
-        role="banner"
-        aria-label="About Us hero section"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
-        </div>
-        
-        <div 
-          className="absolute inset-0 overflow-hidden pointer-events-none" 
-          aria-hidden="true"
-          role="presentation"
-        >
-          <div className="absolute -top-1/2 -right-1/2 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-indigo-400/10 rounded-full animate-pulse [will-change:opacity]"></div>
-          <div className="absolute -bottom-1/2 -left-1/2 w-96 h-96 bg-gradient-to-br from-indigo-400/10 to-purple-400/10 rounded-full animate-pulse delay-1000 [will-change:opacity]"></div>
-        </div>
+      {/* Story & Impact Section */}
+      <StandardErrorBoundary>
+        <EnhancedAboutSection />
+      </StandardErrorBoundary>
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-                About NHBEA
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
-              Discover our mission, meet our leadership, and learn about our commitment to excellence in business education.
-            </p>
-            <div className="mt-8 w-24 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mx-auto"></div>
-          </div>
-        </div>
-      </section>
+      {/* Mission Section */}
+      <StandardErrorBoundary>
+        <Suspense fallback={<LoadingSkeleton variant="content" />}>
+          <section className="py-20 bg-white">
+            <div className="container mx-auto px-6 lg:px-8">
+              <div className="max-w-4xl mx-auto text-center">
+                <h2 className="text-4xl md:text-5xl font-bold text-[var(--nhbea-royal-blue-dark)] mb-8">
+                  Our Mission
+                </h2>
+                <div className="text-xl text-[var(--nhbea-gray-700)] leading-relaxed space-y-6">
+                  <p>
+                    The New Hampshire Business Educators Association is dedicated to promoting excellence in business education throughout the state. We serve as a vital resource for educators, students, and the broader business community.
+                  </p>
+                  <p>
+                    Through professional development, networking opportunities, and innovative programs, we empower educators to inspire the next generation of business leaders while fostering strong connections between academia and industry.
+                  </p>
+                </div>
+                
+                {/* Mission pillars */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                  <div className="group p-8 bg-white rounded-2xl border border-[var(--nhbea-gray-200)] hover:border-[var(--nhbea-royal-blue)]/30 hover:shadow-lg transition-all duration-300">
+                    <div className="w-16 h-16 bg-[var(--nhbea-royal-blue)] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.168 18.477 18.582 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-[var(--nhbea-royal-blue-dark)] mb-4">Educational Excellence</h3>
+                    <p className="text-[var(--nhbea-gray-600)]">Promoting the highest standards in business education curriculum and teaching methodologies</p>
+                  </div>
 
-      <main id="about-main-content" className="focus:outline-none" tabIndex={-1}>
-        {contentError && <ErrorFallback error={contentError} />}
-        
-        {/* Mission Section */}
-        <section className="py-20 lg:py-32 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 to-white"></div>
-          
-          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-8 leading-tight">
-                <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-                  {aboutContent.missionTitle}
-                </span>
-              </h2>
-              <div className="text-lg md:text-xl text-slate-600 leading-relaxed font-light space-y-6">
-                {(aboutContent.missionContent || '').split('\n').map((paragraph, index) => (
-                  paragraph.trim() && (
-                    <p key={index}>
-                      {paragraph}
-                    </p>
-                  )
-                ))}
+                  <div className="group p-8 bg-white rounded-2xl border border-[var(--nhbea-gray-200)] hover:border-[var(--nhbea-royal-blue)]/30 hover:shadow-lg transition-all duration-300">
+                    <div className="w-16 h-16 bg-[var(--nhbea-royal-blue)] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-[var(--nhbea-royal-blue-dark)] mb-4">Professional Development</h3>
+                    <p className="text-[var(--nhbea-gray-600)]">Supporting continuous growth and career advancement for our educator community</p>
+                  </div>
+
+                  <div className="group p-8 bg-white rounded-2xl border border-[var(--nhbea-gray-200)] hover:border-[var(--nhbea-royal-blue)]/30 hover:shadow-lg transition-all duration-300">
+                    <div className="w-16 h-16 bg-[var(--nhbea-royal-blue)] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-[var(--nhbea-royal-blue-dark)] mb-4">Community Impact</h3>
+                    <p className="text-[var(--nhbea-gray-600)]">Building stronger communities through quality business education and student success</p>
+                  </div>
+                </div>
               </div>
-              <div className="mt-8 w-24 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mx-auto"></div>
             </div>
+          </section>
+        </Suspense>
+      </StandardErrorBoundary>
+
+      {/* Leadership Sections */}
+      <div className="bg-[var(--nhbea-gray-50)]">
+        <StandardErrorBoundary>
+          <div id="board-members" className="py-20">
+            <BoardMembersSection 
+              boardMembers={boardMembers} 
+              enhancedMembers={enhancedBoardMembers} 
+            />
           </div>
-        </section>
+        </StandardErrorBoundary>
 
-        {/* About Section */}
-        <section className="py-20 lg:py-32 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-blue-50/30 to-indigo-50/30"></div>
-          
-          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-8 leading-tight">
-                <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-                  {aboutContent.aboutTitle}
-                </span>
-              </h2>
-              <div className="text-lg md:text-xl text-slate-600 leading-relaxed font-light space-y-6">
-                {(aboutContent.aboutContent || '').split('\n').map((paragraph, index) => (
-                  paragraph.trim() && (
-                    <p key={index}>
-                      {paragraph}
-                    </p>
-                  )
-                ))}
-              </div>
-              <div className="mt-8 w-24 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mx-auto"></div>
-            </div>
+        <StandardErrorBoundary>
+          <div id="past-presidents" className="py-20 border-t border-gray-100">
+            <PastPresidentsSection pastPresidents={pastPresidents} />
           </div>
-        </section>
+        </StandardErrorBoundary>
+      </div>
 
-        {/* Board Members Section */}
-        {boardError && <ErrorFallback error={boardError} />}
-        <BoardMembersSection boardMembers={boardMembers} />
+      {/* Trust & Statistics Sections */}
+      <StandardErrorBoundary>
+        <Suspense fallback={<LoadingSkeleton variant="content" />}>
+          <StatisticsSection />
+        </Suspense>
+      </StandardErrorBoundary>
 
-        {/* Past Presidents Section */}
-        {presidentsError && <ErrorFallback error={presidentsError} />}
-        <PastPresidentsSection pastPresidents={pastPresidents} />
-      </main>
-    </div>
+      <StandardErrorBoundary>
+        <Suspense fallback={<LoadingSkeleton variant="content" />}>
+          <TrustBadgesSection />
+        </Suspense>
+      </StandardErrorBoundary>
+    </StandardPageLayout>
   );
 }
 
 export default function About() {
-  return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <AboutPage />
-    </Suspense>
-  );
+  return <EnhancedAboutPage />;
 }

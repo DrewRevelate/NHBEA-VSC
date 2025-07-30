@@ -1,14 +1,14 @@
-# NHBEA Connect Fullstack Architecture Document
+# .github/workflows/deploy.yml structure
 
-## Sections
+## Table of Contents
 
-- [Introduction](./introduction.md)
-- [High-Level Architecture](./high-level-architecture.md)
-- [Tech Stack](./tech-stack.md)
-- [Data Models & Database Schema](./data-models-and-database-schema.md)
-- [Unified Project Structure](./unified-project-structure.md)
-- [Frontend Architecture](./frontend-architecture.md)
-- [Backend Architecture](./backend-architecture.md)
-- [Deployment and CI/CD](./deployment-and-ci-cd.md)
-- [Security](./security.md)
-- [Checklist Results Report](./checklist-results-report.md)
+- [.github/workflows/deploy.yml structure](#table-of-contents)
+  - [Architecture Style](./architecture-style.md)
+  - [Core Backend Components](./core-backend-components.md)
+  - [8. REST API Specifications](./8-rest-api-specifications.md)
+  - [9. Deployment and CI/CD](./9-deployment-and-cicd.md)
+  - [10. Security](./10-security.md)
+  - [11. Backend Development Guidelines](./11-backend-development-guidelines.md)
+  - [12. Checklist Results Report](./12-checklist-results-report.md)
+  - [12.1 Architecture Migration Notes](./121-architecture-migration-notes.md)
+  - [13. V1 Data Migration Strategy](./13-v1-data-migration-strategy.md)

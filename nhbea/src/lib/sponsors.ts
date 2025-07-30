@@ -23,19 +23,4 @@ export async function getSponsors(): Promise<Sponsor[]> {
 }
 
 // Default sponsors fallback for when Firestore is unavailable
-export const defaultSponsors: Sponsor[] = [
-  {
-    id: '1',
-    name: 'Sample Sponsor 1',
-    logoURL: '/placeholder-logo.png',
-    website: 'https://example.com',
-    order: 1
-  },
-  {
-    id: '2',
-    name: 'Sample Sponsor 2',
-    logoURL: '/placeholder-logo.png',
-    website: 'https://example.com',
-    order: 2
-  }
-];
+export const defaultSponsors: Sponsor[] = [];

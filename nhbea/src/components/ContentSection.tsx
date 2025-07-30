@@ -42,7 +42,7 @@ export default function ContentSection({ title, content, imageURL, reverse = fal
           </div>
           
           {/* Image */}
-          {imageURL && (
+          {imageURL && imageURL.trim() !== '' && (
             <div className={`relative ${reverse ? 'lg:col-start-1' : ''}`}>
               <div className="relative group">
                 {/* Background decoration */}

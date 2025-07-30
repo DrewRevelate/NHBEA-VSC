@@ -1,6 +1,12 @@
 import { db } from './firebase';
 import { collection, doc, getDoc, getDocs, query, orderBy } from 'firebase/firestore';
 import { HomepageContent, ContentSection } from '@/types/content';
+import { 
+  validateHomepageContent, 
+  performContentIntegrityCheck, 
+  logContentWarning,
+  createSafeContent 
+} from './contentValidation';
 
 export async function getHomepageContent(): Promise<HomepageContent | null> {
   try {
@@ -8,7 +14,25 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      return docSnap.data() as HomepageContent;
+      const data = docSnap.data();
+      
+      // Perform content integrity check
+      const validationResult = await performContentIntegrityCheck(data, 'homepage');
+      
+      if (validationResult.warnings.length > 0) {
+        logContentWarning('homepage', validationResult.warnings);
+      }
+      
+      if (!validationResult.isValid) {
+        logContentWarning('homepage', validationResult.errors);
+        // Return fallback content if validation fails
+        return null;
+      }
+      
+      // Create safe content with fallbacks for any missing fields
+      const safeContent = createSafeContent(data, defaultHomepageContent);
+      
+      return safeContent;
     } else {
       console.warn('No homepage content found');
       return null;
@@ -25,14 +49,27 @@ export async function getContentSections(): Promise<ContentSection[]> {
     const querySnapshot = await getDocs(q);
     
     const sections: ContentSection[] = [];
-    querySnapshot.forEach((doc) => {
-      if (doc.id !== 'homepage') {
-        sections.push({
-          id: doc.id,
-          ...doc.data()
-        } as ContentSection);
+    
+    // Process each document with validation
+    for (const docSnapshot of querySnapshot.docs) {
+      if (docSnapshot.id !== 'homepage') {
+        const data = { id: docSnapshot.id, ...docSnapshot.data() };
+        
+        // Perform content integrity check
+        const validationResult = await performContentIntegrityCheck(data, 'section');
+        
+        if (validationResult.warnings.length > 0) {
+          logContentWarning(`content section ${docSnapshot.id}`, validationResult.warnings);
+        }
+        
+        if (validationResult.isValid && validationResult.validatedData) {
+          sections.push(validationResult.validatedData as ContentSection);
+        } else {
+          logContentWarning(`content section ${docSnapshot.id}`, validationResult.errors);
+          // Skip invalid sections rather than including them
+        }
       }
-    });
+    }
     
     return sections;
   } catch (error) {
