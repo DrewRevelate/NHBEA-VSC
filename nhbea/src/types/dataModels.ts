@@ -338,18 +338,24 @@ export interface PastPresident {
 
 /**
  * Hall of Fame Collection
- * Enhanced with member references where applicable
+ * Enhanced with member references and awards-based structure
  */
 export interface HallOfFameMember {
   id: string;
   memberId?: string; // Reference to Member document (if they're in the system)
   name: string;
-  year: number;
-  awardType: 'business_educator_of_the_year' | 'lifetime_achievement' | 'other';
-  bio: string;
+  bio?: string;
   imageUrl?: string;
-  achievements?: string[];
-  order: number; // Display order
+  // Awards-based structure
+  activeAwards: Array<{
+    awardId: string;
+    awardName: string;
+    year: number;
+    category?: string;
+  }>;
+  inductionYear: number; // Year of first active award
+  totalActiveAwards: number;
+  order: number; // Display order based on induction year
 }
 
 /**

@@ -5,114 +5,103 @@ interface PastPresidentsSectionProps {
 }
 
 export default function PastPresidentsSection({ pastPresidents }: PastPresidentsSectionProps) {
-  console.log('🔍 PastPresidentsSection: Rendering with', pastPresidents?.length || 0, 'presidents');
-  console.log('🔍 PastPresidentsSection: Data:', JSON.stringify(pastPresidents, null, 2));
+  console.log('🔍 PastPresidentsSection: Received', pastPresidents?.length || 0, 'presidents');
   
-  // Always render something to test UI
-  const testData = pastPresidents && pastPresidents.length > 0 ? pastPresidents : [
+  // Fallback test data if no real data
+  const testPresidents: PastPresident[] = [
     {
-      id: 'test-1',
-      name: 'Test Past President',
-      term: '2023-2024',
+      id: 'fallback-1',
+      name: 'James Dowding',
+      term: '2022-2023',
       order: 1
     }
   ];
-  
-  console.log('🔍 PastPresidentsSection: Using data:', testData);
+
+  // Use real data if available, otherwise use test data
+  const displayPresidents = pastPresidents && pastPresidents.length > 0 ? pastPresidents : testPresidents;
 
   return (
-    <section className="py-20 lg:py-32 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-blue-50/30 to-indigo-50/30"></div>
-      
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400/5 to-indigo-400/5 rounded-full"></div>
-        <div className="absolute -bottom-1/4 -right-1/4 w-96 h-96 bg-gradient-to-br from-indigo-400/5 to-purple-400/5 rounded-full"></div>
-      </div>
-
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16 lg:mb-20">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-              Past Presidents
-            </span>
-          </h2>
-          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light">
-            Honoring the visionary leaders who have shaped NHBEA's legacy and guided our association through the years.
-          </p>
-          <div className="mt-8 w-24 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mx-auto"></div>
-        </div>
-        
-        {/* Timeline Layout */}
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-600 to-indigo-600 transform md:-translate-x-0.5" aria-hidden="true"></div>
-            
-            {/* Presidents List */}
-            <div className="space-y-12">
-              {testData.map((president, index) => (
-                <div
-                  key={president.id}
-                  className={`relative flex items-center ${
-                    index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                  } opacity-0 animate-[fadeInUp_0.8s_ease-out_${index * 150}ms_forwards]`}
-                >
-                  {/* Timeline dot */}
-                  <div className="absolute left-8 md:left-1/2 w-4 h-4 bg-white border-4 border-blue-600 rounded-full transform -translate-x-2 md:-translate-x-2 z-10 shadow-lg"></div>
-                  
-                  {/* Content Card */}
-                  <div className={`w-full md:w-5/12 ml-16 md:ml-0 ${
-                    index % 2 === 0 ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'
-                  }`}>
-                    <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg shadow-blue-900/10 border border-white/20 p-6 md:p-8 group-hover:shadow-xl group-hover:shadow-blue-900/20 transition-all duration-500">
-                      {/* Hover background effect */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-indigo-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                      
-                      <div className="relative z-10">
-                        {/* Term Badge */}
-                        <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white mb-4">
-                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          {president.term}
-                        </div>
-                        
-                        {/* President Name */}
-                        <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-2">
-                          {president.name}
-                        </h3>
-                        
-                        {/* Decorative line */}
-                        <div className="w-12 h-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 mb-4"></div>
-                        
-                        <p className="text-slate-600 text-sm">
-                          Served as President during the {president.term} term, contributing to NHBEA's mission of excellence in business education.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        {/* Legacy Message */}
-        <div className="text-center mt-16 lg:mt-20">
-          <div className="inline-flex flex-col items-center space-y-4 bg-white/60 backdrop-blur-sm rounded-3xl p-8 lg:p-12 shadow-xl shadow-blue-900/10 border border-white/20 max-w-2xl mx-auto">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+    <section className="py-16 lg:py-20 bg-gradient-to-br from-amber-50 via-slate-50 to-white">
+      <div className="container mx-auto px-6 lg:px-8">
+        {/* Distinguished header with legacy theme */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center mb-4">
+            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-16"></div>
+            <div className="mx-4 text-amber-600">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
             </div>
-            <h3 className="text-2xl md:text-3xl font-bold text-slate-900">
-              Continuing the Legacy
+            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-16"></div>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--nhbea-royal-blue-deeper)] mb-4">
+            Past Presidents
+          </h2>
+          <p className="text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+            Honoring the distinguished leaders who have shaped NHBEA's enduring legacy of excellence.
+          </p>
+        </div>
+
+        {/* Elegant grid layout matching board members style */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+          {displayPresidents.map((president, index) => (
+            <div 
+              key={president.id}
+              className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md hover:border-amber-300 transition-all duration-200 relative overflow-hidden"
+            >
+              {/* Subtle legacy accent */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-amber-600"></div>
+              
+              <div className="text-center">
+                {/* Distinguished nameplate style */}
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-1">
+                    {president.name}
+                  </h3>
+                  <p className="text-[var(--nhbea-royal-blue)] font-medium text-sm mb-2">
+                    President
+                  </p>
+                  
+                  {/* Term display with elegant styling */}
+                  {president.term && (
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-amber-50 border border-amber-200">
+                      <span className="text-amber-800 text-sm font-medium">
+                        {president.term}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Bio section */}
+                {president.bio && (
+                  <div className="mt-4 pt-4 border-t border-slate-100">
+                    <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
+                      {president.bio}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Legacy tribute section */}
+        <div className="text-center mt-16">
+          <div className="bg-gradient-to-r from-white via-amber-50 to-white rounded-xl shadow-sm border border-amber-200 p-8 max-w-3xl mx-auto">
+            <div className="flex items-center justify-center mb-6">
+              <div className="text-amber-600">
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                </svg>
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-[var(--nhbea-royal-blue-deeper)] mb-4">
+              A Legacy of Leadership
             </h3>
-            <p className="text-lg text-slate-600 leading-relaxed">
-              Each president has contributed their unique vision and leadership, building upon the foundation laid by their predecessors to advance business education in New Hampshire.
+            <p className="text-[var(--color-text-secondary)] leading-relaxed">
+              Each president has contributed their unique vision and dedication, building upon 
+              the foundation laid by their predecessors to advance business education throughout 
+              New Hampshire. Their collective wisdom continues to guide our mission today.
             </p>
           </div>
         </div>

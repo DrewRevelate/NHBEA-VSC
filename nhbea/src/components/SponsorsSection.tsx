@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Sponsor } from '@/types/sponsors';
+import SponsorImage from './SponsorImage';
 
 interface SponsorsSectionProps {
   sponsors: Sponsor[];
@@ -38,24 +38,10 @@ export default function SponsorsSection({ sponsors }: SponsorsSectionProps) {
                 {/* Brand-consistent hover background effect */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[var(--nhbea-royal-blue)]/5 to-[var(--nhbea-royal-blue-light)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
-                {sponsor.logoURL && sponsor.logoURL.trim() !== '' ? (
-                  <Image
-                    src={sponsor.logoURL}
-                    alt={`${sponsor.name} logo`}
-                    width={160}
-                    height={160}
-                    className="relative z-10 object-contain max-w-full max-h-full grayscale group-hover:grayscale-0 transition-all duration-500"
-                  />
-                ) : (
-                  <div className="relative z-10 text-center">
-                    <div className="text-4xl font-bold text-slate-400 mb-2">
-                      {sponsor.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="text-xs text-slate-500">
-                      {sponsor.name}
-                    </div>
-                  </div>
-                )}
+                <SponsorImage
+                  logoURL={sponsor.logoURL}
+                  sponsorName={sponsor.name}
+                />
               </div>
               
               {/* Brand-consistent tooltip */}

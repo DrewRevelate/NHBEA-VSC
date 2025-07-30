@@ -1,0 +1,114 @@
+[
+  {
+    "id": "0Z1z9Tz9UdNvHtE8BEHt",
+    "name": "Pearson Education",
+    "website": "https://www.pearson.com",
+    "order": 1,
+    "logo": "public/Sponsors/0d8j6_Pearson.jpg",
+    "logoURL": "public/Sponsors/Pearson.jpg"
+  },
+  {
+    "id": "CEn8DP7yxsPFfIZJn98d",
+    "logo": "gv4gm_Granite State College.jpg",
+    "order": 2,
+    "logoURL": "public/Sponsors/Granite State College.jpg",
+    "name": "Granite State College",
+    "website": "https://www.granite.edu"
+  },
+  {
+    "id": "JlObA1OSrff59NFVdFg4",
+    "logoURL": "public/Sponsors/Cengage.png",
+    "order": 3,
+    "name": "Cengage Learning",
+    "website": "https://www.cengage.com",
+    "logo": "sz6jm_Cengage.png"
+  },
+  {
+    "id": "JwkNnIpckEje71tyIqGc",
+    "website": "https://www.intuit.com/education",
+    "logo": "q2345_Intuit.jpg",
+    "order": 4,
+    "logoURL": "public/Sponsors/Intuit.jpg",
+    "name": "Intuit Education"
+  },
+  {
+    "id": "SuCONokvK7dXDq1Ls1uz",
+    "logo": "sponsors/08ik9_NHBA-2c500px.webp",
+    "name": "NH Banking Association",
+    "logoURL": "public/Sponsors/NH Bankers Association.webp",
+    "order": 5,
+    "website": "https://nhbankers.org"
+  },
+  {
+    "id": "YdeewggYaR2oGrpMzjbi",
+    "order": 6,
+    "name": "Stukent",
+    "logoURL": "public/Sponsors/Stukent.webp",
+    "logo": "",
+    "website": "https://www.stukent.com"
+  },
+  {
+    "id": "a3pqq5wfywnqG591IZPg",
+    "logoURL": "public/Sponsors/Knowledge Matters.png",
+    "logo": "sponsors/8m1yl_images.png",
+    "name": "Knowledge Matters",
+    "order": 7,
+    "website": "https://www.knowledgematters.com"
+  },
+  {
+    "id": "cioaYHKKlEXKcVsav03J",
+    "website": "https://www.nhdeca.org",
+    "name": "DECA NH",
+    "order": 8,
+    "logo": "gs://nhbea-64cab.firebasestorage.app/Sponsors/Deca.png",
+    "logoURL": "public/Sponsors/Deca.png"
+  },
+  {
+    "id": "dC1kHYkyXMaC1HntJLau",
+    "name": "Future Business Leaders of America",
+    "order": 9,
+    "logoURL": "public/Sponsors/FBLA.png",
+    "logo": "sponsors/zt7fn_cropped-cropped-FBLA_HorizontalLogo-600x464-1-1.png",
+    "website": "https://www.fbla.org"
+  },
+  {
+    "id": "feuQcV6N0F03mQxAVxaf",
+    "logoURL": "public/Sponsors/Junior Achievement USA.png",
+    "name": "Junior Achievement of NH",
+    "logo": "sponsors/0y99e_jausa-worldwide.png",
+    "order": 10,
+    "website": "https://www.janh.org"
+  },
+  {
+    "id": "icxxt2ld0xzpauYLceyb",
+    "order": 11,
+    "logoURL": "public/Sponsors/TD Bank.png",
+    "logo": "sponsors/e3z7x_TD Bank.webp",
+    "name": "TD Bank",
+    "website": "https://www.td.com"
+  },
+  {
+    "id": "kazVrrIdgxgex2LA7cHo",
+    "website": "https://everfi.com",
+    "name": "EVERFI",
+    "logo": "sponsors/nxyzs_everfi-logo-color.webp",
+    "logoURL": "public/Sponsors/Everfi.webp",
+    "order": 12
+  },
+  {
+    "id": "tNNpS26avGwEDUHvM449",
+    "order": 13,
+    "logo": "sponsors/epyek_Citizens-Bank-logo.jpg",
+    "website": "https://www.citizensbank.com",
+    "name": "Citizens Bank",
+    "logoURL": "public/Sponsors/Citizens Bank.jpg"
+  },
+  {
+    "id": "zBVwXhAM33Ce9pcEN4iH",
+    "website": "https://www.mheducation.com",
+    "name": "McGraw Hill Education",
+    "order": 14,
+    "logo": "sponsors/4tz7v_35406-1.jpeg",
+    "logoURL": "public/Sponsors/McGraw Hill.svg"
+  }
+]

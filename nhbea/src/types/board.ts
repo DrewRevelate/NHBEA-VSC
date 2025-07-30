@@ -5,6 +5,7 @@ export interface BoardMember {
   id: string;
   name: string;
   title: string;
+  secondaryTitle?: string;
   bio: string;
   imageURL?: string;
   order?: number;

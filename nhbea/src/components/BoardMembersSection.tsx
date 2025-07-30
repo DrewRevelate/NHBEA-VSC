@@ -1,6 +1,11 @@
-import Image from 'next/image';
 import { BoardMember } from '@/types/board';
 import { Member } from '@/types/dataModels';
+import MemberImage from './MemberImage';
+
+// Extended interface for display with optional fields
+interface DisplayBoardMember extends BoardMember {
+  secondaryTitle?: string;
+}
 
 interface BoardMembersSectionProps {
   boardMembers: BoardMember[];
@@ -23,19 +28,30 @@ export default function BoardMembersSection({ boardMembers, enhancedMembers }: B
   }
   
   // If enhanced members are provided, convert them to display format
-  let displayMembers = boardMembers || [];
+  let displayMembers: DisplayBoardMember[] = boardMembers || [];
   
   if (enhancedMembers && enhancedMembers.length > 0) {
     displayMembers = enhancedMembers
       .filter(member => member.profile?.activeBoardMember)
-      .map(member => ({
-        id: member.id,
-        name: `${member.personalInfo?.firstName || ''} ${member.personalInfo?.lastName || ''}`.trim(),
-        title: member.profile?.boardPosition || 'Board Member',
-        bio: member.profile?.bio || '',
-        imageURL: undefined, // No photo URL available in current data model
-        order: member.profile?.boardOrder || getBoardPositionOrder(member.profile?.boardPosition)
-      }))
+      .map(member => {
+        // Build name with optional prefix
+        const prefix = member.personalInfo?.prefix;
+        const firstName = member.personalInfo?.firstName?.trim() || '';
+        const lastName = member.personalInfo?.lastName?.trim() || '';
+        const fullName = prefix 
+          ? `${prefix} ${firstName} ${lastName}`.trim()
+          : `${firstName} ${lastName}`.trim();
+
+        return {
+          id: member.id,
+          name: fullName,
+          title: member.profile?.boardPosition || 'Board Member',
+          secondaryTitle: member.organization?.secondary_title,
+          bio: member.profile?.bio || '',
+          imageURL: member.image,
+          order: member.profile?.boardOrder || getBoardPositionOrder(member.profile?.boardPosition)
+        };
+      })
       .sort((a, b) => (a.order || 999) - (b.order || 999));
   }
 
@@ -60,23 +76,12 @@ export default function BoardMembersSection({ boardMembers, enhancedMembers }: B
               className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md hover:border-slate-300 transition-all duration-200"
             >
               <div className="text-center">
-                {/* Simplified member photo */}
+                {/* Member photo with Firebase Storage integration */}
                 <div className="mb-4">
-                  <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-[var(--nhbea-royal-blue-subtle)] to-[var(--nhbea-royal-blue-light)] flex items-center justify-center">
-                    {member.imageURL ? (
-                      <Image
-                        src={member.imageURL}
-                        alt={`${member.name} photo`}
-                        width={80}
-                        height={80}
-                        className="w-full h-full object-cover rounded-full"
-                      />
-                    ) : (
-                      <svg className="w-10 h-10 text-[var(--nhbea-royal-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                    )}
-                  </div>
+                  <MemberImage
+                    imagePath={member.imageURL}
+                    memberName={member.name}
+                  />
                 </div>
 
                 {/* Clean member info */}
@@ -84,9 +89,15 @@ export default function BoardMembersSection({ boardMembers, enhancedMembers }: B
                   <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-1">
                     {member.name}
                   </h3>
-                  <p className="text-[var(--nhbea-royal-blue)] font-medium text-sm mb-3">
+                  <p className="text-[var(--nhbea-royal-blue)] font-medium text-sm mb-1">
                     {member.title}
                   </p>
+                  {member.secondaryTitle && (
+                    <p className="text-[var(--color-text-secondary)] text-xs mb-3 italic">
+                      {member.secondaryTitle}
+                    </p>
+                  )}
+                  {!member.secondaryTitle && <div className="mb-3"></div>}
                   {member.bio && (
                     <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
                       {member.bio}

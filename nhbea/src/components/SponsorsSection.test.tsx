@@ -22,6 +22,40 @@ jest.mock('next/link', () => {
   };
 });
 
+// Mock SponsorImage component to avoid Firebase Storage calls in tests
+jest.mock('./SponsorImage', () => {
+  return function MockSponsorImage({ logoURL, sponsorName }: any) {
+    if (logoURL && logoURL.trim() !== '') {
+      return (
+        <img
+          src={logoURL}
+          alt={`${sponsorName} logo`}
+          width={160}
+          height={160}
+          className="relative z-10 object-contain max-w-full max-h-full grayscale group-hover:grayscale-0 transition-all duration-500"
+        />
+      );
+    }
+    return (
+      <div className="relative z-10 text-center">
+        <div className="text-4xl font-bold text-slate-400 mb-2">
+          {sponsorName.charAt(0).toUpperCase()}
+        </div>
+        <div className="text-xs text-slate-500">
+          {sponsorName}
+        </div>
+      </div>
+    );
+  };
+});
+
+// Mock the image utilities
+jest.mock('@/lib/imageUtils', () => ({
+  getSponsorImageUrl: jest.fn().mockImplementation((path: string) => 
+    Promise.resolve(path ? `https://example.com/${path}` : null)
+  ),
+}));
+
 describe('SponsorsSection', () => {
   const mockSponsors: Sponsor[] = [
     {

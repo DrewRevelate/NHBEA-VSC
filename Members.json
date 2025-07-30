@@ -1,0 +1,334 @@
+[
+  {
+    "id": "068KDPKZoo2uxXCatUr0",
+    "profile": {
+      "past_president": {
+        "past_president": true
+      },
+      "boardOrder": 3,
+      "boardPosition": "Past President",
+      "activeBoardMember": true
+    },
+    "personalInfo": {
+      "firstName": "James",
+      "lastName": "Dowding",
+      "address": {}
+    },
+    "metadata": {
+      "updatedAt": "2025-07-30T01:37:25.523Z",
+      "createdAt": "2025-07-29T21:34:50.884Z"
+    },
+    "preferences": {
+      "emailNotifications": true,
+      "directoryListing": true,
+      "newsletterSubscription": true
+    },
+    "organization": {
+      "0": "e",
+      "1": "t",
+      "2": "V",
+      "3": "i",
+      "4": "b",
+      "5": "Y",
+      "6": "H",
+      "7": "5",
+      "8": "u",
+      "9": "o",
+      "10": "V",
+      "11": "T",
+      "12": "L",
+      "13": "k",
+      "14": "K",
+      "15": "a",
+      "16": "Z",
+      "17": "N",
+      "18": "Z",
+      "19": "B",
+      "address": "organizations/hzLJH8GFPglBkzhHUH21",
+      "title": "Business Teacher"
+    },
+    "image": "public/Member_Images/xv3i7_James Dowding.png",
+    "membership": {
+      "autoRenewal": true,
+      "status": "active",
+      "type": "individual"
+    }
+  },
+  {
+    "id": "B8qWOjqD9ooTBBWzlNJA",
+    "organization": {
+      "title": "Professor",
+      "address": "organizations/97bwfsWo7yCHG2YTPPp1"
+    },
+    "image": "public/Member_Images/4mgmz_Dorothy-Ogara.webp",
+    "hall_of_fame": {
+      "isactive": true,
+      "award": [
+        {
+          "id": "fQov02WYbLHCyvYR7808",
+          "path": "awards"
+        },
+        {
+          "id": "O8KZ53z8yPOwuYErRFZw",
+          "path": "awards"
+        }
+      ]
+    },
+    "membership": {
+      "status": "active",
+      "renewalDate": null,
+      "joinDate": null,
+      "type": "individual",
+      "autoRenewal": true,
+      "membershipYear": null
+    },
+    "preferences": {
+      "emailNotifications": false,
+      "directoryListing": true,
+      "newsletterSubscription": false
+    },
+    "awards": [
+      {
+        "active": true,
+        "year": 2025,
+        "award": "awards/fQov02WYbLHCyvYR7808"
+      },
+      {
+        "award": "awards/O8KZ53z8yPOwuYErRFZw",
+        "active": true,
+        "year": 2025
+      }
+    ],
+    "metadata": {
+      "createdAt": "2025-07-28T20:22:15.881Z",
+      "createdBy": null,
+      "updatedAt": "2025-07-30T18:53:20.519Z"
+    },
+    "personalInfo": {
+      "lastName": "O'Gara",
+      "phone": null,
+      "firstName": "Dorothy",
+      "email": null,
+      "prefix": "Dr.",
+      "address": {}
+    },
+    "profile": {
+      "boardOrder": 1,
+      "bio": null,
+      "boardPosition": "President",
+      "activeBoardMember": true,
+      "past_president": {}
+    }
+  },
+  {
+    "id": "MpFyC6Zy2mxAfWFnuvA6",
+    "metadata": {
+      "createdAt": "2025-07-29T21:34:50.935Z",
+      "updatedAt": "2025-07-30T01:37:33.205Z"
+    },
+    "personalInfo": {
+      "firstName": "Sarah\n",
+      "lastName": "Compagna",
+      "address": {}
+    },
+    "membership": {
+      "status": "active",
+      "type": "individual",
+      "autoRenewal": true
+    },
+    "image": "public/Member_Images/cwi0s_Sarah Compagna.jpeg",
+    "organization": {
+      "0": "C",
+      "1": "k",
+      "2": "e",
+      "3": "d",
+      "4": "z",
+      "5": "x",
+      "6": "b",
+      "7": "C",
+      "8": "s",
+      "9": "r",
+      "10": "w",
+      "11": "X",
+      "12": "A",
+      "13": "8",
+      "14": "C",
+      "15": "k",
+      "16": "F",
+      "17": "Q",
+      "18": "W",
+      "19": "7",
+      "title": "Business Teacher",
+      "address": "organizations/CkedzxbCsrwXA8CkFQW7"
+    },
+    "profile": {
+      "boardOrder": 6,
+      "boardPosition": "Director",
+      "activeBoardMember": true,
+      "past_president": {}
+    },
+    "preferences": {
+      "directoryListing": true
+    }
+  },
+  {
+    "id": "f3D9O6RUeF9OkgPxfjfT",
+    "organization": {
+      "0": "L",
+      "1": "y",
+      "2": "g",
+      "3": "k",
+      "4": "9",
+      "5": "g",
+      "6": "R",
+      "7": "G",
+      "8": "n",
+      "9": "q",
+      "10": "S",
+      "11": "G",
+      "12": "i",
+      "13": "c",
+      "14": "d",
+      "15": "w",
+      "16": "A",
+      "17": "z",
+      "18": "C",
+      "19": "X",
+      "title": "Professor",
+      "address": "organizations/Lygk9gRGnqSGicdwAzCX",
+      "secondary_title": "C/O Department of Business Studies"
+    },
+    "membership": {
+      "status": "active",
+      "autoRenewal": true,
+      "type": "individual"
+    },
+    "preferences": {
+      "directoryListing": true
+    },
+    "personalInfo": {
+      "lastName": "Magoon",
+      "firstName": "Michael",
+      "address": {
+        "country": "United States",
+        "street": "1066 Front Street",
+        "city": "Manchester",
+        "zip_code": "03102",
+        "state": "NH"
+      }
+    },
+    "image": "public/Member_Images/nytqf_Michael Magoon.jpeg",
+    "metadata": {
+      "createdAt": "2025-07-29T21:34:50.993Z",
+      "updatedAt": "2025-07-30T18:53:32.103Z"
+    },
+    "profile": {
+      "activeBoardMember": true,
+      "boardOrder": 2,
+      "boardPosition": "Vice President",
+      "past_president": {}
+    }
+  },
+  {
+    "id": "hA4XeP13wUaof7fJBjsO",
+    "preferences": {
+      "directoryListing": true
+    },
+    "personalInfo": {
+      "lastName": "Matarazzo",
+      "firstName": "Maria",
+      "address": {}
+    },
+    "metadata": {
+      "updatedAt": "2025-07-30T01:37:49.498Z",
+      "createdAt": "2025-07-29T21:34:51.021Z"
+    },
+    "profile": {
+      "boardOrder": 5,
+      "boardPosition": "Director",
+      "activeBoardMember": true,
+      "past_president": {}
+    },
+    "image": "public/Member_Images/ji76i_Maria Matarazzo.webp",
+    "membership": {
+      "status": "active",
+      "type": "individual",
+      "autoRenewal": true
+    },
+    "organization": {
+      "0": "i",
+      "1": "o",
+      "2": "L",
+      "3": "F",
+      "4": "s",
+      "5": "E",
+      "6": "S",
+      "7": "t",
+      "8": "Z",
+      "9": "b",
+      "10": "p",
+      "11": "S",
+      "12": "b",
+      "13": "7",
+      "14": "m",
+      "15": "9",
+      "16": "o",
+      "17": "9",
+      "18": "q",
+      "19": "c",
+      "title": "Senior Adjunct Professor",
+      "address": "organizations/ioLFsEStZbpSb7m9o9qc"
+    }
+  },
+  {
+    "id": "hzQMk4IKmsOHR33yaCjU",
+    "image": "public/Member_Images/1vwwb_Christian Marcelo.jpeg",
+    "organization": {
+      "0": "L",
+      "1": "y",
+      "2": "g",
+      "3": "k",
+      "4": "9",
+      "5": "g",
+      "6": "R",
+      "7": "G",
+      "8": "n",
+      "9": "q",
+      "10": "S",
+      "11": "G",
+      "12": "i",
+      "13": "c",
+      "14": "d",
+      "15": "w",
+      "16": "A",
+      "17": "z",
+      "18": "C",
+      "19": "X",
+      "title": "Professor",
+      "address": "organizations/Lygk9gRGnqSGicdwAzCX"
+    },
+    "membership": {
+      "autoRenewal": true,
+      "status": "active",
+      "type": "individual"
+    },
+    "profile": {
+      "boardOrder": 4,
+      "boardPosition": "Treasurer",
+      "activeBoardMember": true,
+      "past_president": {}
+    },
+    "preferences": {
+      "directoryListing": true
+    },
+    "metadata": {
+      "updatedAt": "2025-07-30T01:37:52.358Z",
+      "createdAt": "2025-07-29T21:34:51.074Z"
+    },
+    "personalInfo": {
+      "firstName": "Christian\n",
+      "lastName": "Marcelo",
+      "address": {}
+    }
+  }
+]

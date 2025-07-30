@@ -99,13 +99,13 @@
        - Neutral Grays (30%): Use for text, backgrounds, borders, layout structure  
        - Accent Colors (10%): Use sparingly for highlights, success states, special CTAs
     */
-    /* Primary Royal Blue System (60% usage) */
-    --nhbea-royal-blue: #2563eb;
-    --nhbea-royal-blue-dark: #1e40af;
-    --nhbea-royal-blue-deeper: #1e3a8a;
-    --nhbea-royal-blue-light: #3b82f6;
-    --nhbea-royal-blue-lighter: #60a5fa;
-    --nhbea-royal-blue-subtle: #93c5fd;
+    /* Primary Navy System (60% usage) - Professional & Mature */
+    --nhbea-royal-blue: #1a365d;        /* Deep professional navy */
+    --nhbea-royal-blue-dark: #0f2242;   /* Darker navy for emphasis */
+    --nhbea-royal-blue-deeper: #0c1a33; /* Deepest navy for authority */
+    --nhbea-royal-blue-light: #2c5282;  /* Medium navy for interactive */
+    --nhbea-royal-blue-lighter: #3b5a7e;/* Lighter navy for backgrounds */
+    --nhbea-royal-blue-subtle: #cbd5e1; /* Light gray-blue for subtle areas */
     
     /* Neutral Foundation (30% usage) - CORRECTED to match brand documentation */
     --nhbea-gray-50: #f8fafc;
@@ -119,13 +119,13 @@
     --nhbea-gray-800: #1e293b;
     --nhbea-gray-900: #0f172a;
     
-    /* Accent Colors (10% usage) */
-    --nhbea-accent-orange: #ea580c;
-    --nhbea-accent-orange-light: #fb923c;
-    --nhbea-accent-orange-dark: #c2410c;
-    --nhbea-accent-gold: #fbbf24;
-    --nhbea-accent-gold-light: #fcd34d;
-    --nhbea-accent-gold-dark: #d97706;
+    /* Accent Colors (10% usage) - Muted & Professional */
+    --nhbea-accent-orange: #d97706;     /* Muted amber instead of bright orange */
+    --nhbea-accent-orange-light: #f59e0b;
+    --nhbea-accent-orange-dark: #b45309;
+    --nhbea-accent-gold: #d69e2e;      /* Sophisticated gold */
+    --nhbea-accent-gold-light: #ecc94b;
+    --nhbea-accent-gold-dark: #b7791f;
     --nhbea-accent-green: #059669;
     --nhbea-accent-green-light: #10b981;
     --nhbea-accent-green-dark: #047857;
@@ -793,16 +793,16 @@ html {
   
   /* Enhanced Button System - Conservative Royal Blue Brand */
   .nhbea-button-primary {
-    background: linear-gradient(135deg, var(--nhbea-royal-blue) 0%, var(--nhbea-royal-blue-dark) 100%);
+    background: var(--nhbea-royal-blue);
     color: var(--nhbea-gray-50);
     font-family: var(--font-primary);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-medium);
     font-size: var(--text-base);
     padding: var(--space-md) var(--space-xl);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
-    box-shadow: var(--shadow-brand);
+    box-shadow: var(--shadow-soft);
     transition: all var(--duration-slow) var(--ease-standard);
     position: relative;
     overflow: hidden;
@@ -814,9 +814,9 @@ html {
   }
   
   .nhbea-button-primary:hover {
-    background: linear-gradient(135deg, var(--nhbea-royal-blue-dark) 0%, var(--nhbea-royal-blue-deeper) 100%);
+    background: var(--nhbea-royal-blue-dark);
     box-shadow: var(--shadow-medium);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
   
   .nhbea-button-primary:focus {
@@ -865,18 +865,18 @@ html {
     transform: translateY(0);
   }
   
-  /* CTA Button - Warm Orange Accent (10% usage rule) */
+  /* CTA Button - Warm Gold Accent (10% usage rule) */
   .nhbea-button-cta {
-    background: linear-gradient(135deg, var(--nhbea-accent-orange) 0%, var(--nhbea-accent-orange-dark) 100%);
+    background: var(--nhbea-accent-gold-dark);
     color: var(--nhbea-gray-50);
     font-family: var(--font-primary);
-    font-weight: var(--font-bold);
+    font-weight: var(--font-semibold);
     font-size: var(--text-base);
     padding: var(--space-md) var(--space-xl);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
-    box-shadow: var(--shadow-accent);
+    box-shadow: var(--shadow-soft);
     transition: all var(--duration-slow) var(--ease-standard);
     position: relative;
     overflow: hidden;
@@ -888,9 +888,9 @@ html {
   }
   
   .nhbea-button-cta:hover {
-    background: linear-gradient(135deg, var(--nhbea-accent-orange-dark) 0%, var(--nhbea-accent-orange) 100%);
+    background: var(--nhbea-accent-gold);
     box-shadow: var(--shadow-medium);
-    transform: translateY(-3px);
+    transform: translateY(-1px);
   }
   
   .nhbea-button-cta:focus {
@@ -1141,8 +1141,8 @@ html {
   
   .nhbea-nav-link:hover {
     color: var(--nhbea-royal-blue);
-    background: var(--nhbea-royal-blue-subtle);
-    transform: translateY(-1px);
+    background: transparent;
+    transform: none;
   }
   
   .nhbea-nav-link:focus {

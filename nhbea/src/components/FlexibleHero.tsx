@@ -104,35 +104,34 @@ export function FlexibleHero(props: FlexibleHeroProps) {
 function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps & { className: string }) {
   return (
     <section 
-      className={`${className} min-h-screen flex items-center justify-center bg-gradient-to-br from-[var(--nhbea-royal-blue)] via-[var(--nhbea-royal-blue-dark)] to-[var(--nhbea-royal-blue-deeper)]`}
+      className={`${className} min-h-screen flex items-center justify-center bg-[var(--nhbea-royal-blue-dark)]`}
       role="banner"
       aria-label="Hero section"
     >
-      {/* Background gradient overlay */}
+      {/* Subtle texture overlay for depth */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--nhbea-royal-blue)] via-[var(--nhbea-royal-blue-dark)] to-[var(--nhbea-royal-blue-deeper)]"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent"></div>
-        <div 
-          className="absolute top-0 right-0 w-full h-full opacity-10"
-          style={{
-            backgroundImage: `radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)`
-          }}
-        ></div>
+        <div className="absolute inset-0 bg-[var(--nhbea-royal-blue-dark)]"></div>
+        <div className="absolute inset-0" style={{
+          backgroundImage: `linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.1) 100%)`
+        }}></div>
+        <div className="absolute inset-0 opacity-[0.02]" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}></div>
       </div>
 
       <div className="relative z-10 container mx-auto px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center">
           {/* Main heading */}
           <div className="mb-8 animate-fade-in">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white leading-tight tracking-tight">
-              <span className="block">New Hampshire</span>
-              <span className="block text-4xl md:text-5xl lg:text-6xl text-white/90 font-semibold">Business Educators Association</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal mb-6 text-white leading-tight">
+              <span className="block tracking-wide">New Hampshire</span>
+              <span className="block text-3xl md:text-4xl lg:text-5xl text-white/90 font-light tracking-wide">Business Educators Association</span>
             </h1>
           </div>
           
           {/* Subtitle */}
           <div className="mb-12 animate-slide-up animation-delay-200">
-            <p className="text-xl md:text-2xl max-w-4xl mx-auto text-white/90 leading-relaxed font-light">
+            <p className="text-lg md:text-xl max-w-3xl mx-auto text-white/80 leading-relaxed">
               {content?.heroSubtitle || "Promoting excellence in business education throughout New Hampshire through professional development, networking, and career advancement opportunities."}
             </p>
           </div>
@@ -140,34 +139,34 @@ function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps 
           {/* Value propositions */}
           <div className="mb-16 animate-slide-up animation-delay-300">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              <div className="flex flex-col items-center text-center p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
-                <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white/30 transition-colors duration-300">
+              <div className="flex flex-col items-center text-center p-8 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 group">
+                <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors duration-300">
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.168 18.477 18.582 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-4">Professional Development</h3>
-                <p className="text-white/80 leading-relaxed">Continuous learning opportunities and certification programs to advance your career</p>
+                <p className="text-white/70 leading-relaxed text-sm">Continuous learning opportunities and certification programs to advance your career</p>
               </div>
               
-              <div className="flex flex-col items-center text-center p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
-                <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white/30 transition-colors duration-300">
+              <div className="flex flex-col items-center text-center p-8 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 group">
+                <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors duration-300">
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-4">Networking</h3>
-                <p className="text-white/80 leading-relaxed">Connect with fellow educators and industry professionals across New Hampshire</p>
+                <p className="text-white/70 leading-relaxed text-sm">Connect with fellow educators and industry professionals across New Hampshire</p>
               </div>
               
-              <div className="flex flex-col items-center text-center p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
-                <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white/30 transition-colors duration-300">
+              <div className="flex flex-col items-center text-center p-8 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 group">
+                <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors duration-300">
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-4">Career Growth</h3>
-                <p className="text-white/80 leading-relaxed">Recognition programs and advancement opportunities in business education</p>
+                <p className="text-white/70 leading-relaxed text-sm">Recognition programs and advancement opportunities in business education</p>
               </div>
             </div>
           </div>
@@ -177,13 +176,13 @@ function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps 
             <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-lg mx-auto">
               <Link 
                 href="/membership/professional"
-                className="px-8 py-4 bg-[var(--nhbea-accent-orange)] text-white font-semibold rounded-xl hover:bg-[var(--nhbea-accent-orange-dark)] transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-center"
+                className="px-8 py-4 bg-[var(--nhbea-accent-gold-dark)] text-white font-medium rounded-lg hover:bg-[var(--nhbea-accent-gold)] transition-all duration-300 shadow-md hover:shadow-lg text-center"
               >
                 Become a Member
               </Link>
               <Link 
                 href="/conference"
-                className="px-8 py-4 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl border-2 border-white/30 hover:bg-white/30 transition-all duration-300 transform hover:scale-105 text-center"
+                className="px-8 py-4 bg-transparent text-white font-medium rounded-lg border-2 border-white/20 hover:bg-white/10 hover:border-white/30 transition-all duration-300 text-center"
               >
                 View Events
               </Link>

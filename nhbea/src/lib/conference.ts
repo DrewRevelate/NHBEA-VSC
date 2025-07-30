@@ -726,6 +726,15 @@ import {
 // Get conference speakers
 export async function getConferenceSpeakers(conferenceId: string): Promise<ConferenceSpeaker[]> {
   try {
+    // Check if the subcollection exists first
+    const speakersRef = collection(db, `conference/${conferenceId}/speakers`);
+    const speakersSnapshot = await getDocs(speakersRef);
+    
+    if (speakersSnapshot.empty) {
+      // No speakers subcollection exists, return empty array
+      return [];
+    }
+
     const q = query(
       collection(db, `conference/${conferenceId}/speakers`),
       orderBy('featured', 'desc'),
@@ -743,8 +752,8 @@ export async function getConferenceSpeakers(conferenceId: string): Promise<Confe
     
     return speakers;
   } catch (error) {
-    console.error('Error fetching conference speakers:', error);
-    // Return empty array instead of throwing to avoid breaking the page
+    // Silently handle missing subcollections or permission errors
+    console.warn('Conference speakers subcollection not available:', error);
     return [];
   }
 }
@@ -752,17 +761,24 @@ export async function getConferenceSpeakers(conferenceId: string): Promise<Confe
 // Get conference agenda/sessions
 export async function getConferenceAgenda(conferenceId: string): Promise<ConferenceAgenda | null> {
   try {
+    const sessionsRef = collection(db, `conference/${conferenceId}/sessions`);
+    const sessionsSnapshot = await getDocs(sessionsRef);
+    
+    if (sessionsSnapshot.empty) {
+      return null;
+    }
+
     const sessionsQuery = query(
       collection(db, `conference/${conferenceId}/sessions`),
       orderBy('startTime', 'asc')
     );
-    const sessionsSnapshot = await getDocs(sessionsQuery);
+    const orderedSnapshot = await getDocs(sessionsQuery);
     
     const sessions: ConferenceSession[] = [];
     const tracks = new Set<string>();
     const timeSlots = new Set<string>();
     
-    sessionsSnapshot.forEach((doc) => {
+    orderedSnapshot.forEach((doc) => {
       const data = doc.data();
       const session: ConferenceSession = {
         id: doc.id,
@@ -790,7 +806,7 @@ export async function getConferenceAgenda(conferenceId: string): Promise<Confere
       timeSlots: Array.from(timeSlots).sort()
     };
   } catch (error) {
-    console.error('Error fetching conference agenda:', error);
+    console.warn('Conference agenda subcollection not available:', error);
     return null;
   }
 }
@@ -798,6 +814,13 @@ export async function getConferenceAgenda(conferenceId: string): Promise<Confere
 // Get conference FAQs
 export async function getConferenceFAQs(conferenceId: string): Promise<ConferenceFAQ[]> {
   try {
+    const faqsRef = collection(db, `conference/${conferenceId}/faqs`);
+    const faqsSnapshot = await getDocs(faqsRef);
+    
+    if (faqsSnapshot.empty) {
+      return [];
+    }
+
     const q = query(
       collection(db, `conference/${conferenceId}/faqs`),
       orderBy('order', 'asc')
@@ -816,7 +839,7 @@ export async function getConferenceFAQs(conferenceId: string): Promise<Conferenc
     
     return faqs;
   } catch (error) {
-    console.error('Error fetching conference FAQs:', error);
+    console.warn('Conference FAQs subcollection not available:', error);
     return [];
   }
 }
@@ -840,7 +863,7 @@ export async function getVenueDetails(conferenceId: string): Promise<VenueDetail
     
     return null;
   } catch (error) {
-    console.error('Error fetching venue details:', error);
+    console.warn('Venue details not available:', error);
     return null;
   }
 }
@@ -857,7 +880,7 @@ export async function getSocialMediaConfig(conferenceId: string): Promise<Social
     
     return null;
   } catch (error) {
-    console.error('Error fetching social media config:', error);
+    console.warn('Social media config not available:', error);
     return null;
   }
 }
@@ -874,7 +897,7 @@ export async function getConferenceTheme(conferenceId: string): Promise<Conferen
     
     return null;
   } catch (error) {
-    console.error('Error fetching conference theme:', error);
+    console.warn('Conference theme not available:', error);
     return null;
   }
 }

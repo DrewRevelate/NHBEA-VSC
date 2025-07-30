@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { HallOfFameMember } from '@/types/dataModels';
+import MemberImage from './MemberImage';
 
 interface EnhancedHallOfFameGridProps {
   members: HallOfFameMember[];
@@ -90,34 +90,34 @@ function EnhancedMemberCard({ member, index }: { member: HallOfFameMember; index
       
       {/* Content */}
       <div className="relative p-8">
-        {/* Award Badge */}
+        {/* Award Badges - Show all active awards */}
         <div className="absolute top-4 right-4">
-          <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${getAwardBadgeColor(member.awardType)} shadow-lg`}>
-            {getAwardIcon(member.awardType)}
-            <span className="ml-1">{member.year}</span>
+          <div className="flex flex-col gap-1">
+            {member.activeAwards.slice(0, 2).map((award, idx) => (
+              <div key={award.awardId} className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${getAwardBadgeColor(award.category || 'general')} shadow-lg`}>
+                {getAwardIcon(award.category || 'general')}
+                <span className="ml-1">{award.year}</span>
+              </div>
+            ))}
+            {member.activeAwards.length > 2 && (
+              <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-muted to-foreground shadow-lg">
+                <span>+{member.activeAwards.length - 2}</span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Member Photo */}
         <div className="flex justify-center mb-6">
           <div className="relative">
-            <div className="w-32 h-32 rounded-full overflow-hidden bg-gradient-to-br from-secondary to-muted shadow-lg ring-4 ring-card group-hover:ring-primary/20 transition-all duration-300">
-              {member.imageUrl ? (
-                <Image
-                  src={member.imageUrl}
-                  alt={`${member.name} - Hall of Fame ${member.year}`}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="128px"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/20 text-primary">
-                  <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              )}
-            </div>
+            <MemberImage
+              imagePath={member.imageUrl}
+              memberName={member.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              containerClassName="w-32 h-32 rounded-full bg-gradient-to-br from-secondary to-muted shadow-lg ring-4 ring-card group-hover:ring-primary/20 transition-all duration-300 flex items-center justify-center"
+              width={128}
+              height={128}
+            />
             {/* Decorative ring */}
             <div className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-30 transition-opacity duration-300" style={{ padding: '2px' }}>
               <div className="w-full h-full rounded-full bg-card"></div>
@@ -130,11 +130,15 @@ function EnhancedMemberCard({ member, index }: { member: HallOfFameMember; index
           <h3 className="heading-4 mb-2 group-hover:text-primary transition-colors">
             {member.name}
           </h3>
-          <p className="text-primary font-semibold text-sm mb-1">
-            {formatAwardType(member.awardType)}
-          </p>
+          <div className="space-y-1 mb-1">
+            {member.activeAwards.map((award, idx) => (
+              <p key={award.awardId} className="text-primary font-semibold text-sm">
+                {award.awardName} ({award.year})
+              </p>
+            ))}
+          </div>
           <p className="text-muted-foreground text-sm font-medium">
-            Class of {member.year}
+            Inducted {member.inductionYear}
           </p>
         </div>
 
@@ -147,25 +151,28 @@ function EnhancedMemberCard({ member, index }: { member: HallOfFameMember; index
           </div>
         )}
 
-        {/* Achievements */}
-        {member.achievements && member.achievements.length > 0 && (
+        {/* Awards Details */}
+        {member.activeAwards && member.activeAwards.length > 0 && (
           <div className="space-y-3">
             <h4 className="text-sm font-bold text-foreground flex items-center">
               <svg className="w-4 h-4 mr-2 text-accent" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              Notable Achievements
+              Awards ({member.totalActiveAwards})
             </h4>
             <div className="space-y-2">
-              {member.achievements.slice(0, isHovered ? member.achievements.length : 3).map((achievement, idx) => (
-                <div key={idx} className="flex items-start group-hover:transform group-hover:translate-x-1 transition-transform duration-200" style={{ transitionDelay: `${idx * 50}ms` }}>
+              {member.activeAwards.slice(0, isHovered ? member.activeAwards.length : 2).map((award, idx) => (
+                <div key={award.awardId} className="flex items-start group-hover:transform group-hover:translate-x-1 transition-transform duration-200" style={{ transitionDelay: `${idx * 50}ms` }}>
                   <div className="w-2 h-2 bg-gradient-to-r from-primary to-accent rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <span className="text-xs text-muted-foreground leading-relaxed">{achievement}</span>
+                  <div className="text-xs text-muted-foreground leading-relaxed">
+                    <div className="font-medium">{award.awardName}</div>
+                    <div className="text-primary">{award.year} • {award.category}</div>
+                  </div>
                 </div>
               ))}
-              {!isHovered && member.achievements.length > 3 && (
+              {!isHovered && member.activeAwards.length > 2 && (
                 <div className="text-primary font-medium text-xs pl-5">
-                  +{member.achievements.length - 3} more achievements
+                  +{member.activeAwards.length - 2} more awards
                 </div>
               )}
             </div>
@@ -224,8 +231,8 @@ function FilterControls({
   onFilter: (filter: string) => void;
   selectedFilter: string;
 }) {
-  const awardTypes = [...new Set(members.map(m => m.awardType))];
-  const years = [...new Set(members.map(m => m.year))].sort((a, b) => b - a);
+  const awardTypes = [...new Set(members.flatMap(m => m.activeAwards.map(a => a.category)))].filter(Boolean);
+  const years = [...new Set(members.map(m => m.inductionYear))].sort((a, b) => b - a);
 
   const formatFilterLabel = (type: string) => {
     switch (type) {
@@ -252,7 +259,7 @@ function FilterControls({
           All Members ({members.length})
         </button>
         {awardTypes.map(type => {
-          const count = members.filter(m => m.awardType === type).length;
+          const count = members.filter(m => m.activeAwards.some(a => a.category === type)).length;
           return (
             <button
               key={type}
@@ -270,7 +277,7 @@ function FilterControls({
       </div>
       
       <div className="text-sm text-muted-foreground">
-        Showing {members.filter(m => selectedFilter === 'all' || m.awardType === selectedFilter).length} of {members.length} members
+        Showing {members.filter(m => selectedFilter === 'all' || m.activeAwards.some(a => a.category === selectedFilter)).length} of {members.length} members
       </div>
     </div>
   );
@@ -286,7 +293,7 @@ export default function EnhancedHallOfFameGrid({ members }: EnhancedHallOfFameGr
   }, []);
 
   const filteredMembers = members.filter(member => 
-    selectedFilter === 'all' || member.awardType === selectedFilter
+    selectedFilter === 'all' || member.activeAwards.some(a => a.category === selectedFilter)
   );
 
   if (isLoading) {
