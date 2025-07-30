@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "NHBEA Connect",
   description: "New Hampshire Business Education Association - Supporting business educators across the state",
+  metadataBase: new URL("https://nhbea-64cab.web.app"),
 };
 
 export default function RootLayout({
