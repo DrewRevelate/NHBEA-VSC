@@ -74,20 +74,70 @@ export default function ConferenceRegistrationFormWrapper({
         paymentStatus: 'pending' as const,
       };
 
-      // Store registrant in database
-      const registrantId = await registrantsRepository.createRegistrant(registrantData);
+      // Calculate total amount based on membership status and registration type
+      const fees = conference.registration.fees;
+      let totalAmount = 0;
+      
+      if (sanitizedData.registrationType === 'early_bird' && fees.earlyBird) {
+        totalAmount = fees.earlyBird.amount;
+      } else if (sanitizedData.membershipStatus === 'member') {
+        totalAmount = fees.member;
+      } else if (sanitizedData.membershipStatus === 'non-member') {
+        totalAmount = fees.nonMember;
+      } else if (sanitizedData.membershipStatus === 'student') {
+        totalAmount = fees.student;
+      }
+
+      // Prepare data for API
+      const apiData = {
+        ...sanitizedData,
+        conferenceId: conference.id,
+        conferenceTitle: conference.title,
+        totalAmount: totalAmount,
+        phone: sanitizedData.phone || '',
+        dietaryRestrictions: sanitizedData.dietaryRestrictions || '',
+        accessibilityNeeds: sanitizedData.accessibilityNeeds || '',
+        sessionPreferences: sanitizedData.sessionPreferences || [],
+        networkingOptIn: sanitizedData.networkingOptIn || false,
+        marketingConsent: sanitizedData.marketingConsent || false
+      };
+
+      // Call Firebase Function to process registration and payment
+      const functionsUrl = process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_URL || 
+        (process.env.NODE_ENV === 'production' 
+          ? 'https://us-central1-nhbea-64cab.cloudfunctions.net/api'
+          : 'http://127.0.0.1:5001/nhbea-64cab/us-central1/api/api');
+      
+      const response = await fetch(`${functionsUrl}/conference/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(apiData)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Failed to process registration');
+      }
 
       // Log successful submission (for monitoring)
       console.log('Conference registration submitted successfully:', {
-        registrantId,
+        registrantId: result.registrantId,
         conferenceId: conference.id,
         participantEmail: sanitizedData.email,
         membershipStatus: sanitizedData.membershipStatus,
         timestamp: new Date().toISOString()
       });
 
-      // Registration successful - redirect to success page
-      window.location.href = `/conference/success?registrantId=${registrantId}`;
+      // Redirect to Square payment
+      if (result.paymentUrl) {
+        window.location.href = result.paymentUrl;
+      } else {
+        // Fallback to success page if no payment URL (shouldn't happen)
+        window.location.href = `/conference/success?registrantId=${result.registrantId}`;
+      }
       
     } catch (error) {
       console.error('Registration error:', error);

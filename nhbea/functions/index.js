@@ -14,8 +14,51 @@ app.use(cors({ origin: true }));
 // Parse JSON bodies
 app.use(express.json());
 
-// Square payment integration will be added later
-// const { Client } = require('square');
+// Square payment integration
+const { SquareClient, SquareEnvironment } = require('square');
+
+// Initialize Square client
+const squareClient = new SquareClient({
+  accessToken: process.env.SQUARE_ACCESS_TOKEN || functions.config().square?.access_token,
+  environment: process.env.SQUARE_ENVIRONMENT === 'production' ? SquareEnvironment.Production : SquareEnvironment.Sandbox
+});
+
+const locationId = process.env.SQUARE_LOCATION_ID || functions.config().square?.location_id;
+
+// Conference registration validation
+const validateConferenceRegistration = (data) => {
+  const errors = [];
+  
+  if (!data.fullName || typeof data.fullName !== 'string' || data.fullName.trim().length === 0) {
+    errors.push('Full name is required');
+  }
+  
+  if (!data.email || typeof data.email !== 'string' || !data.email.includes('@')) {
+    errors.push('Valid email is required');
+  }
+  
+  if (!data.institution || typeof data.institution !== 'string' || data.institution.trim().length === 0) {
+    errors.push('Institution is required');
+  }
+  
+  if (!data.membershipStatus || !['member', 'non-member', 'student'].includes(data.membershipStatus)) {
+    errors.push('Valid membership status is required');
+  }
+  
+  if (!data.registrationType || typeof data.registrationType !== 'string') {
+    errors.push('Registration type is required');
+  }
+  
+  if (!data.agreeToTerms) {
+    errors.push('You must agree to the terms and conditions');
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors: errors.length > 0 ? errors : null,
+    data: errors.length === 0 ? data : null
+  };
+};
 
 // Validation schemas (recreated from your existing code)
 const validateProfessionalMembershipForm = (data) => {
@@ -278,6 +321,190 @@ app.post('/api/nominations', async (req, res) => {
       message: 'An unexpected error occurred. Please try again.',
       error: error instanceof Error ? error.message : 'Unknown error'
     });
+  }
+});
+
+// Conference registration endpoint
+app.post('/api/conference/register', async (req, res) => {
+  try {
+    const formData = req.body;
+
+    // Validate form data
+    const validation = validateConferenceRegistration(formData);
+    if (!validation.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: 'Form validation failed',
+        errors: validation.errors
+      });
+    }
+
+    const sanitizedData = validation.data;
+    
+    // Store registrant in Firestore first
+    const db = admin.firestore();
+    const registrantsRef = db.collection('registrants');
+    
+    const registrantData = {
+      conferenceId: sanitizedData.conferenceId,
+      conferenceTitle: sanitizedData.conferenceTitle,
+      conferenceYear: new Date().getFullYear(),
+      participant: {
+        fullName: sanitizedData.fullName,
+        email: sanitizedData.email.toLowerCase(),
+        phone: sanitizedData.phone || '',
+        institution: sanitizedData.institution,
+        membershipStatus: sanitizedData.membershipStatus
+      },
+      registration: {
+        registrationType: sanitizedData.registrationType,
+        registrationDate: admin.firestore.FieldValue.serverTimestamp(),
+        totalAmount: sanitizedData.totalAmount,
+        paymentStatus: 'pending'
+      },
+      preferences: {
+        dietaryRestrictions: sanitizedData.dietaryRestrictions || '',
+        accessibilityNeeds: sanitizedData.accessibilityNeeds || '',
+        sessionPreferences: sanitizedData.sessionPreferences || [],
+        networkingOptIn: sanitizedData.networkingOptIn || false
+      },
+      status: 'registered',
+      registrationStatus: 'pending',
+      paymentStatus: 'pending',
+      checkedIn: false,
+      communications: {
+        confirmationSent: false,
+        remindersSent: 0
+      },
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    // Save to Firestore
+    const docRef = await registrantsRef.add(registrantData);
+    const registrantId = docRef.id;
+
+    // Create Square payment link
+    try {
+      const paymentsApi = squareClient.paymentsApi;
+      const checkoutApi = squareClient.checkoutApi;
+      
+      // Create checkout link
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nhbea.org';
+      
+      const createPaymentLinkResponse = await checkoutApi.createPaymentLink({
+        idempotencyKey: registrantId, // Use registrant ID for idempotency
+        quickPay: {
+          name: `Conference Registration - ${sanitizedData.conferenceTitle}`,
+          priceMoney: {
+            amount: sanitizedData.totalAmount * 100, // Convert to cents
+            currency: 'USD'
+          },
+          locationId: locationId
+        },
+        checkoutOptions: {
+          redirectUrl: `${baseUrl}/conference/success?registrantId=${registrantId}`,
+          askForShippingAddress: false,
+          merchantSupportEmail: 'support@nhbea.org'
+        },
+        prePopulatedData: {
+          buyerEmail: sanitizedData.email,
+          buyerPhoneNumber: sanitizedData.phone
+        },
+        note: `Conference Registration ID: ${registrantId}`
+      });
+
+      if (createPaymentLinkResponse.result.paymentLink) {
+        const paymentUrl = createPaymentLinkResponse.result.paymentLink.url;
+        
+        // Update registrant with payment link ID
+        await registrantsRef.doc(registrantId).update({
+          'payment.squarePaymentLinkId': createPaymentLinkResponse.result.paymentLink.id,
+          'payment.squareOrderId': createPaymentLinkResponse.result.paymentLink.orderId,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+
+        return res.json({
+          success: true,
+          message: 'Registration processed successfully. Redirecting to payment...',
+          paymentUrl: paymentUrl,
+          registrantId: registrantId
+        });
+      } else {
+        throw new Error('Failed to create payment link');
+      }
+    } catch (squareError) {
+      console.error('Square API error:', squareError);
+      
+      // Update registrant with error status
+      await registrantsRef.doc(registrantId).update({
+        paymentStatus: 'error',
+        'payment.error': squareError.message || 'Square payment creation failed',
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to create payment link. Please try again.',
+        error: 'Payment processing error',
+        registrantId: registrantId
+      });
+    }
+
+  } catch (error) {
+    console.error('Error processing conference registration:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'An unexpected error occurred. Please try again.',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+// Square webhook endpoint to handle payment confirmations
+app.post('/api/square/webhook', async (req, res) => {
+  try {
+    const signature = req.headers['x-square-hmacsha256-signature'];
+    const body = JSON.stringify(req.body);
+    
+    // TODO: Verify webhook signature when webhook secret is configured
+    // const webhookSecret = process.env.SQUARE_WEBHOOK_SECRET || functions.config().square?.webhook_secret;
+    
+    const event = req.body;
+    
+    if (event.type === 'payment.created' || event.type === 'payment.updated') {
+      const payment = event.data.object.payment;
+      
+      if (payment.status === 'COMPLETED') {
+        // Extract registrant ID from the note or reference_id
+        const note = payment.note || '';
+        const registrantIdMatch = note.match(/Conference Registration ID: (.+)/);
+        
+        if (registrantIdMatch && registrantIdMatch[1]) {
+          const registrantId = registrantIdMatch[1];
+          
+          // Update registrant payment status
+          const db = admin.firestore();
+          await db.collection('registrants').doc(registrantId).update({
+            paymentStatus: 'paid',
+            'payment.squarePaymentId': payment.id,
+            'payment.completedAt': admin.firestore.FieldValue.serverTimestamp(),
+            'payment.receiptUrl': payment.receipt_url || '',
+            'payment.totalAmount': payment.total_money.amount / 100, // Convert from cents
+            'registration.paymentStatus': 'paid',
+            'communications.confirmationSent': true, // Mark for sending confirmation email
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+          });
+          
+          console.log(`Payment completed for registrant: ${registrantId}`);
+        }
+      }
+    }
+    
+    res.json({ received: true });
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    res.status(400).json({ error: 'Webhook processing failed' });
   }
 });
 

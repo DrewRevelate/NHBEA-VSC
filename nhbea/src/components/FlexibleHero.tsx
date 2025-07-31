@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -108,83 +110,83 @@ function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps 
       role="banner"
       aria-label="Hero section"
     >
-      {/* Subtle texture overlay for depth */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[var(--nhbea-royal-blue-dark)]"></div>
-        <div className="absolute inset-0" style={{
-          backgroundImage: `linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.1) 100%)`
-        }}></div>
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-        }}></div>
-      </div>
+      {/* Clean brand background */}
+      <div className="absolute inset-0 bg-[var(--nhbea-royal-blue-dark)]"></div>
 
       <div className="relative z-10 container mx-auto px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center">
-          {/* Main heading */}
+          {/* Main heading - Clear hierarchy */}
           <div className="mb-8 animate-fade-in">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal mb-6 text-white leading-tight">
-              <span className="block tracking-wide">New Hampshire</span>
-              <span className="block text-3xl md:text-4xl lg:text-5xl text-white/90 font-light tracking-wide">Business Educators Association</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-white leading-tight">
+              <span className="block tracking-tight">New Hampshire</span>
+              <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white/95 font-semibold tracking-wide mt-2">Business Educators Association</span>
             </h1>
           </div>
           
-          {/* Subtitle */}
+          {/* Subtitle - Supporting content */}
           <div className="mb-12 animate-slide-up animation-delay-200">
-            <p className="text-lg md:text-xl max-w-3xl mx-auto text-white/80 leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl max-w-4xl mx-auto text-white/95 leading-relaxed font-light">
               {content?.heroSubtitle || "Promoting excellence in business education throughout New Hampshire through professional development, networking, and career advancement opportunities."}
             </p>
           </div>
 
           {/* Value propositions */}
           <div className="mb-16 animate-slide-up animation-delay-300">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              <div className="flex flex-col items-center text-center p-8 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 group">
-                <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+              <div className="flex flex-col items-center text-center p-8 bg-white/15 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg">
+                <div className="w-16 h-16 bg-white/25 rounded-xl flex items-center justify-center mb-6">
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.168 18.477 18.582 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-4">Professional Development</h3>
-                <p className="text-white/70 leading-relaxed text-sm">Continuous learning opportunities and certification programs to advance your career</p>
+                <p className="text-white/90 leading-relaxed text-sm font-medium">Continuous learning opportunities and certification programs to advance your career</p>
               </div>
               
-              <div className="flex flex-col items-center text-center p-8 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 group">
-                <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors duration-300">
+              <div className="flex flex-col items-center text-center p-8 bg-white/15 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg">
+                <div className="w-16 h-16 bg-white/25 rounded-xl flex items-center justify-center mb-6">
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-4">Networking</h3>
-                <p className="text-white/70 leading-relaxed text-sm">Connect with fellow educators and industry professionals across New Hampshire</p>
+                <p className="text-white/90 leading-relaxed text-sm font-medium">Connect with fellow educators and industry professionals across New Hampshire</p>
               </div>
               
-              <div className="flex flex-col items-center text-center p-8 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 group">
-                <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors duration-300">
+              <div className="flex flex-col items-center text-center p-8 bg-white/15 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg">
+                <div className="w-16 h-16 bg-white/25 rounded-xl flex items-center justify-center mb-6">
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-4">Career Growth</h3>
-                <p className="text-white/70 leading-relaxed text-sm">Recognition programs and advancement opportunities in business education</p>
+                <p className="text-white/90 leading-relaxed text-sm font-medium">Recognition programs and advancement opportunities in business education</p>
               </div>
             </div>
           </div>
 
-          {/* Call-to-action buttons */}
+          {/* Primary CTA - Membership Focus */}
           <div className="mb-16 animate-slide-up animation-delay-400">
-            <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-lg mx-auto">
+            <div className="flex flex-col gap-4 justify-center max-w-sm mx-auto">
               <Link 
                 href="/membership/professional"
-                className="px-8 py-4 bg-[var(--nhbea-accent-gold-dark)] text-white font-medium rounded-lg hover:bg-[var(--nhbea-accent-gold)] transition-all duration-300 shadow-md hover:shadow-lg text-center"
+                className="group px-10 py-6 bg-[var(--nhbea-accent-gold-dark)] text-white font-bold text-lg rounded-xl hover:bg-[var(--nhbea-accent-gold)] transition-all duration-300 shadow-xl hover:shadow-2xl text-center transform hover:scale-110 min-h-[56px] flex items-center justify-center relative overflow-hidden"
               >
-                Become a Member
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--nhbea-accent-gold)] to-[var(--nhbea-accent-gold-dark)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="relative z-10 group-hover:animate-pulse flex items-center gap-2">
+                  <span className="group-hover:animate-bounce">🎓</span>
+                  Join NHBEA Today
+                </span>
               </Link>
               <Link 
                 href="/conference"
-                className="px-8 py-4 bg-transparent text-white font-medium rounded-lg border-2 border-white/20 hover:bg-white/10 hover:border-white/30 transition-all duration-300 text-center"
+                className="group px-8 py-4 bg-white/10 text-white font-semibold text-base rounded-lg border-2 border-white/40 hover:bg-white/20 hover:text-white transition-all duration-300 text-center backdrop-blur-sm min-h-[48px] flex items-center justify-center hover:scale-105 relative overflow-hidden"
               >
-                View Events
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="relative z-10 flex items-center gap-2">
+                  Explore Events
+                  <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                </span>
               </Link>
             </div>
           </div>
@@ -201,6 +203,9 @@ function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps 
                     height={600}
                     className="w-full h-auto object-cover"
                     priority
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAKABQDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGBkaEDFBRB/8QAFQEBAQAAAAAAAAAAAAAAAAAAAgT/xAAbEQACAwEBAQAAAAAAAAAAAAABAgADERIhMf/aAAwDAQACEQMRAD8Auz4//9k="
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                   />
                 </div>
               </div>
@@ -216,23 +221,21 @@ function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps 
 function AboutHeroVariant({ title, subtitle, boardCount = 12, establishedYear = 1960, className }: AboutHeroProps & { className: string }) {
   return (
     <section 
-      className={`${className} py-16 lg:py-24 bg-gradient-to-br from-[var(--nhbea-royal-blue)] via-[var(--nhbea-royal-blue-dark)] to-[var(--nhbea-royal-blue-deeper)]`}
+      className={`${className} py-16 lg:py-24 bg-[var(--nhbea-royal-blue-dark)]`}
       role="banner"
       aria-label="About us hero section"
     >
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 right-0 w-full h-full opacity-10">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-[var(--nhbea-accent-orange)]/20 rounded-full blur-2xl"></div>
-        </div>
+      {/* Solid background with subtle overlay for better contrast */}
+      <div className="absolute inset-0 bg-[var(--nhbea-royal-blue-dark)]">
+        <div className="absolute inset-0 bg-black/20"></div>
       </div>
       
       <div className="relative z-10 container mx-auto px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-white drop-shadow-lg">
             {title || "About NHBEA"}
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl mb-12 text-white/90 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl lg:text-2xl mb-12 text-white leading-relaxed max-w-3xl mx-auto drop-shadow-md">
             {subtitle || "Dedicated to advancing business education excellence in New Hampshire since " + establishedYear}
           </p>
           
@@ -287,7 +290,7 @@ function ConferenceHeroVariant({ title, subtitle, conference, className }: Confe
           </h1>
           
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed animate-[fadeInUp_1s_ease-out_0.3s_forwards] opacity-0">
+          <p className="text-xl md:text-2xl font-medium mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed animate-[fadeInUp_1s_ease-out_0.3s_forwards] opacity-0">
             {subtitle || "Join New Hampshire's premier gathering of business educators for professional development, networking, and innovation"}
           </p>
           
@@ -299,7 +302,7 @@ function ConferenceHeroVariant({ title, subtitle, conference, className }: Confe
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span className="text-white font-medium">{conference.date}</span>
+                  <span className="text-white font-semibold">{conference.date}</span>
                 </div>
                 
                 <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
@@ -307,14 +310,14 @@ function ConferenceHeroVariant({ title, subtitle, conference, className }: Confe
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  <span className="text-white font-medium">{conference.location}</span>
+                  <span className="text-white font-semibold">{conference.location}</span>
                 </div>
               </div>
               
               {conference.earlyBirdDeadline && (
                 <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-6 py-2 border border-white/20 mb-8">
                   <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-white/90 text-sm font-medium">
+                  <span className="text-white/90 text-sm font-semibold">
                     Early Bird Pricing Available Until {conference.earlyBirdDeadline}
                   </span>
                 </div>
@@ -420,14 +423,14 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
 
   return (
     <section 
-      className={`${className} py-16 lg:py-24 bg-gradient-to-br from-[var(--nhbea-royal-blue)] via-[var(--nhbea-royal-blue-dark)] to-[var(--nhbea-royal-blue-deeper)] relative overflow-hidden`}
+      className={`${className} py-16 lg:py-24 bg-white relative overflow-hidden`}
       role="banner"
       aria-label="Awards hero section"
     >
       {/* Subtle background pattern for depth */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-[var(--nhbea-accent-orange)]/10 rounded-full blur-2xl"></div>
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gray-100/50 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gray-200/30 rounded-full blur-2xl"></div>
       </div>
 
       <div className="relative z-10 container mx-auto px-6 lg:px-8">
@@ -444,14 +447,14 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
             </div>
           )}
 
-          <div className="text-center text-white mb-12">
+          <div className="text-center text-[var(--nhbea-gray-800)] mb-12">
             {/* Compelling headline with emotional appeal */}
             <div className="mb-8 animate-[fadeInUp_1s_ease-out_0.2s_forwards] opacity-0">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                 {title || (
                   <>
                     <span className="block">Celebrate</span>
-                    <span className="block bg-gradient-to-r from-[var(--nhbea-academic-gold)] via-[var(--nhbea-academic-gold-light)] to-[var(--nhbea-academic-gold)] bg-clip-text text-transparent">
+                    <span className="block bg-gradient-to-r from-[var(--nhbea-accent-gold)] via-[var(--nhbea-accent-gold-light)] to-[var(--nhbea-accent-gold)] bg-clip-text text-transparent">
                       Educational Excellence
                     </span>
                   </>
@@ -461,7 +464,7 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
             
             {/* Social proof oriented subtitle */}
             <div className="mb-12 animate-[fadeInUp_1s_ease-out_0.3s_forwards] opacity-0">
-              <p className="text-xl md:text-2xl mb-6 text-white/90 leading-relaxed max-w-4xl mx-auto">
+              <p className="text-xl md:text-2xl mb-6 text-[var(--nhbea-gray-700)] leading-relaxed max-w-4xl mx-auto">
                 {subtitle || "Join 102 years of honoring the educators who shape tomorrow's business leaders. Your nomination could recognize the next inspiring teacher."}
               </p>
             </div>
@@ -469,21 +472,21 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
             {/* Trust indicators and stats */}
             <div className="mb-12 animate-[fadeInUp_1s_ease-out_0.4s_forwards] opacity-0">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-                <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <div className="text-center p-4 bg-white border border-gray-200 shadow-lg">
                   <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">102</div>
-                  <div className="text-white/80 text-sm">Years of Recognition</div>
+                  <div className="text-[var(--nhbea-gray-600)] text-sm font-medium">Years of Recognition</div>
                 </div>
-                <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <div className="text-center p-4 bg-white border border-gray-200 shadow-lg">
                   <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">{activeAwards || 2}</div>
-                  <div className="text-white/80 text-sm">Award Categories</div>
+                  <div className="text-[var(--nhbea-gray-600)] text-sm font-medium">Award Categories</div>
                 </div>
-                <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <div className="text-center p-4 bg-white border border-gray-200 shadow-lg">
                   <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">250+</div>
-                  <div className="text-white/80 text-sm">Past Winners</div>
+                  <div className="text-[var(--nhbea-gray-600)] text-sm font-medium">Past Winners</div>
                 </div>
-                <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+                <div className="text-center p-4 bg-white border border-gray-200 shadow-lg">
                   <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">NH</div>
-                  <div className="text-white/80 text-sm">Statewide Impact</div>
+                  <div className="text-[var(--nhbea-gray-600)] text-sm font-medium">Statewide Impact</div>
                 </div>
               </div>
             </div>
@@ -506,7 +509,7 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
             
             <Link 
               href="#available-awards"
-              className="px-8 py-4 bg-white/20 backdrop-blur-sm text-white font-semibold text-lg rounded-xl border-2 border-white/30 hover:bg-white/30 hover:border-white/40 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/30 text-center"
+              className="px-8 py-4 bg-white border-2 border-[var(--nhbea-royal-blue)] text-[var(--nhbea-royal-blue)] font-semibold text-lg rounded-xl hover:bg-[var(--nhbea-royal-blue)] hover:text-white transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[var(--nhbea-royal-blue)]/30 text-center shadow-sm"
             >
               <span className="flex items-center justify-center">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -519,8 +522,8 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
 
           {/* Quick help text */}
           <div className="text-center mt-8 animate-[fadeInUp_1s_ease-out_0.6s_forwards] opacity-0">
-            <p className="text-white/70 text-sm">
-              🤔 Not sure who to nominate? <Link href="#nomination-guide" className="underline hover:text-white transition-colors">See our nomination guide</Link>
+            <p className="text-[var(--nhbea-gray-600)] text-sm">
+              🤔 Not sure who to nominate? <Link href="#nomination-guide" className="underline text-[var(--nhbea-royal-blue)] hover:text-[var(--nhbea-royal-blue-dark)] transition-colors font-medium">See our nomination guide</Link>
             </p>
           </div>
         </div>
