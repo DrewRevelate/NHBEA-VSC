@@ -1,4 +1,5 @@
 const functions = require('firebase-functions');
+const { onRequest } = require('firebase-functions/v2/https');
 const admin = require('firebase-admin');
 const express = require('express');
 const cors = require('cors');
@@ -510,8 +511,12 @@ app.post('/api/square/webhook', async (req, res) => {
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'healthy', 
+    runtime: 'nodejs20',
+    timestamp: new Date().toISOString() 
+  });
 });
 
-// Export the Express app as a Firebase Function v1 (allows unauthenticated by default)
-exports.api = functions.https.onRequest(app);
+// Export the Express app as a Firebase Function v2 with Node.js 20 runtime
+exports.api = onRequest(app);

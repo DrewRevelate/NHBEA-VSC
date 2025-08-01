@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
+import FormProgressIndicator from '@/components/FormProgressIndicator';
+import FormField from '@/components/FormField';
+import FormCheckbox from '@/components/FormCheckbox';
 import { 
   awardNominationFormSchema, 
   awardSelectionSchema,
@@ -185,91 +188,46 @@ function NomineeInformationStep({ onNext, onPrevious, isLoading, initialData }: 
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="nomineeName" className="block text-sm font-medium text-gray-700 mb-2">
-              Nominee Full Name *
-            </label>
-            <input
-              id="nomineeName"
-              type="text"
-              {...register('nomineeInfo.name')}
-              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
-              style={{
-                borderColor: `var(--color-border-primary)`,
-                '--focus-ring-color': `var(--nhbea-royal-blue)`,
-                '--focus-border-color': `var(--nhbea-royal-blue)`
-              } as React.CSSProperties}
-              placeholder="Enter nominee's full name"
-            />
-            {errors.nomineeInfo?.name && (
-              <p className="text-red-600 text-sm mt-1">{errors.nomineeInfo.name.message}</p>
-            )}
-          </div>
+          <FormField
+            label="Nominee Full Name"
+            required
+            error={errors.nomineeInfo?.name}
+            helpText="Enter the full legal name of the person you are nominating"
+            placeholder="Enter nominee's full name"
+            successMessage="Name captured successfully"
+            {...register('nomineeInfo.name')}
+          />
 
-          <div>
-            <label htmlFor="nomineeEmail" className="block text-sm font-medium text-gray-700 mb-2">
-              Nominee Email Address *
-            </label>
-            <input
-              id="nomineeEmail"
-              type="email"
-              {...register('nomineeInfo.email')}
-              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
-              style={{
-                borderColor: `var(--color-border-primary)`,
-                '--focus-ring-color': `var(--nhbea-royal-blue)`,
-                '--focus-border-color': `var(--nhbea-royal-blue)`
-              } as React.CSSProperties}
-              placeholder="nominee@example.com"
-            />
-            {errors.nomineeInfo?.email && (
-              <p className="text-red-600 text-sm mt-1">{errors.nomineeInfo.email.message}</p>
-            )}
-          </div>
+          <FormField
+            label="Nominee Email Address"
+            type="email"
+            required
+            error={errors.nomineeInfo?.email}
+            helpText="We'll use this to contact the nominee if they win"
+            placeholder="nominee@example.com"
+            successMessage="Valid email address"
+            {...register('nomineeInfo.email')}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="nomineeOrganization" className="block text-sm font-medium text-gray-700 mb-2">
-              Organization/School
-            </label>
-            <input
-              id="nomineeOrganization"
-              type="text"
-              {...register('nomineeInfo.organization')}
-              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
-              style={{
-                borderColor: `var(--color-border-primary)`,
-                '--focus-ring-color': `var(--nhbea-royal-blue)`,
-                '--focus-border-color': `var(--nhbea-royal-blue)`
-              } as React.CSSProperties}
-              placeholder="School or organization name"
-            />
-            {errors.nomineeInfo?.organization && (
-              <p className="text-red-600 text-sm mt-1">{errors.nomineeInfo.organization.message}</p>
-            )}
-          </div>
+          <FormField
+            label="Organization/School"
+            error={errors.nomineeInfo?.organization}
+            helpText="Where does the nominee currently work?"
+            placeholder="School or organization name"
+            successMessage="Organization captured"
+            {...register('nomineeInfo.organization')}
+          />
 
-          <div>
-            <label htmlFor="nomineePosition" className="block text-sm font-medium text-gray-700 mb-2">
-              Position/Title
-            </label>
-            <input
-              id="nomineePosition"
-              type="text"
-              {...register('nomineeInfo.position')}
-              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
-              style={{
-                borderColor: `var(--color-border-primary)`,
-                '--focus-ring-color': `var(--nhbea-royal-blue)`,
-                '--focus-border-color': `var(--nhbea-royal-blue)`
-              } as React.CSSProperties}
-              placeholder="Job title or position"
-            />
-            {errors.nomineeInfo?.position && (
-              <p className="text-red-600 text-sm mt-1">{errors.nomineeInfo.position.message}</p>
-            )}
-          </div>
+          <FormField
+            label="Position/Title"
+            error={errors.nomineeInfo?.position}
+            helpText="Current job title or role"
+            placeholder="Job title or position"
+            successMessage="Position captured"
+            {...register('nomineeInfo.position')}
+          />
         </div>
 
         <div className="flex justify-between">
@@ -322,91 +280,46 @@ function NominatorInformationStep({ onNext, onPrevious, isLoading, initialData }
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="nominatorName" className="block text-sm font-medium text-gray-700 mb-2">
-              Your Full Name *
-            </label>
-            <input
-              id="nominatorName"
-              type="text"
-              {...register('nominatorInfo.name')}
-              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
-              style={{
-                borderColor: `var(--color-border-primary)`,
-                '--focus-ring-color': `var(--nhbea-royal-blue)`,
-                '--focus-border-color': `var(--nhbea-royal-blue)`
-              } as React.CSSProperties}
-              placeholder="Enter your full name"
-            />
-            {errors.nominatorInfo?.name && (
-              <p className="text-red-600 text-sm mt-1">{errors.nominatorInfo.name.message}</p>
-            )}
-          </div>
+          <FormField
+            label="Your Full Name"
+            required
+            error={errors.nominatorInfo?.name}
+            helpText="Your legal name for our records"
+            placeholder="Enter your full name"
+            successMessage="Name captured successfully"
+            {...register('nominatorInfo.name')}
+          />
 
-          <div>
-            <label htmlFor="nominatorEmail" className="block text-sm font-medium text-gray-700 mb-2">
-              Your Email Address *
-            </label>
-            <input
-              id="nominatorEmail"
-              type="email"
-              {...register('nominatorInfo.email')}
-              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
-              style={{
-                borderColor: `var(--color-border-primary)`,
-                '--focus-ring-color': `var(--nhbea-royal-blue)`,
-                '--focus-border-color': `var(--nhbea-royal-blue)`
-              } as React.CSSProperties}
-              placeholder="your@example.com"
-            />
-            {errors.nominatorInfo?.email && (
-              <p className="text-red-600 text-sm mt-1">{errors.nominatorInfo.email.message}</p>
-            )}
-          </div>
+          <FormField
+            label="Your Email Address"
+            type="email"
+            required
+            error={errors.nominatorInfo?.email}
+            helpText="We'll send confirmation to this email"
+            placeholder="your@example.com"
+            successMessage="Valid email address"
+            {...register('nominatorInfo.email')}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="nominatorOrganization" className="block text-sm font-medium text-gray-700 mb-2">
-              Your Organization/School
-            </label>
-            <input
-              id="nominatorOrganization"
-              type="text"
-              {...register('nominatorInfo.organization')}
-              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
-              style={{
-                borderColor: `var(--color-border-primary)`,
-                '--focus-ring-color': `var(--nhbea-royal-blue)`,
-                '--focus-border-color': `var(--nhbea-royal-blue)`
-              } as React.CSSProperties}
-              placeholder="Your school or organization"
-            />
-            {errors.nominatorInfo?.organization && (
-              <p className="text-red-600 text-sm mt-1">{errors.nominatorInfo.organization.message}</p>
-            )}
-          </div>
+          <FormField
+            label="Your Organization/School"
+            error={errors.nominatorInfo?.organization}
+            helpText="Where do you currently work?"
+            placeholder="Your school or organization"
+            successMessage="Organization captured"
+            {...register('nominatorInfo.organization')}
+          />
 
-          <div>
-            <label htmlFor="nominatorPosition" className="block text-sm font-medium text-gray-700 mb-2">
-              Your Position/Title
-            </label>
-            <input
-              id="nominatorPosition"
-              type="text"
-              {...register('nominatorInfo.position')}
-              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
-              style={{
-                borderColor: `var(--color-border-primary)`,
-                '--focus-ring-color': `var(--nhbea-royal-blue)`,
-                '--focus-border-color': `var(--nhbea-royal-blue)`
-              } as React.CSSProperties}
-              placeholder="Your job title or position"
-            />
-            {errors.nominatorInfo?.position && (
-              <p className="text-red-600 text-sm mt-1">{errors.nominatorInfo.position.message}</p>
-            )}
-          </div>
+          <FormField
+            label="Your Position/Title"
+            error={errors.nominatorInfo?.position}
+            helpText="Your current job title or role"
+            placeholder="Your job title or position"
+            successMessage="Position captured"
+            {...register('nominatorInfo.position')}
+          />
         </div>
 
         <div className="flex justify-between">
@@ -460,58 +373,34 @@ function NominationDetailsStep({ onNext, onPrevious, isLoading, initialData }: F
           </p>
         </div>
 
-        <div>
-          <label htmlFor="nominationText" className="block text-sm font-medium text-gray-700 mb-2">
-            Nomination Statement *
-          </label>
-          <textarea
-            id="nominationText"
-            rows={8}
-            {...register('nominationText')}
-            className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
-            style={{
-              borderColor: `var(--color-border-primary)`,
-              '--focus-ring-color': `var(--nhbea-royal-blue)`,
-              '--focus-border-color': `var(--nhbea-royal-blue)`
-            } as React.CSSProperties}
-            placeholder="Describe the nominee's achievements, contributions, and why they deserve this award..."
-          />
-          <div className="flex justify-between items-center mt-2">
-            {errors.nominationText && (
-              <p className="text-red-600 text-sm">{errors.nominationText.message}</p>
-            )}
-            <p className={`text-sm ${
-              characterCount < 50 ? 'text-red-600' : 
-              characterCount > 1900 ? 'text-orange-600' : 
-              'text-gray-500'
-            }`}>
-              {characterCount}/2000 characters {characterCount < 50 && `(${50 - characterCount} more needed)`}
-            </p>
-          </div>
-        </div>
+        <FormField
+          label="Nomination Statement"
+          multiline
+          rows={8}
+          required
+          error={errors.nominationText}
+          helpText="Provide a detailed explanation of why this person deserves the award. Include specific achievements, contributions, and impact on the business education community."
+          placeholder="Describe the nominee's achievements, contributions, and why they deserve this award..."
+          showCharacterCount
+          minCharacters={50}
+          maxCharacters={2000}
+          successMessage="Great nomination statement!"
+          validateOnChange
+          {...register('nominationText')}
+        />
 
-
-        <div>
-          <label className="flex items-start space-x-3">
-            <input
-              type="checkbox"
-              {...register('agreedToTerms')}
-              className="mt-1 h-4 w-4 rounded"
-              style={{
-                color: `var(--nhbea-royal-blue)`,
-                borderColor: `var(--color-border-primary)`,
-                '--focus-ring-color': `var(--nhbea-royal-blue)`
-              } as React.CSSProperties}
-            />
-            <span className="text-sm text-gray-700">
+        <FormCheckbox
+          label={
+            <>
               I agree that the information provided is accurate and I have permission to nominate this individual. 
-              I understand that false information may disqualify the nomination. *
-            </span>
-          </label>
-          {errors.agreedToTerms && (
-            <p className="text-red-600 text-sm mt-1">{errors.agreedToTerms.message}</p>
-          )}
-        </div>
+              I understand that false information may disqualify the nomination.
+            </>
+          }
+          required
+          error={errors.agreedToTerms}
+          helpText="You must agree to these terms to submit your nomination"
+          {...register('agreedToTerms')}
+        />
 
         <div className="flex justify-between">
           <Button 
@@ -547,6 +436,12 @@ export default function AwardNominationForm({ awards, onSubmit }: AwardNominatio
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
 
   const totalSteps = 4;
+  const stepNames = [
+    'Select Award',
+    'Nominee Information', 
+    'Nominator Information',
+    'Nomination Details'
+  ];
 
   const handleNext = (stepData?: any) => {
     // Merge step data into form data
@@ -619,52 +514,12 @@ export default function AwardNominationForm({ awards, onSubmit }: AwardNominatio
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Progress Indicator */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          {[1, 2, 3, 4].map((step) => (
-            <div
-              key={step}
-              className={`flex items-center ${step < totalSteps ? 'flex-1' : ''}`}
-            >
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
-                  step < currentStep
-                    ? 'text-white'
-                    : step === currentStep
-                    ? 'border-2'
-                    : ''
-                }`}
-                style={{
-                  backgroundColor: step < currentStep ? `var(--nhbea-royal-blue)` :
-                    step === currentStep ? `var(--nhbea-royal-blue-subtle)` :
-                    `var(--nhbea-gray-200)`,
-                  color: step < currentStep ? 'white' :
-                    step === currentStep ? `var(--nhbea-royal-blue)` :
-                    `var(--nhbea-gray-500)`,
-                  borderColor: step === currentStep ? `var(--nhbea-royal-blue)` : 'transparent'
-                }}
-              >
-                {step < currentStep ? '✓' : step}
-              </div>
-              {step < totalSteps && (
-                <div
-                  className="flex-1 h-1 mx-4"
-                  style={{
-                    backgroundColor: step < currentStep ? `var(--nhbea-royal-blue)` : `var(--nhbea-gray-200)`
-                  }}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between mt-2 text-sm text-gray-600">
-          <span>Select Award</span>
-          <span>Nominee Info</span>
-          <span>Your Info</span>
-          <span>Submit</span>
-        </div>
-      </div>
+      {/* Enhanced Progress Indicator */}
+      <FormProgressIndicator
+        currentStep={currentStep - 1}
+        totalSteps={totalSteps}
+        stepNames={stepNames}
+      />
 
       {/* Success/Error Messages */}
       {submitSuccess && (

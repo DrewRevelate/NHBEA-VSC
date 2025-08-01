@@ -60,8 +60,26 @@
       "Bash(./scripts/accessibility-validation.sh:*)",
       "Bash(npm run:*)",
       "Bash(timeout 10 npm run dev)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(timeout 10s npm run dev)",
+      "Bash(npm start)",
+      "Bash(PORT=3002 npm start)",
+      "Bash(firebase hosting:channel:deploy:*)",
+      "Bash(timeout 60 npm run build)",
+      "Bash(gsutil acl:*)",
+      "WebFetch(domain:firebasestorage.googleapis.com)",
+      "Bash(firebase auth:list:*)",
+      "Bash(vm_stat:*)",
+      "Bash(top:*)",
+      "Bash(sudo killall:*)",
+      "Bash(sudo mdutil:*)",
+      "Bash(open http://localhost:3001/about/)",
+      "Bash(xcode-select:*)"
     ],
     "deny": []
-  }
+  },
+  "$schema": "https://json.schemastore.org/claude-code-settings.json"
 }

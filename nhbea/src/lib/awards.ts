@@ -304,5 +304,49 @@ export const awardsUtils = {
       default:
         return category;
     }
+  },
+
+  /**
+   * Sort awards by deadline status (active first, then by urgency)
+   */
+  sortAwardsByDeadlineStatus(awards: Award[]): Award[] {
+    return [...awards].sort((a, b) => {
+      const aCanNominate = a.isActive && !this.isDeadlinePassed(a.deadline);
+      const bCanNominate = b.isActive && !this.isDeadlinePassed(b.deadline);
+      const aDaysLeft = this.getDaysUntilDeadline(a.deadline);
+      const bDaysLeft = this.getDaysUntilDeadline(b.deadline);
+      
+      // HIGHEST PRIORITY: Active nominations ALWAYS come first
+      if (aCanNominate && !bCanNominate) return -1;
+      if (!aCanNominate && bCanNominate) return 1;
+      
+      // SECOND PRIORITY: Among active nominations, sort by urgency
+      if (aCanNominate && bCanNominate) {
+        // Critical deadlines (≤7 days) first
+        if (aDaysLeft <= 7 && bDaysLeft > 7) return -1;
+        if (bDaysLeft <= 7 && aDaysLeft > 7) return 1;
+        
+        // Then by deadline (soonest first)
+        return aDaysLeft - bDaysLeft;
+      }
+      
+      // LOWEST PRIORITY: Expired awards, sorted by how recently they closed
+      if (!aCanNominate && !bCanNominate) {
+        return bDaysLeft - aDaysLeft; // Most recently closed first
+      }
+      
+      return 0;
+    });
+  },
+
+  /**
+   * Get awards separated by active/expired status
+   */
+  separateAwardsByStatus(awards: Award[]): { active: Award[]; expired: Award[] } {
+    const sorted = this.sortAwardsByDeadlineStatus(awards);
+    const active = sorted.filter(award => award.isActive && !this.isDeadlinePassed(award.deadline));
+    const expired = sorted.filter(award => !award.isActive || this.isDeadlinePassed(award.deadline));
+    
+    return { active, expired };
   }
 };

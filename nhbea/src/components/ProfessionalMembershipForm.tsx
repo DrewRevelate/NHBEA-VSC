@@ -5,6 +5,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { professionalMembershipSchema, type ProfessionalMembershipFormData } from '@/lib/membershipValidation';
 import { MembershipSubmissionResult } from '@/types/membership';
+import FormField from '@/components/FormField';
+import FormSelect from '@/components/FormSelect';
+import FormCheckbox from '@/components/FormCheckbox';
 
 // US states for dropdown
 const US_STATES = [
@@ -116,30 +119,15 @@ export default function ProfessionalMembershipForm({
     }
   };
 
-  const inputClassName = (fieldName: keyof ProfessionalMembershipFormData | string) => `
-    nhbea-form-input
-    ${errors[fieldName as keyof ProfessionalMembershipFormData] ? 'border-destructive focus:border-destructive focus:ring-destructive' : ''}
-  `;
-
-  const renderError = (fieldName: keyof ProfessionalMembershipFormData | string, id: string) => {
-    const error = errors[fieldName as keyof ProfessionalMembershipFormData];
-    if (!error) return null;
-    
-    return (
-      <p id={id} className="nhbea-form-error" role="alert">
-        {error.message}
-      </p>
-    );
-  };
 
   return (
     <div className={`nhbea-container ${className}`}>
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-6">
+        <h1 className="text-3xl lg:text-4xl font-bold text-white mb-6">
           Professional Membership Application
         </h1>
-        <p className="nhbea-text-large max-w-2xl mx-auto">
+        <p className="nhbea-text-large max-w-2xl mx-auto text-white">
           Join the New Hampshire Business Educators Association and connect with fellow educators 
           across the state. Annual membership fee: $50.00
         </p>
@@ -151,7 +139,7 @@ export default function ProfessionalMembershipForm({
           
           {/* Membership Type */}
           <div className="nhbea-form-group">
-            <h2 className="text-xl font-semibold text-foreground mb-4">Membership Type</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Membership Type</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label className="flex items-center space-x-3 cursor-pointer">
                 <input
@@ -161,7 +149,7 @@ export default function ProfessionalMembershipForm({
                   disabled={isSubmitting}
                   className="w-4 h-4 text-primary nhbea-focus-ring"
                 />
-                <span className="text-foreground">New Membership</span>
+                <span className="text-gray-900">New Membership</span>
               </label>
               <label className="flex items-center space-x-3 cursor-pointer">
                 <input
@@ -171,297 +159,224 @@ export default function ProfessionalMembershipForm({
                   disabled={isSubmitting}
                   className="w-4 h-4 text-primary nhbea-focus-ring"
                 />
-                <span className="text-foreground">Membership Renewal</span>
+                <span className="text-gray-900">Membership Renewal</span>
               </label>
             </div>
-            {renderError('membershipType', 'membershipType-error')}
+            {errors.membershipType && (
+              <p className="text-red-600 text-sm mt-1" role="alert">
+                {errors.membershipType.message}
+              </p>
+            )}
           </div>
 
           {/* Previous Member Number (only for renewals) */}
           {membershipType === 'renewal' && (
-            <div className="space-y-2">
-              <label htmlFor="previousMemberNumber" className="block text-sm font-medium text-slate-700">
-                Previous Member Number *
-              </label>
-              <input
-                id="previousMemberNumber"
-                type="text"
-                placeholder="Enter your previous member number"
-                {...register('previousMemberNumber')}
-                disabled={isSubmitting}
-                className={inputClassName('previousMemberNumber')}
-                aria-invalid={errors.previousMemberNumber ? 'true' : 'false'}
-                aria-describedby={errors.previousMemberNumber ? 'previousMemberNumber-error' : undefined}
-              />
-              {renderError('previousMemberNumber', 'previousMemberNumber-error')}
-            </div>
+            <FormField
+              label="Previous Member Number"
+              required
+              error={errors.previousMemberNumber}
+              helpText="Find this on your previous membership card or confirmation email"
+              placeholder="Enter your previous member number"
+              successMessage="Member number validated"
+              disabled={isSubmitting}
+              {...register('previousMemberNumber')}
+            />
           )}
 
           {/* Personal Information */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-slate-800">Personal Information</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Personal Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label htmlFor="firstName" className="block text-sm font-medium text-slate-700">
-                  First Name *
-                </label>
-                <input
-                  id="firstName"
-                  type="text"
-                  placeholder="Enter your first name"
-                  {...register('firstName')}
-                  disabled={isSubmitting}
-                  className={inputClassName('firstName')}
-                  aria-invalid={errors.firstName ? 'true' : 'false'}
-                  aria-describedby={errors.firstName ? 'firstName-error' : undefined}
-                />
-                {renderError('firstName', 'firstName-error')}
-              </div>
+              <FormField
+                label="First Name"
+                required
+                error={errors.firstName}
+                helpText="Your legal first name"
+                placeholder="Enter your first name"
+                successMessage="First name captured"
+                disabled={isSubmitting}
+                {...register('firstName')}
+              />
 
-              <div className="space-y-2">
-                <label htmlFor="lastName" className="block text-sm font-medium text-slate-700">
-                  Last Name *
-                </label>
-                <input
-                  id="lastName"
-                  type="text"
-                  placeholder="Enter your last name"
-                  {...register('lastName')}
-                  disabled={isSubmitting}
-                  className={inputClassName('lastName')}
-                  aria-invalid={errors.lastName ? 'true' : 'false'}
-                  aria-describedby={errors.lastName ? 'lastName-error' : undefined}
-                />
-                {renderError('lastName', 'lastName-error')}
-              </div>
+              <FormField
+                label="Last Name"
+                required
+                error={errors.lastName}
+                helpText="Your legal last name"
+                placeholder="Enter your last name"
+                successMessage="Last name captured"
+                disabled={isSubmitting}
+                {...register('lastName')}
+              />
 
-              <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-                  Email Address *
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email address"
-                  {...register('email')}
-                  disabled={isSubmitting}
-                  className={inputClassName('email')}
-                  aria-invalid={errors.email ? 'true' : 'false'}
-                  aria-describedby={errors.email ? 'email-error' : undefined}
-                />
-                {renderError('email', 'email-error')}
-              </div>
+              <FormField
+                label="Email Address"
+                type="email"
+                required
+                error={errors.email}
+                helpText="We'll use this for membership communications"
+                placeholder="your@email.com"
+                successMessage="Valid email address"
+                disabled={isSubmitting}
+                {...register('email')}
+              />
 
-              <div className="space-y-2">
-                <label htmlFor="phone" className="block text-sm font-medium text-slate-700">
-                  Phone Number *
-                </label>
-                <input
-                  id="phone"
-                  type="tel"
-                  placeholder="(555) 123-4567"
-                  {...register('phone')}
-                  disabled={isSubmitting}
-                  className={inputClassName('phone')}
-                  aria-invalid={errors.phone ? 'true' : 'false'}
-                  aria-describedby={errors.phone ? 'phone-error' : undefined}
-                />
-                {renderError('phone', 'phone-error')}
-              </div>
+              <FormField
+                label="Phone Number"
+                type="tel"
+                required
+                error={errors.phone}
+                helpText="Include area code (e.g., 555-123-4567)"
+                placeholder="(555) 123-4567"
+                successMessage="Phone number captured"
+                disabled={isSubmitting}
+                {...register('phone')}
+              />
             </div>
           </div>
 
           {/* Professional Information */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-slate-800">Professional Information</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Professional Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label htmlFor="institution" className="block text-sm font-medium text-slate-700">
-                  Institution *
-                </label>
-                <input
-                  id="institution"
-                  type="text"
-                  placeholder="School, college, or organization"
-                  {...register('institution')}
-                  disabled={isSubmitting}
-                  className={inputClassName('institution')}
-                  aria-invalid={errors.institution ? 'true' : 'false'}
-                  aria-describedby={errors.institution ? 'institution-error' : undefined}
-                />
-                {renderError('institution', 'institution-error')}
-              </div>
+              <FormField
+                label="Institution"
+                required
+                error={errors.institution}
+                helpText="Your school, college, or organization"
+                placeholder="School, college, or organization"
+                successMessage="Institution captured"
+                disabled={isSubmitting}
+                {...register('institution')}
+              />
 
-              <div className="space-y-2">
-                <label htmlFor="position" className="block text-sm font-medium text-slate-700">
-                  Position/Title *
-                </label>
-                <input
-                  id="position"
-                  type="text"
-                  placeholder="Your job title or position"
-                  {...register('position')}
-                  disabled={isSubmitting}
-                  className={inputClassName('position')}
-                  aria-invalid={errors.position ? 'true' : 'false'}
-                  aria-describedby={errors.position ? 'position-error' : undefined}
-                />
-                {renderError('position', 'position-error')}
-              </div>
+              <FormField
+                label="Position/Title"
+                required
+                error={errors.position}
+                helpText="Your current job title"
+                placeholder="Your job title or position"
+                successMessage="Position captured"
+                disabled={isSubmitting}
+                {...register('position')}
+              />
 
-              <div className="space-y-2 md:col-span-2">
-                <label htmlFor="yearsExperience" className="block text-sm font-medium text-slate-700">
-                  Years of Experience in Education *
-                </label>
-                <input
-                  id="yearsExperience"
+              <div className="md:col-span-2">
+                <FormField
+                  label="Years of Experience in Education"
                   type="number"
                   min="0"
                   max="70"
+                  required
+                  error={errors.yearsExperience}
+                  helpText="Total years in business education"
                   placeholder="Enter years of experience"
-                  {...register('yearsExperience', { valueAsNumber: true })}
+                  successMessage="Experience captured"
                   disabled={isSubmitting}
-                  className={inputClassName('yearsExperience')}
-                  aria-invalid={errors.yearsExperience ? 'true' : 'false'}
-                  aria-describedby={errors.yearsExperience ? 'yearsExperience-error' : undefined}
+                  {...register('yearsExperience', { valueAsNumber: true })}
                 />
-                {renderError('yearsExperience', 'yearsExperience-error')}
               </div>
             </div>
           </div>
 
           {/* Address Information */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-slate-800">Address Information</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Address Information</h2>
             <div className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="address" className="block text-sm font-medium text-slate-700">
-                  Street Address *
-                </label>
-                <input
-                  id="address"
-                  type="text"
-                  placeholder="Enter your street address"
-                  {...register('address')}
-                  disabled={isSubmitting}
-                  className={inputClassName('address')}
-                  aria-invalid={errors.address ? 'true' : 'false'}
-                  aria-describedby={errors.address ? 'address-error' : undefined}
-                />
-                {renderError('address', 'address-error')}
-              </div>
+              <FormField
+                label="Street Address"
+                required
+                error={errors.address}
+                helpText="Your mailing address"
+                placeholder="Enter your street address"
+                successMessage="Address captured"
+                disabled={isSubmitting}
+                {...register('address')}
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <label htmlFor="city" className="block text-sm font-medium text-slate-700">
-                    City *
-                  </label>
-                  <input
-                    id="city"
-                    type="text"
-                    placeholder="Enter your city"
-                    {...register('city')}
-                    disabled={isSubmitting}
-                    className={inputClassName('city')}
-                    aria-invalid={errors.city ? 'true' : 'false'}
-                    aria-describedby={errors.city ? 'city-error' : undefined}
-                  />
-                  {renderError('city', 'city-error')}
-                </div>
+                <FormField
+                  label="City"
+                  required
+                  error={errors.city}
+                  helpText="Your city"
+                  placeholder="Enter your city"
+                  successMessage="City captured"
+                  disabled={isSubmitting}
+                  {...register('city')}
+                />
 
-                <div className="space-y-2">
-                  <label htmlFor="state" className="block text-sm font-medium text-slate-700">
-                    State *
-                  </label>
-                  <Controller
-                    name="state"
-                    control={control}
-                    render={({ field }) => (
-                      <select
-                        {...field}
-                        id="state"
-                        disabled={isSubmitting}
-                        className={inputClassName('state')}
-                        aria-invalid={errors.state ? 'true' : 'false'}
-                        aria-describedby={errors.state ? 'state-error' : undefined}
-                      >
-                        <option value="">Select state</option>
-                        {US_STATES.map((state) => (
-                          <option key={state.value} value={state.value}>
-                            {state.label}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  />
-                  {renderError('state', 'state-error')}
-                </div>
+                <Controller
+                  name="state"
+                  control={control}
+                  render={({ field }) => (
+                    <FormSelect
+                      {...field}
+                      label="State"
+                      required
+                      error={errors.state}
+                      helpText="Select your state"
+                      options={US_STATES}
+                      placeholder="Select state"
+                      successMessage="State selected"
+                      disabled={isSubmitting}
+                    />
+                  )}
+                />
 
-                <div className="space-y-2">
-                  <label htmlFor="zipCode" className="block text-sm font-medium text-slate-700">
-                    ZIP Code *
-                  </label>
-                  <input
-                    id="zipCode"
-                    type="text"
-                    placeholder="12345"
-                    {...register('zipCode')}
-                    disabled={isSubmitting}
-                    className={inputClassName('zipCode')}
-                    aria-invalid={errors.zipCode ? 'true' : 'false'}
-                    aria-describedby={errors.zipCode ? 'zipCode-error' : undefined}
-                  />
-                  {renderError('zipCode', 'zipCode-error')}
-                </div>
+                <FormField
+                  label="ZIP Code"
+                  required
+                  error={errors.zipCode}
+                  helpText="5-digit ZIP code"
+                  placeholder="12345"
+                  successMessage="ZIP code captured"
+                  disabled={isSubmitting}
+                  {...register('zipCode')}
+                />
               </div>
             </div>
           </div>
 
           {/* Communication Preferences */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-slate-800">Communication Preferences</h2>
-            <p className="text-sm text-slate-600">
+            <h2 className="text-xl font-semibold text-gray-900">Communication Preferences</h2>
+            <p className="text-sm text-gray-600">
               Select how you'd like to receive communications from NHBEA:
             </p>
             <div className="space-y-3">
-              <label className="flex items-start space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  {...register('communicationPreferences.newsletter')}
-                  disabled={isSubmitting}
-                  className="w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2 mt-1"
-                />
-                <div>
-                  <span className="text-slate-700 font-medium">Newsletter</span>
-                  <p className="text-sm text-slate-600">Receive our monthly newsletter with updates and resources</p>
-                </div>
-              </label>
+              <FormCheckbox
+                label={
+                  <div>
+                    <span className="text-gray-900 font-medium">Newsletter</span>
+                    <p className="text-sm text-gray-600">Receive our monthly newsletter with updates and resources</p>
+                  </div>
+                }
+                disabled={isSubmitting}
+                {...register('communicationPreferences.newsletter')}
+              />
 
-              <label className="flex items-start space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  {...register('communicationPreferences.updates')}
-                  disabled={isSubmitting}
-                  className="w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2 mt-1"
-                />
-                <div>
-                  <span className="text-slate-700 font-medium">General Updates</span>
-                  <p className="text-sm text-slate-600">Important announcements and association news</p>
-                </div>
-              </label>
+              <FormCheckbox
+                label={
+                  <div>
+                    <span className="text-gray-900 font-medium">General Updates</span>
+                    <p className="text-sm text-gray-600">Important announcements and association news</p>
+                  </div>
+                }
+                disabled={isSubmitting}
+                {...register('communicationPreferences.updates')}
+              />
 
-              <label className="flex items-start space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  {...register('communicationPreferences.events')}
-                  disabled={isSubmitting}
-                  className="w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2 mt-1"
-                />
-                <div>
-                  <span className="text-slate-700 font-medium">Event Notifications</span>
-                  <p className="text-sm text-slate-600">Conference announcements and professional development opportunities</p>
-                </div>
-              </label>
+              <FormCheckbox
+                label={
+                  <div>
+                    <span className="text-gray-900 font-medium">Event Notifications</span>
+                    <p className="text-sm text-gray-600">Conference announcements and professional development opportunities</p>
+                  </div>
+                }
+                disabled={isSubmitting}
+                {...register('communicationPreferences.events')}
+              />
             </div>
           </div>
 

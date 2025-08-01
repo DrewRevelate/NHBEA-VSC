@@ -4,23 +4,22 @@ import { FlexibleHero } from '@/components/FlexibleHero';
 import { LoadingSpinner, LoadingSkeleton } from '@/components/LoadingSpinner';
 import { StandardErrorBoundary } from '@/components/StandardErrorBoundary';
 import { ResponsiveGrid } from '@/components/ResponsiveGrid';
-import StatisticsSection from '@/components/StatisticsSection';
+import { StructuredData } from '@/components/StructuredData';
+import TestimonialsCarousel from '@/components/TestimonialsCarousel';
+import MembershipBenefitsHighlight from '@/components/MembershipBenefitsHighlight';
 import EnhancedMissionSection from '@/components/EnhancedMissionSection';
 import EnhancedAboutSection from '@/components/EnhancedAboutSection';
 import { getHomepageContent, defaultHomepageContent } from '@/lib/content';
-import { getSponsors, defaultSponsors } from '@/lib/sponsors';
 
 // Lazy load non-critical sections for better performance
 const TrustBadgesSection = lazy(() => import('@/components/TrustBadgesSection'));
-const SponsorsSection = lazy(() => import('@/components/SponsorsSection'));
 const NewsletterSignup = lazy(() => import('@/components/NewsletterSignup'));
+const SocialProofSection = lazy(() => import('@/components/SocialProofSection'));
 
 
 async function HomePage() {
   let homepageContent = defaultHomepageContent;
-  let sponsors = defaultSponsors;
   let contentError = null;
-  let sponsorsError = null;
 
   try {
     const fetchedContent = await getHomepageContent();
@@ -30,13 +29,6 @@ async function HomePage() {
   } catch (error) {
     contentError = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch homepage content:', error);
-  }
-
-  try {
-    sponsors = await getSponsors();
-  } catch (error) {
-    sponsorsError = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Failed to fetch sponsors:', error);
   }
 
   // Ensure we always have valid content with all required fields
@@ -63,13 +55,27 @@ async function HomePage() {
         twitterCard: true
       }}
     >
+      {/* SEO Structured Data */}
+      <StructuredData type="membership" data={{}} />
+      <StructuredData type="awards" data={{}} />
+      
       <ResponsiveGrid 
         gap="lg" 
         breakpoints={{ mobile: 1, tablet: 1, desktop: 1, wide: 1 }}
         className="space-y-16"
       >
         <StandardErrorBoundary>
-          <StatisticsSection />
+          <TestimonialsCarousel />
+        </StandardErrorBoundary>
+        
+        <StandardErrorBoundary>
+          <MembershipBenefitsHighlight />
+        </StandardErrorBoundary>
+        
+        <StandardErrorBoundary>
+          <Suspense fallback={<LoadingSkeleton variant="content" />}>
+            <TrustBadgesSection />
+          </Suspense>
         </StandardErrorBoundary>
         
         <StandardErrorBoundary>
@@ -89,13 +95,7 @@ async function HomePage() {
         
         <StandardErrorBoundary>
           <Suspense fallback={<LoadingSkeleton variant="content" />}>
-            <TrustBadgesSection />
-          </Suspense>
-        </StandardErrorBoundary>
-        
-        <StandardErrorBoundary>
-          <Suspense fallback={<LoadingSkeleton variant="grid" count={3} />}>
-            <SponsorsSection sponsors={sponsors} />
+            <SocialProofSection />
           </Suspense>
         </StandardErrorBoundary>
         

@@ -1,10 +1,24 @@
 'use client';
 
 interface AboutHeroSectionProps {
+  title?: string;
+  subtitle?: string;
+  boardCount?: number;
+  establishedYear?: number;
+  memberCount?: number | null;
+  schoolCount?: number;
   className?: string;
 }
 
-export default function AboutHeroSection({ className = '' }: AboutHeroSectionProps) {
+export default function AboutHeroSection({ 
+  title = "About NHBEA",
+  subtitle = "Dedicated to advancing business education excellence in New Hampshire since 1923",
+  boardCount = 15,
+  establishedYear = 1923,
+  memberCount = null,
+  schoolCount = 50,
+  className = '' 
+}: AboutHeroSectionProps) {
   return (
     <section 
       className={`relative min-h-[60vh] flex items-center justify-center overflow-hidden ${className}`}
@@ -43,7 +57,7 @@ export default function AboutHeroSection({ className = '' }: AboutHeroSectionPro
             {/* Main heading with proper history */}
             <div className="opacity-0 animate-[fadeInUp_1s_ease-out_0.2s_forwards]">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                64 Years of 
+                102 Years of 
                 <span className="block">Educational Excellence</span>
               </h1>
             </div>
@@ -51,7 +65,7 @@ export default function AboutHeroSection({ className = '' }: AboutHeroSectionPro
             {/* Accurate institutional narrative */}
             <div className="opacity-0 animate-[fadeInUp_1s_ease-out_0.4s_forwards]">
               <p className="text-lg md:text-xl text-white leading-relaxed max-w-2xl">
-                Since 1960, the New Hampshire Business Education Association has served as the 
+                Since 1923, the New Hampshire Business Education Association has served as the 
                 premier professional organization for business educators across our state. We're 
                 dedicated to advancing excellence in business education and empowering the next 
                 generation of business leaders.
@@ -64,14 +78,14 @@ export default function AboutHeroSection({ className = '' }: AboutHeroSectionPro
                 <div className="flex items-start space-x-4">
                   <div className="w-2 h-2 bg-white/80 rounded-full mt-3 flex-shrink-0"></div>
                   <p className="text-white/90">
-                    <span className="font-semibold text-white">Established 1960</span> by dedicated educators 
+                    <span className="font-semibold text-white">Established 1923</span> by dedicated educators 
                     committed to advancing the highest standards of business education excellence.
                   </p>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="w-2 h-2 bg-white/80 rounded-full mt-3 flex-shrink-0"></div>
                   <p className="text-white/90">
-                    <span className="font-semibold text-white">500+ active members</span> representing 
+                    <span className="font-semibold text-white">Active members</span> representing 
                     educational institutions and professional organizations across New Hampshire.
                   </p>
                 </div>
@@ -97,21 +111,23 @@ export default function AboutHeroSection({ className = '' }: AboutHeroSectionPro
                   {/* Established */}
                   <div className="flex items-center space-x-4">
                     <div className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/20">
-                      <span className="text-white font-bold text-lg">64</span>
+                      <span className="text-white font-bold text-lg">102</span>
                     </div>
                     <div>
                       <div className="font-semibold text-white">Years of Excellence</div>
-                      <div className="text-sm text-white/80">Serving NH educators since 1960</div>
+                      <div className="text-sm text-white/80">Serving NH educators since 1923</div>
                     </div>
                   </div>
 
-                  {/* Members */}
+                  {/* Professional Network */}
                   <div className="flex items-center space-x-4">
                     <div className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/20">
-                      <span className="text-white font-bold text-lg">500+</span>
+                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                      </svg>
                     </div>
                     <div>
-                      <div className="font-semibold text-white">Active Members</div>
+                      <div className="font-semibold text-white">Professional Network</div>
                       <div className="text-sm text-white/80">Educators & professionals</div>
                     </div>
                   </div>
@@ -119,7 +135,7 @@ export default function AboutHeroSection({ className = '' }: AboutHeroSectionPro
                   {/* Schools */}
                   <div className="flex items-center space-x-4">
                     <div className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/20">
-                      <span className="text-white font-bold text-lg">50+</span>
+                      <span className="text-white font-bold text-lg">{schoolCount}+</span>
                     </div>
                     <div>
                       <div className="font-semibold text-white">Partner Schools</div>

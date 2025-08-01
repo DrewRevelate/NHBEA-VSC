@@ -1,306 +1,302 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { getRegistrantById, getConferenceById, updateRegistrantPaymentStatus } from '@/lib/conference';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-// Using inline SVG icons to match existing codebase pattern
+import { StandardPageLayout } from '@/components/StandardPageLayout';
+import { StandardErrorBoundary } from '@/components/StandardErrorBoundary';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { ResponsiveGrid, Container } from '@/components/ResponsiveGrid';
+
+interface RegistrantData {
+  id: string;
+  participant: {
+    fullName: string | { first_name: string; last_name: string };
+    email: string;
+    institution: string;
+    phone?: string;
+  };
+  conferenceTitle: string;
+  conferenceYear: number;
+  registration: {
+    totalAmount: number;
+    paymentStatus: string;
+    registrationType: string;
+    registrationDate: any;
+  };
+  payment?: {
+    receiptUrl?: string;
+    completedAt?: any;
+    squarePaymentId?: string;
+  };
+  status: string;
+  registrationStatus: string;
+  paymentStatus: string;
+}
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const registrantId = searchParams.get('registrantId');
-  const conferenceId = searchParams.get('conferenceId');
-  const transactionId = searchParams.get('transactionId');
-  const orderId = searchParams.get('orderId');
-
   const [loading, setLoading] = useState(true);
-  const [registrant, setRegistrant] = useState<any>(null);
-  const [conference, setConference] = useState<any>(null);
+  const [registrant, setRegistrant] = useState<RegistrantData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadData() {
+    async function loadRegistrantData() {
       try {
-        if (!registrantId || !conferenceId) {
-          setError('Missing registration information');
+        if (!registrantId) {
+          setError('No registration ID provided');
+          setLoading(false);
           return;
         }
 
-        const [registrantData, conferenceData] = await Promise.all([
-          getRegistrantById(registrantId),
-          getConferenceById(conferenceId)
-        ]);
+        // Fetch registrant data from Firestore
+        const { getRegistrantById } = await import('@/lib/conference');
+        const registrantData = await getRegistrantById(registrantId);
 
-        if (!registrantData || !conferenceData) {
-          setError('Registration or conference not found');
+        if (!registrantData) {
+          setError('Registration not found');
+          setLoading(false);
           return;
         }
 
-        // Update payment status if transaction details are provided
-        if ((transactionId || orderId) && registrantData.registration.paymentStatus === 'pending') {
-          try {
-            await updateRegistrantPaymentStatus(registrantId, {
-              squareOrderId: orderId || undefined,
-              transactionId: transactionId || undefined,
-              paymentMethod: 'Square',
-              paidAt: new Date()
-            });
-            // Refresh registrant data
-            const updatedRegistrant = await getRegistrantById(registrantId);
-            if (updatedRegistrant) {
-              setRegistrant(updatedRegistrant);
-            }
-          } catch (error) {
-            console.error('Error updating payment status:', error);
-            // Continue with success page even if status update fails
-            setRegistrant(registrantData);
-          }
-        } else {
-          setRegistrant(registrantData);
-        }
-
-        setConference(conferenceData);
+        setRegistrant(registrantData as RegistrantData);
       } catch (err) {
-        console.error('Error loading success page:', err);
+        console.error('Error loading registration:', err);
         setError('Failed to load registration details');
       } finally {
         setLoading(false);
       }
     }
 
-    loadData();
-  }, [registrantId, conferenceId, transactionId, orderId]);
+    loadRegistrantData();
+  }, [registrantId]);
 
   if (loading) {
-    return (
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading your registration details...</p>
-      </div>
-    );
+    return <LoadingSpinner variant="page" message="Loading your registration details..." />;
   }
 
-  if (error || !registrant || !conference) {
+  if (error || !registrant) {
     return (
-      <div className="text-center">
-        <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-          <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Invalid Registration</h1>
-        <p className="text-gray-600 mb-6">
-          We couldn't find your registration information. Please contact support if you believe this is an error.
+      <Container size="md" className="py-16 text-center">
+        <h1 className="text-3xl font-medium text-[var(--color-text-primary)] mb-4">
+          Registration Status
+        </h1>
+        <p className="text-lg text-[var(--color-text-secondary)] mb-8">
+          {error || 'Unable to load registration details. Please check your email for confirmation.'}
         </p>
         <Link href="/conference">
-          <Button>Back to Conference</Button>
+          <Button className="bg-[var(--nhbea-royal-blue)] hover:bg-[var(--nhbea-royal-blue-dark)] text-white">
+            Back to Conference
+          </Button>
         </Link>
-      </div>
+      </Container>
     );
   }
 
-  // Helper functions
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+  const isPaid = registrant.paymentStatus === 'paid' || registrant.registration?.paymentStatus === 'paid';
+  
+  // Handle fullName as either string or object
+  const fullName = typeof registrant.participant.fullName === 'string' 
+    ? registrant.participant.fullName 
+    : `${registrant.participant.fullName.first_name} ${registrant.participant.fullName.last_name}`;
 
-  const formatTime = (time: string) => {
-    const [hours, minutes] = time.split(':');
-    const hour24 = parseInt(hours);
-    const hour12 = hour24 > 12 ? hour24 - 12 : hour24 === 0 ? 12 : hour24;
-    const ampm = hour24 >= 12 ? 'PM' : 'AM';
-    return `${hour12}:${minutes} ${ampm}`;
-  };
-
-
-    return (
-      <div className="max-w-3xl mx-auto">
-        {/* Success Header */}
+  return (
+    <Container size="md" className="py-16">
+      <div className="bg-white rounded-2xl shadow-xl border-2 border-[var(--color-border-primary)] p-8">
+        {/* Success Icon */}
         <div className="text-center mb-8">
-          <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
-            <svg className="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Registration Successful!
+          <h1 className="text-3xl font-medium text-[var(--color-text-primary)] mb-2">
+            Registration {isPaid ? 'Complete' : 'Submitted'}!
           </h1>
-          <p className="text-lg text-gray-600">
-            Thank you for registering for {conference.title}
+          <p className="text-lg text-[var(--color-text-secondary)]">
+            {isPaid 
+              ? 'Your payment has been processed successfully.'
+              : 'Your registration has been received. Please complete payment to confirm your spot.'}
           </p>
         </div>
 
-        {/* Registration Details */}
-        <div className="bg-white rounded-lg shadow-sm border mb-6">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Registration Details</h2>
-          </div>
-          
-          <div className="p-6 space-y-4">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Participant Information</h3>
-                <div className="space-y-2 text-sm">
-                  <p><strong>Name:</strong> {registrant.participant.fullName}</p>
-                  <p><strong>Email:</strong> {registrant.participant.email}</p>
-                  {registrant.participant.phone && (
-                    <p><strong>Phone:</strong> {registrant.participant.phone}</p>
-                  )}
-                  <p><strong>Institution:</strong> {registrant.participant.institution}</p>
-                  <p><strong>Membership Status:</strong> {registrant.participant.membershipStatus}</p>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Registration Information</h3>
-                <div className="space-y-2 text-sm">
-                  <p><strong>Registration ID:</strong> {registrant.id}</p>
-                  <p><strong>Registration Type:</strong> {registrant.registration.registrationType}</p>
-                  <p><strong>Registration Fee:</strong> ${registrant.registration.totalAmount}</p>
-                  <p><strong>Payment Status:</strong> 
-                    <span className={`ml-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      registrant.registration.paymentStatus === 'paid'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {registrant.registration.paymentStatus === 'paid' ? 'Paid' : 'Processing'}
-                    </span>
-                  </p>
-                  {transactionId && (
-                    <p><strong>Transaction ID:</strong> {transactionId}</p>
-                  )}
-                </div>
-              </div>
+        {/* Confirmation Details */}
+        <div className="bg-gray-50 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-medium text-[var(--color-text-primary)] mb-4">
+            Confirmation Details
+          </h2>
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm text-[var(--color-text-secondary)]">Confirmation Code</p>
+              <p className="text-lg font-medium text-[var(--nhbea-royal-blue)] font-mono">
+                {registrantId}
+              </p>
             </div>
-
-            {/* Special Requirements */}
-            {(registrant.preferences.dietaryRestrictions || registrant.preferences.accessibilityNeeds) && (
-              <div className="pt-4 border-t border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-3">Special Requirements</h3>
-                <div className="space-y-2 text-sm">
-                  {registrant.preferences.dietaryRestrictions && (
-                    <p><strong>Dietary Restrictions:</strong> {registrant.preferences.dietaryRestrictions}</p>
-                  )}
-                  {registrant.preferences.accessibilityNeeds && (
-                    <p><strong>Accessibility Needs:</strong> {registrant.preferences.accessibilityNeeds}</p>
-                  )}
-                </div>
-              </div>
-            )}
+            <div>
+              <p className="text-sm text-[var(--color-text-secondary)]">Conference</p>
+              <p className="text-lg text-[var(--color-text-primary)]">
+                {registrant.conferenceTitle}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-[var(--color-text-secondary)]">Registrant</p>
+              <p className="text-lg text-[var(--color-text-primary)]">
+                {fullName}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-[var(--color-text-secondary)]">Email</p>
+              <p className="text-lg text-[var(--color-text-primary)]">
+                {registrant.participant.email}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-[var(--color-text-secondary)]">Institution</p>
+              <p className="text-lg text-[var(--color-text-primary)]">
+                {registrant.participant.institution}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-[var(--color-text-secondary)]">Registration Type</p>
+              <p className="text-lg text-[var(--color-text-primary)]">
+                {registrant.registration.registrationType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-[var(--color-text-secondary)]">Amount</p>
+              <p className="text-lg font-medium text-[var(--color-text-primary)]">
+                ${registrant.registration.totalAmount}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-[var(--color-text-secondary)]">Payment Status</p>
+              <p className={`text-lg font-medium ${isPaid ? 'text-green-600' : 'text-yellow-600'}`}>
+                {isPaid ? 'Paid' : 'Pending Payment'}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Conference Information */}
-        <div className="bg-white rounded-lg shadow-sm border mb-6">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Conference Information</h2>
+        {/* Receipt Link */}
+        {isPaid && registrant.payment?.receiptUrl && (
+          <div className="mb-8 text-center">
+            <a 
+              href={registrant.payment.receiptUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-6 py-3 bg-[var(--nhbea-royal-blue)] hover:bg-[var(--nhbea-royal-blue-dark)] text-white rounded-xl transition-all duration-300"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Download Receipt
+            </a>
           </div>
-          
-          <div className="p-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <div>
-                    <p className="font-medium text-gray-900">Date & Time</p>
-                    <p className="text-gray-600">{formatDate(conference.schedule.date)}</p>
-                    <p className="text-gray-600">
-                      {formatTime(conference.schedule.startTime)} - {formatTime(conference.schedule.endTime)}
-                    </p>
-                  </div>
-                </div>
+        )}
 
-                <div className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <div>
-                    <p className="font-medium text-gray-900">Location</p>
-                    <p className="text-gray-600">{conference.location.venue}</p>
-                    <p className="text-gray-600">
-                      {conference.location.address.street}<br />
-                      {conference.location.address.city}, {conference.location.address.state} {conference.location.address.zipCode}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">What's Next?</h3>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• You will receive a confirmation email shortly</li>
-                    <li>• Conference materials will be emailed closer to the event</li>
-                    <li>• Check-in begins 30 minutes before the start time</li>
-                    <li>• Bring a photo ID for registration verification</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Need Help?</h3>
-                  <div className="space-y-1 text-sm text-gray-600">
-                    <div className="flex items-center">
-                      <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      <a href="mailto:support@nhbea.org" className="text-blue-600 hover:text-blue-800">
-                        support@nhbea.org
-                      </a>
-                    </div>
-                    <div className="flex items-center">
-                      <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      <span>(555) 123-4567</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Next Steps */}
+        <div className="border-t border-gray-200 pt-8">
+          <h3 className="text-lg font-medium text-[var(--color-text-primary)] mb-4">
+            Next Steps
+          </h3>
+          <ul className="space-y-2 text-[var(--color-text-secondary)]">
+            <li className="flex items-start">
+              <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>A confirmation email has been sent to {registrant.participant.email}</span>
+            </li>
+            <li className="flex items-start">
+              <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Save your confirmation code <strong>{registrantId}</strong> for check-in at the conference</span>
+            </li>
+            {isPaid && (
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Your payment has been confirmed and receipt is available above</span>
+              </li>
+            )}
+            <li className="flex items-start">
+              <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>You'll receive reminder emails as the conference date approaches</span>
+            </li>
+          </ul>
         </div>
 
         {/* Actions */}
-        <div className="text-center space-y-4">
-          <div className="flex justify-center space-x-4">
-            <Link href="/conference">
-              <Button variant="outline">Back to Conference</Button>
-            </Link>
-            <Link href="/">
-              <Button>Return Home</Button>
-            </Link>
-          </div>
-          
-          <p className="text-sm text-gray-500">
-            Save this page or take a screenshot for your records.
-          </p>
+        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          <Button
+            onClick={() => window.print()}
+            variant="outline"
+            className="inline-flex items-center"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Print Confirmation
+          </Button>
+          <Link href="/conference">
+            <Button className="bg-[var(--nhbea-royal-blue)] hover:bg-[var(--nhbea-royal-blue-dark)] text-white">
+              Back to Conference
+            </Button>
+          </Link>
+          <Link href="/">
+            <Button variant="outline">
+              Return Home
+            </Button>
+          </Link>
         </div>
       </div>
-    );
+
+      {/* Support Info */}
+      <div className="mt-8 text-center text-sm text-[var(--color-text-secondary)]">
+        <p>
+          Questions? Contact us at{' '}
+          <a 
+            href="mailto:support@nhbea.org" 
+            className="text-[var(--nhbea-royal-blue)] hover:underline"
+          >
+            support@nhbea.org
+          </a>
+        </p>
+      </div>
+    </Container>
+  );
 }
 
 export default function ConferenceSuccessPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Suspense fallback={
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading your registration details...</p>
-          </div>
-        }>
-          <SuccessContent />
-        </Suspense>
-      </div>
-    </div>
+    <StandardPageLayout
+      hero={{
+        component: 'none' as any,
+        props: {}
+      }}
+      meta={{
+        title: 'Registration Successful - NHBEA Conference',
+        description: 'Your conference registration has been successfully processed.'
+      }}
+      error={{ boundary: true }}
+      loading={{ enabled: true }}
+    >
+      <ResponsiveGrid 
+        gap="lg" 
+        breakpoints={{ mobile: 1, tablet: 1, desktop: 1, wide: 1 }}
+        className="space-y-16"
+      >
+        <StandardErrorBoundary>
+          <Suspense fallback={<LoadingSpinner variant="page" message="Loading registration details..." />}>
+            <SuccessContent />
+          </Suspense>
+        </StandardErrorBoundary>
+      </ResponsiveGrid>
+    </StandardPageLayout>
   );
 }

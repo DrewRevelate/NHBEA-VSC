@@ -40,10 +40,7 @@ export default function StudentMembershipForm({
         gpa: 0
       },
       essay: '',
-      references: [
-        { name: '', email: '', relationship: '' },
-        { name: '', email: '', relationship: '' }
-      ]
+      references: []
     }
   });
 
@@ -129,10 +126,10 @@ export default function StudentMembershipForm({
     <div className={`max-w-4xl mx-auto ${className}`}>
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">
+        <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4">
           Student Membership Application
         </h1>
-        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+        <p className="text-lg text-white max-w-2xl mx-auto">
           Apply for a free student membership with NHBEA. Join our community of business educators 
           and gain access to professional development opportunities, networking, and resources.
         </p>
@@ -322,7 +319,7 @@ export default function StudentMembershipForm({
           {/* References */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-slate-800">References (2-3 required)</h2>
+              <h2 className="text-xl font-semibold text-slate-800">References (optional, up to 3)</h2>
               {fields.length < 3 && (
                 <button
                   type="button"
@@ -335,24 +332,38 @@ export default function StudentMembershipForm({
               )}
             </div>
             
+            {fields.length === 0 && (
+              <div className="text-center py-8 bg-white/10 rounded-xl border-2 border-dashed border-slate-300">
+                <p className="text-slate-600 mb-4">
+                  References are optional but can strengthen your application
+                </p>
+                <button
+                  type="button"
+                  onClick={() => append({ name: '', email: '', relationship: '' })}
+                  disabled={isSubmitting}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                >
+                  Add Your First Reference
+                </button>
+              </div>
+            )}
+            
             <div className="space-y-6">
               {fields.map((field, index) => (
                 <div key={field.id} className="p-4 border border-slate-200 rounded-xl bg-white/20">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-medium text-slate-700">Reference {index + 1}</h3>
-                    {fields.length > 2 && (
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        disabled={isSubmitting}
-                        className="text-red-600 hover:text-red-700 disabled:opacity-50"
-                        aria-label={`Remove reference ${index + 1}`}
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      disabled={isSubmitting}
+                      className="text-red-600 hover:text-red-700 disabled:opacity-50"
+                      aria-label={`Remove reference ${index + 1}`}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -49,6 +49,89 @@
     animation-delay: 0.3s;
   }
 
+  /* Awards Section Animations */
+  @keyframes cardEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes urgentPulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+    }
+  }
+
+  @keyframes slideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%) skewX(-12deg);
+    }
+    100% {
+      transform: translateX(200%) skewX(-12deg);
+    }
+  }
+
+  @keyframes scaleBounce {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .animate-card-entrance {
+    animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-urgent-pulse {
+    animation: urgentPulse 2s infinite;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 0.8s ease-out;
+  }
+
+  .animate-scale-bounce {
+    animation: scaleBounce 0.3s ease-out;
+  }
+
+  /* Scroll behavior */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   .animation-delay-400 {
     animation-delay: 0.4s;
   }
@@ -147,8 +230,8 @@
     --brand-primary: var(--nhbea-royal-blue);
     --brand-primary-dark: var(--nhbea-royal-blue-dark);
     --brand-primary-light: var(--nhbea-royal-blue-light);
-    --brand-accent-primary: var(--nhbea-accent-orange);
-    --brand-accent-secondary: var(--nhbea-accent-gold);
+    --brand-accent-primary: var(--nhbea-accent-gold);
+    --brand-accent-secondary: var(--nhbea-accent-orange);
     --brand-accent-tertiary: var(--nhbea-accent-green);
     
     /* Layer 2: Semantic Color Tokens
@@ -177,7 +260,7 @@
     --secondary-foreground: 220 9% 46%; /* --nhbea-gray-600 equivalent */
     --muted: 220 13% 95%; /* --nhbea-gray-100 equivalent */  
     --muted-foreground: 220 9% 46%; /* --nhbea-gray-600 equivalent */
-    --accent: 22 82% 39%; /* --nhbea-accent-orange equivalent */
+    --accent: 45 69% 54%; /* --nhbea-accent-gold equivalent */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%; /* --nhbea-error equivalent */
     --destructive-foreground: 0 0% 100%;
@@ -388,6 +471,7 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-primary);
+    font-weight: var(--font-light);
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -395,14 +479,14 @@
   
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-primary);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     letter-spacing: -0.025em;
     line-height: var(--leading-tight);
   }
   
   h1 {
     font-size: var(--text-4xl);
-    font-weight: var(--font-bold);
+    font-weight: var(--font-normal);
     letter-spacing: -0.05em;
     color: var(--nhbea-royal-blue-deeper);
   }
@@ -429,13 +513,15 @@
   
   h6 {
     font-size: var(--text-base);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     color: var(--nhbea-royal-blue);
   }
   
   p {
-    line-height: 1.65;
+    font-weight: var(--font-light);
+    line-height: 1.7;
     color: hsl(var(--muted-foreground));
+    letter-spacing: 0.01em;
   }
   
   a {
@@ -458,7 +544,7 @@
   .heading-1 {
     font-family: var(--font-primary);
     font-size: var(--text-4xl);
-    font-weight: var(--font-bold);
+    font-weight: var(--font-normal);
     line-height: var(--leading-tight);
     letter-spacing: -0.05em;
     color: var(--nhbea-royal-blue-deeper);
@@ -467,7 +553,7 @@
   .heading-2 {
     font-family: var(--font-primary);
     font-size: var(--text-3xl);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     line-height: var(--leading-snug);
     letter-spacing: -0.025em;
     color: var(--nhbea-royal-blue);
@@ -476,7 +562,7 @@
   .heading-3 {
     font-family: var(--font-primary);
     font-size: var(--text-2xl);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     line-height: var(--leading-snug);
     letter-spacing: -0.025em;
     color: var(--nhbea-royal-blue-dark);
@@ -485,7 +571,7 @@
   .heading-4 {
     font-family: var(--font-primary);
     font-size: var(--text-xl);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     line-height: var(--leading-normal);
     color: var(--nhbea-royal-blue-dark);
   }
@@ -493,7 +579,7 @@
   .heading-5 {
     font-family: var(--font-primary);
     font-size: var(--text-lg);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     line-height: var(--leading-normal);
     color: var(--nhbea-royal-blue);
   }
@@ -501,7 +587,7 @@
   .heading-6 {
     font-family: var(--font-primary);
     font-size: var(--text-base);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     line-height: var(--leading-normal);
     color: var(--nhbea-royal-blue);
   }
@@ -537,7 +623,7 @@
   .text-caption {
     font-family: var(--font-primary);
     font-size: var(--text-xs);
-    font-weight: var(--font-normal);
+    font-weight: var(--font-light);
     line-height: var(--leading-normal);
     color: var(--nhbea-gray-500);
   }
@@ -550,6 +636,76 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Cross-browser compatibility fixes */
+@supports not (backdrop-filter: blur(10px)) {
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .dark .backdrop-blur-sm,
+  .dark .backdrop-blur-md,
+  .dark .backdrop-blur-lg {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+}
+
+/* Safari-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .animate-bounce {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-iteration-count: infinite;
+    animation-name: bounce;
+    animation-timing-function: ease-in-out;
+  }
+}
+
+/* Firefox-specific fixes */
+@-moz-document url-prefix() {
+  .group:hover .group-hover\:scale-110 {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+  }
+}
+
+/* Edge-specific fixes */
+@supports (-ms-ime-align:auto) {
+  .rounded-xl {
+    border-radius: 12px;
+  }
+  
+  .rounded-2xl {
+    border-radius: 16px;
+  }
+}
+
+/* Fallbacks for older browsers */
+.bg-gradient-to-r,
+.bg-gradient-to-br,
+.bg-gradient-to-t {
+  background-image: linear-gradient(90deg, var(--nhbea-royal-blue), var(--nhbea-royal-blue-light));
+}
+
+/* IE11 fallbacks (if needed) */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .flex {
+    display: -ms-flexbox;
+    display: flex;
+  }
+  
+  .items-center {
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  
+  .justify-center {
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
 }
 
 /* Respect user's motion preferences */
@@ -746,7 +902,7 @@ html {
   .nhbea-card-title {
     font-family: var(--font-primary);
     font-size: var(--text-xl);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     color: var(--nhbea-royal-blue-dark);
     margin: 0 0 var(--space-sm) 0;
     line-height: var(--leading-tight);
@@ -796,7 +952,7 @@ html {
     background: var(--nhbea-royal-blue);
     color: var(--nhbea-gray-50);
     font-family: var(--font-primary);
-    font-weight: var(--font-medium);
+    font-weight: var(--font-normal);
     font-size: var(--text-base);
     padding: var(--space-md) var(--space-xl);
     border-radius: var(--radius-md);
@@ -833,7 +989,7 @@ html {
     background: transparent;
     color: var(--nhbea-royal-blue);
     font-family: var(--font-primary);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     font-size: var(--text-base);
     padding: var(--space-md) var(--space-xl);
     border: 2px solid var(--nhbea-royal-blue);
@@ -870,7 +1026,7 @@ html {
     background: var(--nhbea-accent-gold-dark);
     color: var(--nhbea-gray-50);
     font-family: var(--font-primary);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     font-size: var(--text-base);
     padding: var(--space-md) var(--space-xl);
     border-radius: var(--radius-md);
@@ -908,7 +1064,7 @@ html {
     background: transparent;
     color: var(--nhbea-royal-blue);
     font-family: var(--font-primary);
-    font-weight: var(--font-medium);
+    font-weight: var(--font-normal);
     font-size: var(--text-base);
     padding: var(--space-md) var(--space-xl);
     border: none;
@@ -950,7 +1106,7 @@ html {
     font-size: var(--text-lg);
     padding: var(--space-lg) var(--space-2xl);
     min-height: 52px;
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
   }
   
   /* Enhanced Form Components - Brand-Consistent Styling */
@@ -1047,7 +1203,7 @@ html {
   .nhbea-text-caption {
     font-family: var(--font-primary);
     font-size: var(--text-xs);
-    font-weight: var(--font-medium);
+    font-weight: var(--font-light);
     line-height: var(--leading-normal);
     color: var(--nhbea-gray-400);
     text-transform: uppercase;
@@ -1126,7 +1282,7 @@ html {
   /* Enhanced Navigation Components - Royal Blue Brand System */
   .nhbea-nav-link {
     font-family: var(--font-primary);
-    font-weight: var(--font-medium);
+    font-weight: var(--font-normal);
     font-size: var(--text-base);
     color: var(--nhbea-gray-600);
     text-decoration: none;
@@ -1153,7 +1309,7 @@ html {
   
   .nhbea-nav-link.active {
     color: var(--nhbea-royal-blue);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     background: var(--nhbea-royal-blue-subtle);
     position: relative;
   }
@@ -1246,6 +1402,39 @@ html {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .7;
+  }
+}
+
+@keyframes wiggle {
+  0%, 7% {
+    transform: rotateZ(0);
+  }
+  15% {
+    transform: rotateZ(-15deg);
+  }
+  20% {
+    transform: rotateZ(10deg);
+  }
+  25% {
+    transform: rotateZ(-10deg);
+  }
+  30% {
+    transform: rotateZ(6deg);
+  }
+  35% {
+    transform: rotateZ(-4deg);
+  }
+  40%, 100% {
+    transform: rotateZ(0);
   }
 }
 

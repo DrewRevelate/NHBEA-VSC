@@ -117,9 +117,9 @@ function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps 
         <div className="max-w-5xl mx-auto text-center">
           {/* Main heading - Clear hierarchy */}
           <div className="mb-8 animate-fade-in">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-white leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal mb-4 text-white leading-tight">
               <span className="block tracking-tight">New Hampshire</span>
-              <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white/95 font-semibold tracking-wide mt-2">Business Educators Association</span>
+              <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white/95 font-light tracking-wide mt-2">Business Educators Association</span>
             </h1>
           </div>
           
@@ -139,8 +139,8 @@ function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps 
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.168 18.477 18.582 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">Professional Development</h3>
-                <p className="text-white/90 leading-relaxed text-sm font-medium">Continuous learning opportunities and certification programs to advance your career</p>
+                <h3 className="text-xl font-light text-white mb-4">Professional Development</h3>
+                <p className="text-white/90 leading-relaxed text-sm font-light">Continuous learning opportunities and certification programs to advance your career</p>
               </div>
               
               <div className="flex flex-col items-center text-center p-8 bg-white/15 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg">
@@ -149,8 +149,8 @@ function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps 
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">Networking</h3>
-                <p className="text-white/90 leading-relaxed text-sm font-medium">Connect with fellow educators and industry professionals across New Hampshire</p>
+                <h3 className="text-xl font-light text-white mb-4">Networking</h3>
+                <p className="text-white/90 leading-relaxed text-sm font-light">Connect with fellow educators and industry professionals across New Hampshire</p>
               </div>
               
               <div className="flex flex-col items-center text-center p-8 bg-white/15 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg">
@@ -159,35 +159,53 @@ function HomeHeroVariant({ content, title, subtitle, className }: HomeHeroProps 
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">Career Growth</h3>
-                <p className="text-white/90 leading-relaxed text-sm font-medium">Recognition programs and advancement opportunities in business education</p>
+                <h3 className="text-xl font-light text-white mb-4">Career Growth</h3>
+                <p className="text-white/90 leading-relaxed text-sm font-light">Recognition programs and advancement opportunities in business education</p>
               </div>
             </div>
           </div>
 
-          {/* Primary CTA - Membership Focus */}
+          {/* Clear CTA Hierarchy - Primary Action Focus */}
           <div className="mb-16 animate-slide-up animation-delay-400">
-            <div className="flex flex-col gap-4 justify-center max-w-sm mx-auto">
+            <div className="text-center max-w-md mx-auto">
+              {/* Primary CTA - Much larger and more prominent */}
               <Link 
                 href="/membership/professional"
-                className="group px-10 py-6 bg-[var(--nhbea-accent-gold-dark)] text-white font-bold text-lg rounded-xl hover:bg-[var(--nhbea-accent-gold)] transition-all duration-300 shadow-xl hover:shadow-2xl text-center transform hover:scale-110 min-h-[56px] flex items-center justify-center relative overflow-hidden"
+                className="inline-block w-full mb-6 px-12 py-6 bg-gradient-to-r from-[var(--nhbea-accent-gold)] to-[var(--nhbea-accent-gold-dark)] text-white font-normal text-xl rounded-2xl shadow-2xl text-center relative overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-[var(--nhbea-accent-gold)] to-[var(--nhbea-accent-gold-dark)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span className="relative z-10 group-hover:animate-pulse flex items-center gap-2">
-                  <span className="group-hover:animate-bounce">🎓</span>
-                  Join NHBEA Today
+                <span className="flex items-center justify-center gap-3">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.1 1 1 0 01-.95-.8zM6.331 10.8a6.968 6.968 0 011.239-.1c1.845 0 3.58.532 5.043 1.451A8.967 8.967 0 0110 18a8.967 8.967 0 01-2.613-5.849L6.331 10.8z"/>
+                  </svg>
+                  <span className="text-xl font-normal">Join NHBEA Today</span>
                 </span>
+                <div className="mt-2 text-sm font-light opacity-90">
+                  Professional Membership • $50/year
+                </div>
               </Link>
-              <Link 
-                href="/conference"
-                className="group px-8 py-4 bg-white/10 text-white font-semibold text-base rounded-lg border-2 border-white/40 hover:bg-white/20 hover:text-white transition-all duration-300 text-center backdrop-blur-sm min-h-[48px] flex items-center justify-center hover:scale-105 relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span className="relative z-10 flex items-center gap-2">
-                  Explore Events
-                  <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-                </span>
-              </Link>
+
+              {/* Secondary Actions - Much smaller and clearly secondary */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link 
+                  href="/conference"
+                  className="group px-6 py-3 text-white/90 font-light text-sm rounded-lg border border-white/30 hover:bg-white/10 hover:text-white transition-all duration-300 text-center backdrop-blur-sm flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span>View Conference</span>
+                </Link>
+                
+                <Link 
+                  href="/awards"
+                  className="group px-6 py-3 text-white/90 font-light text-sm rounded-lg border border-white/30 hover:bg-white/10 hover:text-white transition-all duration-300 text-center backdrop-blur-sm flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                  <span>Nominate Educator</span>
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -232,7 +250,7 @@ function AboutHeroVariant({ title, subtitle, boardCount = 12, establishedYear = 
       
       <div className="relative z-10 container mx-auto px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-white drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal mb-6 leading-tight text-white drop-shadow-lg">
             {title || "About NHBEA"}
           </h1>
           <p className="text-lg md:text-xl lg:text-2xl mb-12 text-white leading-relaxed max-w-3xl mx-auto drop-shadow-md">
@@ -242,19 +260,19 @@ function AboutHeroVariant({ title, subtitle, boardCount = 12, establishedYear = 
           {/* Stats section with improved design */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto">
             <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-              <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">{boardCount}</div>
+              <div className="text-2xl md:text-3xl font-normal text-[var(--nhbea-accent-orange)] mb-1">{boardCount}</div>
               <div className="text-white/80 text-sm">Board Members</div>
             </div>
             <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-              <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">{new Date().getFullYear() - establishedYear}+</div>
+              <div className="text-2xl md:text-3xl font-normal text-[var(--nhbea-accent-orange)] mb-1">{new Date().getFullYear() - establishedYear}+</div>
               <div className="text-white/80 text-sm">Years Serving</div>
             </div>
             <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-              <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">500+</div>
-              <div className="text-white/80 text-sm">Members</div>
+              <div className="text-2xl md:text-3xl font-normal text-[var(--nhbea-accent-orange)] mb-1">250+</div>
+              <div className="text-white/80 text-sm">Active Members</div>
             </div>
             <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-              <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">50+</div>
+              <div className="text-2xl md:text-3xl font-normal text-[var(--nhbea-accent-orange)] mb-1">50+</div>
               <div className="text-white/80 text-sm">Schools</div>
             </div>
           </div>
@@ -280,17 +298,17 @@ function ConferenceHeroVariant({ title, subtitle, conference, className }: Confe
           {/* Section indicator */}
           <div className="inline-flex items-center space-x-3 text-white/90 mb-8 animate-[fadeInUp_1s_ease-out_0.1s_forwards] opacity-0">
             <div className="w-8 h-px bg-white/80"></div>
-            <span className="text-sm font-medium tracking-wider uppercase">Annual Conference</span>
+            <span className="text-sm font-light tracking-wider uppercase">Annual Conference</span>
             <div className="w-8 h-px bg-white/80"></div>
           </div>
           
           {/* Main heading */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white leading-tight animate-[fadeInUp_1s_ease-out_0.2s_forwards] opacity-0">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-normal mb-6 text-white leading-tight animate-[fadeInUp_1s_ease-out_0.2s_forwards] opacity-0">
             {conference?.title || title || "NHBEA Annual Conference"}
           </h1>
           
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl font-medium mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed animate-[fadeInUp_1s_ease-out_0.3s_forwards] opacity-0">
+          <p className="text-xl md:text-2xl font-light mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed animate-[fadeInUp_1s_ease-out_0.3s_forwards] opacity-0">
             {subtitle || "Join New Hampshire's premier gathering of business educators for professional development, networking, and innovation"}
           </p>
           
@@ -302,7 +320,7 @@ function ConferenceHeroVariant({ title, subtitle, conference, className }: Confe
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span className="text-white font-semibold">{conference.date}</span>
+                  <span className="text-white font-light">{conference.date}</span>
                 </div>
                 
                 <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
@@ -310,14 +328,14 @@ function ConferenceHeroVariant({ title, subtitle, conference, className }: Confe
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  <span className="text-white font-semibold">{conference.location}</span>
+                  <span className="text-white font-light">{conference.location}</span>
                 </div>
               </div>
               
               {conference.earlyBirdDeadline && (
                 <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-6 py-2 border border-white/20 mb-8">
                   <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-white/90 text-sm font-semibold">
+                  <span className="text-white/90 text-sm font-light">
                     Early Bird Pricing Available Until {conference.earlyBirdDeadline}
                   </span>
                 </div>
@@ -330,7 +348,7 @@ function ConferenceHeroVariant({ title, subtitle, conference, className }: Confe
             <div className="animate-[fadeInUp_1s_ease-out_0.5s_forwards] opacity-0">
               <Link 
                 href="/conference/register"
-                className="inline-block px-10 py-4 bg-white text-[var(--nhbea-royal-blue)] font-bold text-lg rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                className="inline-block px-10 py-4 bg-white text-[var(--nhbea-royal-blue)] font-normal text-lg rounded-xl shadow-xl"
               >
                 Register Now
               </Link>
@@ -352,14 +370,14 @@ function MembershipHeroVariant({ title, subtitle, membershipType, pricing, benef
     >
       <div className="container mx-auto px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center text-white">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-normal mb-6 leading-tight">
             {title || `${membershipType === 'professional' ? 'Professional' : 'Student'} Membership`}
           </h1>
           <p className="text-xl mb-8 text-white/90">
             {subtitle || "Join our community of dedicated business educators"}
           </p>
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-            <div className="text-5xl font-bold text-[var(--nhbea-accent-orange)] mb-2">
+            <div className="text-5xl font-normal text-[var(--nhbea-accent-orange)] mb-2">
               {pricing.currency}{pricing.amount}
             </div>
             <div className="text-white/80 mb-6">per {pricing.period}</div>
@@ -390,7 +408,7 @@ function HallOfFameHeroVariant({ title, subtitle, stats, className }: HallOfFame
     >
       <div className="container mx-auto px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center text-white">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-normal mb-6 leading-tight">
             {title || "Hall of Fame"}
           </h1>
           <p className="text-xl md:text-2xl mb-12 text-white/90 leading-relaxed">
@@ -398,11 +416,11 @@ function HallOfFameHeroVariant({ title, subtitle, stats, className }: HallOfFame
           </p>
           <div className="flex justify-center space-x-12">
             <div className="text-center">
-              <div className="text-5xl font-bold text-[var(--nhbea-accent-orange)]">{stats.totalMembers}</div>
+              <div className="text-5xl font-normal text-[var(--nhbea-accent-orange)]">{stats.totalMembers}</div>
               <div className="text-white/80">Honored Members</div>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-[var(--nhbea-accent-orange)]">{stats.latestYear}</div>
+              <div className="text-5xl font-normal text-[var(--nhbea-accent-orange)]">{stats.latestYear}</div>
               <div className="text-white/80">Latest Induction</div>
             </div>
           </div>
@@ -438,10 +456,10 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
           {/* Urgent notification bar */}
           {showUrgency && (
             <div className="mb-8 animate-[fadeInUp_1s_ease-out_0.1s_forwards] opacity-0">
-              <div className="flex items-center justify-center space-x-3 bg-[var(--nhbea-accent-orange)] text-white px-6 py-3 rounded-full text-center font-semibold shadow-lg">
+              <div className="flex items-center justify-center space-x-3 bg-[var(--nhbea-accent-orange)] text-white px-6 py-3 rounded-full text-center font-light shadow-lg">
                 <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                 <span className="text-sm sm:text-base">
-                  ⚡ Only {daysUntilDeadline} days left to nominate! Deadline: December 15th
+                  Only {daysUntilDeadline} days left to nominate! Deadline: December 15th
                 </span>
               </div>
             </div>
@@ -450,7 +468,7 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
           <div className="text-center text-[var(--nhbea-gray-800)] mb-12">
             {/* Compelling headline with emotional appeal */}
             <div className="mb-8 animate-[fadeInUp_1s_ease-out_0.2s_forwards] opacity-0">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-normal mb-6 leading-tight">
                 {title || (
                   <>
                     <span className="block">Celebrate</span>
@@ -473,20 +491,20 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
             <div className="mb-12 animate-[fadeInUp_1s_ease-out_0.4s_forwards] opacity-0">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
                 <div className="text-center p-4 bg-white border border-gray-200 shadow-lg">
-                  <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">102</div>
-                  <div className="text-[var(--nhbea-gray-600)] text-sm font-medium">Years of Recognition</div>
+                  <div className="text-2xl md:text-3xl font-normal text-[var(--nhbea-accent-orange)] mb-1">102</div>
+                  <div className="text-[var(--nhbea-gray-600)] text-sm font-light">Years of Recognition</div>
                 </div>
                 <div className="text-center p-4 bg-white border border-gray-200 shadow-lg">
-                  <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">{activeAwards || 2}</div>
-                  <div className="text-[var(--nhbea-gray-600)] text-sm font-medium">Award Categories</div>
+                  <div className="text-2xl md:text-3xl font-normal text-[var(--nhbea-accent-orange)] mb-1">{activeAwards || 2}</div>
+                  <div className="text-[var(--nhbea-gray-600)] text-sm font-light">Award Categories</div>
                 </div>
                 <div className="text-center p-4 bg-white border border-gray-200 shadow-lg">
-                  <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">250+</div>
-                  <div className="text-[var(--nhbea-gray-600)] text-sm font-medium">Past Winners</div>
+                  <div className="text-2xl md:text-3xl font-normal text-[var(--nhbea-accent-orange)] mb-1">250+</div>
+                  <div className="text-[var(--nhbea-gray-600)] text-sm font-light">Past Winners</div>
                 </div>
                 <div className="text-center p-4 bg-white border border-gray-200 shadow-lg">
-                  <div className="text-2xl md:text-3xl font-bold text-[var(--nhbea-accent-orange)] mb-1">NH</div>
-                  <div className="text-[var(--nhbea-gray-600)] text-sm font-medium">Statewide Impact</div>
+                  <div className="text-2xl md:text-3xl font-normal text-[var(--nhbea-accent-orange)] mb-1">NH</div>
+                  <div className="text-[var(--nhbea-gray-600)] text-sm font-light">Statewide Impact</div>
                 </div>
               </div>
             </div>
@@ -496,20 +514,19 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto animate-[fadeInUp_1s_ease-out_0.5s_forwards] opacity-0">
             <Link 
               href="/awards/nominate"
-              className="group relative px-8 py-4 bg-gradient-to-r from-[var(--nhbea-accent-orange)] to-[var(--nhbea-accent-orange-dark)] text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[var(--nhbea-accent-orange)]/30"
+              className="px-8 py-4 bg-gradient-to-r from-[var(--nhbea-accent-orange)] to-[var(--nhbea-accent-orange-dark)] text-white font-normal text-lg rounded-xl shadow-lg focus:outline-none focus:ring-4 focus:ring-[var(--nhbea-accent-orange)]/30"
             >
-              <span className="relative z-10 flex items-center justify-center">
+              <span className="flex items-center justify-center">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                 </svg>
                 Nominate Someone
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[var(--nhbea-accent-orange-dark)] to-[var(--nhbea-accent-orange)] rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
             
             <Link 
               href="#available-awards"
-              className="px-8 py-4 bg-white border-2 border-[var(--nhbea-royal-blue)] text-[var(--nhbea-royal-blue)] font-semibold text-lg rounded-xl hover:bg-[var(--nhbea-royal-blue)] hover:text-white transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[var(--nhbea-royal-blue)]/30 text-center shadow-sm"
+              className="px-8 py-4 bg-white border-2 border-[var(--nhbea-royal-blue)] text-[var(--nhbea-royal-blue)] font-light text-lg rounded-xl focus:outline-none focus:ring-4 focus:ring-[var(--nhbea-royal-blue)]/30 text-center shadow-sm"
             >
               <span className="flex items-center justify-center">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -523,7 +540,7 @@ function AwardsHeroVariant({ title, subtitle, nominationDeadline, activeAwards, 
           {/* Quick help text */}
           <div className="text-center mt-8 animate-[fadeInUp_1s_ease-out_0.6s_forwards] opacity-0">
             <p className="text-[var(--nhbea-gray-600)] text-sm">
-              🤔 Not sure who to nominate? <Link href="#nomination-guide" className="underline text-[var(--nhbea-royal-blue)] hover:text-[var(--nhbea-royal-blue-dark)] transition-colors font-medium">See our nomination guide</Link>
+              Not sure who to nominate? <Link href="#nomination-guide" className="underline text-[var(--nhbea-royal-blue)] hover:text-[var(--nhbea-royal-blue-dark)] transition-colors font-light">See our nomination guide</Link>
             </p>
           </div>
         </div>

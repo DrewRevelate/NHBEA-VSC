@@ -53,7 +53,7 @@ export async function getPastPresidentsFromMembers(): Promise<PastPresident[]> {
       pastPresidents.push(pastPresident);
     });
     
-    // Sort by year_started (descending - most recent first)
+    // Sort by year_started (descending - most recent first), then alphabetically by last name
     return pastPresidents.sort((a, b) => {
       // Extract year from order (which contains year_started)
       const yearA = a.order || 0;
@@ -63,7 +63,11 @@ export async function getPastPresidentsFromMembers(): Promise<PastPresident[]> {
       if (yearA !== yearB) {
         return yearB - yearA;
       }
-      return a.name.localeCompare(b.name);
+      
+      // If same year, sort alphabetically by last name
+      const lastNameA = a.name.split(' ').pop() || '';
+      const lastNameB = b.name.split(' ').pop() || '';
+      return lastNameA.localeCompare(lastNameB);
     });
   } catch (error) {
     console.error('Error fetching past presidents from members collection:', error);

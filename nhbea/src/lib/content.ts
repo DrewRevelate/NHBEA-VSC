@@ -8,13 +8,52 @@ import {
   createSafeContent 
 } from './contentValidation';
 
+/**
+ * Converts Firebase Timestamps and other complex objects to plain objects
+ * to prevent "toJSON" method serialization issues with Client Components
+ */
+function serializeFirestoreData(data: any): any {
+  if (data === null || data === undefined) {
+    return data;
+  }
+  
+  if (data.toDate && typeof data.toDate === 'function') {
+    // Firebase Timestamp
+    return data.toDate().toISOString();
+  }
+  
+  if (data.seconds !== undefined && data.nanoseconds !== undefined) {
+    // Firebase Timestamp object format
+    return new Date(data.seconds * 1000 + data.nanoseconds / 1000000).toISOString();
+  }
+  
+  if (Array.isArray(data)) {
+    return data.map(serializeFirestoreData);
+  }
+  
+  if (typeof data === 'object' && data !== null) {
+    const serialized: any = {};
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        serialized[key] = serializeFirestoreData(data[key]);
+      }
+    }
+    return serialized;
+  }
+  
+  return data;
+}
+
 export async function getHomepageContent(): Promise<HomepageContent | null> {
   try {
     const docRef = doc(db, 'content', 'homepage');
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      const data = docSnap.data();
+      const rawData = docSnap.data();
+      
+      // Convert Firebase Timestamps to plain objects
+      const data = serializeFirestoreData(rawData);
       
       // Perform content integrity check
       const validationResult = await performContentIntegrityCheck(data, 'homepage');
@@ -53,7 +92,10 @@ export async function getContentSections(): Promise<ContentSection[]> {
     // Process each document with validation
     for (const docSnapshot of querySnapshot.docs) {
       if (docSnapshot.id !== 'homepage') {
-        const data = { id: docSnapshot.id, ...docSnapshot.data() };
+        const rawData = { id: docSnapshot.id, ...docSnapshot.data() };
+        
+        // Convert Firebase Timestamps to plain objects
+        const data = serializeFirestoreData(rawData);
         
         // Perform content integrity check
         const validationResult = await performContentIntegrityCheck(data, 'section');

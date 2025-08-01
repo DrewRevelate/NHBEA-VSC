@@ -74,7 +74,7 @@ export const studentMembershipSchema = z.object({
     .min(100, 'Essay must be at least 100 characters')
     .max(2000, 'Essay must be less than 2000 characters'),
 
-  // References
+  // References (optional)
   references: z
     .array(
       z.object({
@@ -96,8 +96,9 @@ export const studentMembershipSchema = z.object({
           .max(100, 'Relationship description must be less than 100 characters')
       })
     )
-    .min(2, 'At least 2 references are required')
     .max(3, 'Maximum 3 references allowed')
+    .optional()
+    .default([])
 });
 
 // Verify that the Zod schema matches our TypeScript interface

@@ -52,17 +52,17 @@ function AwardCard({ award, index }: { award: Award; index: number }) {
     }
     if (daysUntilDeadline <= 30) {
       return {
-        bg: 'bg-[var(--nhbea-academic-gold)]/10',
-        text: 'text-[var(--nhbea-academic-gold-dark)]',
-        dot: 'bg-[var(--nhbea-academic-gold)]',
+        bg: 'bg-yellow-100',
+        text: 'text-yellow-700',
+        dot: 'bg-yellow-500',
         label: `⏰ ${daysUntilDeadline} days left`,
         priority: 'medium'
       };
     }
     return {
-      bg: 'bg-[var(--nhbea-royal-blue)]/10',
-      text: 'text-[var(--nhbea-royal-blue-dark)]',
-      dot: 'bg-[var(--nhbea-royal-blue)]',
+      bg: 'bg-blue-100',
+      text: 'text-blue-700',
+      dot: 'bg-blue-500',
       label: `📅 Due ${awardsUtils.formatDeadline(award.deadline)}`,
       priority: 'normal'
     };
@@ -73,7 +73,7 @@ function AwardCard({ award, index }: { award: Award; index: number }) {
   // UX enhancement: Show motivation and impact
   const getMotivationalText = () => {
     if (canNominate) {
-      return "This nomination could be the recognition they deserve! ⭐";
+      return "This nomination could be the recognition they deserve!";
     }
     return "Check back next year for nomination opportunities.";
   };
@@ -84,10 +84,10 @@ function AwardCard({ award, index }: { award: Award; index: number }) {
         isVisible ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-8 opacity-0 scale-95'
       }`}
     >
-      <article className={`group rounded-2xl border p-6 md:p-8 h-full flex flex-col relative overflow-hidden ${
+      <article className={`rounded-2xl border-2 p-6 md:p-8 h-full flex flex-col relative overflow-hidden ${
         canNominate 
-          ? 'bg-white shadow-lg border-[var(--color-border-primary)] hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2 transition-all duration-500 hover:border-[var(--nhbea-royal-blue)]/50' 
-          : 'bg-gray-50 shadow-sm border-gray-200 opacity-75'
+          ? 'bg-white shadow-lg border-gray-400' 
+          : 'bg-gray-50 shadow-sm border-gray-300 opacity-75'
       }`}>
         
         {/* Priority indicator bar for urgent deadlines */}
@@ -107,7 +107,7 @@ function AwardCard({ award, index }: { award: Award; index: number }) {
             {/* Award Category Icon */}
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-110 transition-transform duration-300 ${
               canNominate 
-                ? 'bg-gradient-to-br from-[var(--nhbea-academic-gold)] to-[var(--nhbea-academic-gold-dark)]' 
+                ? 'bg-gradient-to-br from-yellow-500 to-yellow-600' 
                 : 'bg-gradient-to-br from-gray-300 to-gray-400'
             }`}>
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -137,7 +137,7 @@ function AwardCard({ award, index }: { award: Award; index: number }) {
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className={`text-sm font-medium underline hover:no-underline transition-colors ${
-                canNominate ? 'text-[var(--nhbea-royal-blue)]' : 'text-gray-400'
+                canNominate ? 'text-blue-600' : 'text-gray-400'
               }`}
             >
               {isExpanded ? 'Show less' : 'Read more'}
@@ -151,7 +151,7 @@ function AwardCard({ award, index }: { award: Award; index: number }) {
             canNominate ? 'text-[var(--color-text-primary)]' : 'text-gray-500'
           }`}>
             <svg className={`w-4 h-4 mr-2 ${
-              canNominate ? 'text-[var(--nhbea-royal-blue)]' : 'text-gray-400'
+              canNominate ? 'text-blue-600' : 'text-gray-400'
             }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -159,7 +159,7 @@ function AwardCard({ award, index }: { award: Award; index: number }) {
           </h4>
           <div className={`rounded-xl p-4 border-l-4 ${
             canNominate 
-              ? 'bg-[var(--nhbea-royal-blue)]/5 border-[var(--nhbea-royal-blue)]' 
+              ? 'bg-blue-50 border-blue-500' 
               : 'bg-gray-50 border-gray-300'
           }`}>
             <p className={`text-sm leading-relaxed ${
@@ -172,8 +172,8 @@ function AwardCard({ award, index }: { award: Award; index: number }) {
 
         {/* Motivational Message */}
         {canNominate && (
-          <div className="mb-6 p-3 bg-gradient-to-r from-[var(--nhbea-royal-blue)]/5 to-[var(--nhbea-academic-gold)]/5 rounded-lg border border-[var(--nhbea-royal-blue)]/20">
-            <p className="text-sm text-[var(--nhbea-royal-blue)] font-medium text-center">
+          <div className="mb-6 p-3 bg-gradient-to-r from-blue-50 to-yellow-50 rounded-lg border border-blue-200">
+            <p className="text-sm text-blue-700 font-medium text-center">
               {getMotivationalText()}
             </p>
           </div>
@@ -224,28 +224,28 @@ function CategorySection({ category, awards, categoryIndex }: {
     return () => clearTimeout(timer);
   }, [categoryIndex]);
 
-  // UX Enhancement: Always show open nominations first, then sort by urgency
+  // Enhanced UX: Prioritize active awards, move expired awards to bottom
   const sortedAwards = [...awards].sort((a, b) => {
     const aCanNominate = a.isActive && !awardsUtils.isDeadlinePassed(a.deadline);
     const bCanNominate = b.isActive && !awardsUtils.isDeadlinePassed(b.deadline);
     const aDaysLeft = awardsUtils.getDaysUntilDeadline(a.deadline);
     const bDaysLeft = awardsUtils.getDaysUntilDeadline(b.deadline);
     
-    // FIRST PRIORITY: Open nominations always come first
+    // HIGHEST PRIORITY: Active nominations ALWAYS come first
     if (aCanNominate && !bCanNominate) return -1;
     if (!aCanNominate && bCanNominate) return 1;
     
-    // SECOND PRIORITY: Among open nominations, urgent deadlines first
+    // SECOND PRIORITY: Among active nominations, sort by urgency
     if (aCanNominate && bCanNominate) {
-      // Urgent deadlines (≤7 days) first
+      // Critical deadlines (≤7 days) first
       if (aDaysLeft <= 7 && bDaysLeft > 7) return -1;
       if (bDaysLeft <= 7 && aDaysLeft > 7) return 1;
       
-      // Then sort by deadline (soonest first)
+      // Then by deadline (soonest first)
       return aDaysLeft - bDaysLeft;
     }
     
-    // THIRD PRIORITY: Among closed nominations, sort by how recently they closed
+    // LOWEST PRIORITY: Expired awards go to bottom, sorted by how recently they closed
     if (!aCanNominate && !bCanNominate) {
       return bDaysLeft - aDaysLeft; // Most recently closed first
     }
@@ -253,10 +253,15 @@ function CategorySection({ category, awards, categoryIndex }: {
     return 0;
   });
 
-  // Count active nominations for user guidance
-  const activeCount = sortedAwards.filter(award => 
+  const activeAwards = sortedAwards.filter(award => 
     award.isActive && !awardsUtils.isDeadlinePassed(award.deadline)
-  ).length;
+  );
+  const expiredAwards = sortedAwards.filter(award => 
+    !award.isActive || awardsUtils.isDeadlinePassed(award.deadline)
+  );
+
+  // Count active nominations for user guidance
+  const activeCount = activeAwards.length;
 
   const categoryId = `category-${category.toLowerCase().replace(/\s+/g, '-')}`;
 
@@ -270,12 +275,10 @@ function CategorySection({ category, awards, categoryIndex }: {
       <div className="mb-12">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[var(--color-text-primary)] mb-2">
-              <span className="bg-gradient-to-r from-[var(--nhbea-royal-blue)] via-[var(--nhbea-royal-blue-dark)] to-[var(--nhbea-royal-blue-deeper)] bg-clip-text text-transparent">
-                {awardsUtils.formatCategory(category as Award['category'])}
-              </span>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
+              {awardsUtils.formatCategory(category as Award['category'])}
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[var(--nhbea-royal-blue)] to-[var(--nhbea-royal-blue-dark)] rounded-full"></div>
+            <div className="w-24 h-1 bg-gray-300 rounded-full"></div>
           </div>
           
           {/* Category status indicator */}
@@ -296,15 +299,51 @@ function CategorySection({ category, awards, categoryIndex }: {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-        {sortedAwards.map((award, index) => (
-          <AwardCard 
-            key={award.id} 
-            award={award} 
-            index={index}
-          />
-        ))}
-      </div>
+      {/* Active Awards Section */}
+      {activeAwards.length > 0 && (
+        <div className="mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {activeAwards.map((award, index) => (
+              <AwardCard 
+                key={award.id} 
+                award={award} 
+                index={index}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Expired Awards Section */}
+      {expiredAwards.length > 0 && (
+        <div className="mb-16">
+          {/* Separator for expired awards */}
+          {activeAwards.length > 0 && (
+            <div className="flex items-center mb-8">
+              <hr className="flex-1 border-gray-300" />
+              <div className="px-4 py-2 bg-gray-100 rounded-full">
+                <span className="text-sm font-medium text-gray-600 flex items-center">
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Past Deadline
+                </span>
+              </div>
+              <hr className="flex-1 border-gray-300" />
+            </div>
+          )}
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {expiredAwards.map((award, index) => (
+              <AwardCard 
+                key={award.id} 
+                award={award} 
+                index={activeAwards.length + index}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

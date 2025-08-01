@@ -38,7 +38,7 @@ export default function EnhancedMissionSection({
       ),
       title: "Professional Development",
       description: "Supporting continuous growth and career advancement through workshops, certifications, and networking opportunities for our educator community.",
-      color: "from-[var(--nhbea-accent-orange)] to-[var(--nhbea-accent-orange-dark)]"
+      color: "from-[var(--nhbea-accent-gold-dark)] to-[var(--nhbea-accent-gold)]"
     },
     {
       icon: (
@@ -53,36 +53,47 @@ export default function EnhancedMissionSection({
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-white via-slate-50/30 to-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -right-32 w-96 h-96 bg-[var(--nhbea-royal-blue)]/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 -left-32 w-96 h-96 bg-[var(--nhbea-accent-orange)]/5 rounded-full blur-3xl"></div>
-      </div>
+    <section className="py-24 bg-white relative">
+      {/* Clean white background for optimal readability */}
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Enhanced title section */}
-          <div className={`text-center mb-20 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <span className="inline-block px-4 py-2 bg-[var(--nhbea-royal-blue)]/10 text-[var(--nhbea-royal-blue)] rounded-full text-sm font-semibold mb-6">
+          <div className={`text-center mb-24 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <span className="inline-block px-4 py-2 bg-[var(--nhbea-royal-blue)]/10 text-[var(--nhbea-royal-blue)] rounded-full text-sm font-light mb-6">
               What Drives Us
             </span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 leading-tight">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-gray-900 mb-10 leading-tight">
               Our <span className="bg-gradient-to-r from-[var(--nhbea-royal-blue)] to-[var(--nhbea-royal-blue-dark)] bg-clip-text text-transparent">Mission</span>
             </h2>
             <div className="max-w-4xl mx-auto">
-              <p className="text-xl md:text-2xl text-gray-600 leading-relaxed mb-8">
+              <p className="text-2xl md:text-3xl text-gray-700 leading-relaxed mb-8 font-light">
                 {content}
               </p>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Through professional development, networking opportunities, and innovative programs, we empower educators to inspire the next generation of business leaders while fostering strong connections between academia and industry.
-              </p>
+              <details className="group cursor-pointer">
+                <summary 
+                  className="text-lg text-[var(--nhbea-royal-blue)] font-light hover:text-[var(--nhbea-royal-blue-dark)] transition-colors duration-200 list-none flex items-center justify-center gap-2 mb-6"
+                  aria-expanded="false"
+                  role="button"
+                  aria-label="Learn more about our impact - click to expand"
+                >
+                  <span>Learn More About Our Impact</span>
+                  <svg className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <div className="mt-4 p-6 bg-[var(--nhbea-gray-50)] rounded-xl border border-[var(--nhbea-gray-200)]">
+                  <p className="text-xl text-gray-600 leading-relaxed font-normal">
+                    Through professional development, networking opportunities, and innovative programs, we empower educators to inspire the next generation of business leaders while fostering strong connections between academia and industry.
+                  </p>
+                </div>
+              </details>
             </div>
-            <div className="w-24 h-1 bg-gradient-to-r from-[var(--nhbea-royal-blue)] to-[var(--nhbea-accent-orange)] rounded-full mx-auto mt-8"></div>
+            <div className="w-24 h-1 bg-[var(--nhbea-royal-blue)] rounded-full mx-auto mt-8"></div>
           </div>
 
           {/* Enhanced mission pillars */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 mb-24">
             {missionPillars.map((pillar, index) => (
               <div 
                 key={index}
@@ -90,23 +101,18 @@ export default function EnhancedMissionSection({
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
-                <div className="relative bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-500 hover:scale-105 h-full">
-                  {/* Gradient border effect */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${pillar.color} rounded-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
-                  
-                  <div className="relative z-10">
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${pillar.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                      {pillar.icon}
-                    </div>
-                    
-                    <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-[var(--nhbea-royal-blue)] transition-colors duration-300">
-                      {pillar.title}
-                    </h3>
-                    
-                    <p className="text-gray-600 leading-relaxed">
-                      {pillar.description}
-                    </p>
+                <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300 h-full">
+                  <div className="w-16 h-16 rounded-xl bg-[var(--nhbea-royal-blue)] flex items-center justify-center mb-6">
+                    {pillar.icon}
                   </div>
+                  
+                  <h3 className="text-2xl font-normal text-gray-900 mb-4">
+                    {pillar.title}
+                  </h3>
+                  
+                  <p className="text-lg text-gray-600 leading-relaxed font-normal">
+                    {pillar.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -114,27 +120,26 @@ export default function EnhancedMissionSection({
 
           {/* Enhanced call to action */}
           <div className={`text-center transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="bg-gradient-to-br from-[var(--nhbea-royal-blue)] to-[var(--nhbea-royal-blue-dark)] rounded-3xl p-12 text-white shadow-2xl">
+            <div className="bg-gradient-to-r from-[var(--nhbea-royal-blue-dark)] to-[var(--nhbea-royal-blue-deeper)] rounded-2xl p-12 text-white shadow-2xl border border-[var(--nhbea-accent-gold-dark)]/20">
               <div className="max-w-3xl mx-auto">
-                <h3 className="text-3xl md:text-4xl font-bold mb-6">
-                  Ready to Make an Impact?
+                <h3 className="text-4xl md:text-5xl font-normal mb-8 text-white">
+                  ⚡ Ready to Make an Impact?
                 </h3>
-                <p className="text-xl text-white/90 mb-8 leading-relaxed">
+                <p className="text-2xl text-white mb-10 leading-relaxed font-light">
                   Join our community of dedicated educators and help shape the future of business education in New Hampshire.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex flex-col gap-4 justify-center max-w-sm mx-auto">
                   <a 
                     href="/membership/professional"
-                    className="group px-8 py-4 bg-[var(--nhbea-accent-orange)] text-white font-bold rounded-2xl hover:bg-[var(--nhbea-accent-orange-dark)] transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[var(--nhbea-accent-orange)]/25 relative overflow-hidden"
+                    className="px-10 py-6 bg-[var(--nhbea-accent-gold-dark)] text-white font-normal text-xl rounded-xl hover:bg-[var(--nhbea-accent-gold)] transition-all duration-300 shadow-xl hover:shadow-2xl text-center transform hover:scale-110 border-2 border-[var(--nhbea-accent-gold)] min-h-[56px] flex items-center justify-center"
                   >
-                    <span className="relative z-10">Join Our Mission</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-[var(--nhbea-accent-orange-dark)] to-[var(--nhbea-accent-orange)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    🚀 Join Our Mission
                   </a>
                   <a 
                     href="/conference"
-                    className="px-8 py-4 bg-white/20 backdrop-blur-sm text-white font-bold rounded-2xl border-2 border-white/40 hover:bg-white/30 hover:border-white/60 transition-all duration-300 transform hover:scale-105"
+                    className="px-8 py-4 bg-white/15 text-white font-light rounded-lg border-2 border-white/50 hover:bg-white/25 hover:text-white transition-all duration-300 text-center backdrop-blur-sm min-h-[48px] flex items-center justify-center"
                   >
-                    Explore Events
+                    View Conference Details
                   </a>
                 </div>
               </div>

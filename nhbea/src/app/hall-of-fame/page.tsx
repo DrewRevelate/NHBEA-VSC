@@ -142,7 +142,7 @@ function HallOfFameContent() {
   // Calculate stats for hero section
   const totalMembers = members.length;
   const latestInductionYear = members.length > 0 
-    ? Math.max(...members.map(m => m.year))
+    ? Math.max(...members.map(m => m.inductionYear))
     : new Date().getFullYear();
 
   return (

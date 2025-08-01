@@ -7,9 +7,13 @@ import { NewsletterSubscriber, NewsletterSubmissionResult } from '@/types/newsle
  * Uses email as document ID to prevent duplicates
  * 
  * @param email - The email address to subscribe
+ * @param source - The source of the subscription (defaults to 'website')
  * @returns Promise<NewsletterSubmissionResult>
  */
-export async function addNewsletterSubscriber(email: string): Promise<NewsletterSubmissionResult> {
+export async function addNewsletterSubscriber(
+  email: string, 
+  source: 'website' | 'manual' | 'import' | 'social_media' | 'api' = 'website'
+): Promise<NewsletterSubmissionResult> {
   try {
     // Normalize email address
     const normalizedEmail = email.toLowerCase().trim();
@@ -28,7 +32,8 @@ export async function addNewsletterSubscriber(email: string): Promise<Newsletter
     const subscriberData: NewsletterSubscriber = {
       email: normalizedEmail,
       timestamp: new Date(),
-      status: 'active'
+      status: 'active',
+      source: source
     };
 
     // Use email as document ID to prevent duplicates
@@ -127,5 +132,21 @@ export async function unsubscribeNewsletter(email: string): Promise<NewsletterSu
       message: 'Something went wrong. Please try again later.',
       error: error instanceof Error ? error.message : 'Unknown error'
     };
+  }
+}
+
+/**
+ * Adds a newsletter subscriber when a member is created
+ * This ensures newsletter subscriptions are tracked even for member registrations
+ * 
+ * @param email - The email address to subscribe
+ * @returns Promise<void> - Silent operation, doesn't throw on failure
+ */
+export async function addNewsletterSubscriberForMember(email: string): Promise<void> {
+  try {
+    await addNewsletterSubscriber(email, 'website');
+  } catch (error) {
+    // Log error but don't throw - member creation should not fail due to newsletter issues
+    console.warn('Failed to add newsletter subscription for member:', error);
   }
 }

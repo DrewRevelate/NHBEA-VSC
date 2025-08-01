@@ -8,180 +8,122 @@ interface EnhancedHallOfFameGridProps {
   members: HallOfFameMember[];
 }
 
-// Enhanced member card with modern design
-function EnhancedMemberCard({ member, index }: { member: HallOfFameMember; index: number }) {
+// Premium Hall of Fame member card with sophisticated aesthetic
+function PremiumRecipientCard({ member, index }: { member: HallOfFameMember; index: number }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), index * 100);
+    const timer = setTimeout(() => setIsVisible(true), index * 150);
     return () => clearTimeout(timer);
   }, [index]);
 
-  const formatAwardType = (awardType: string) => {
-    switch (awardType) {
-      case 'business_educator_of_the_year':
-        return 'Business Educator of the Year';
-      case 'lifetime_achievement':
-        return 'Lifetime Achievement';
-      case 'distinguished_service':
-        return 'Distinguished Service';
-      case 'innovation':
-        return 'Innovation Award';
-      default:
-        return 'Distinguished Recognition';
-    }
-  };
-
-  const getAwardBadgeColor = (awardType: string) => {
-    switch (awardType) {
-      case 'business_educator_of_the_year':
-        return 'from-accent to-accent/80';
-      case 'lifetime_achievement':
-        return 'from-primary to-primary/90';
-      case 'distinguished_service':
-        return 'from-primary/90 to-primary';
-      case 'innovation':
-        return 'from-accent to-accent/80';
-      default:
-        return 'from-muted to-foreground';
-    }
-  };
-
-  const getAwardIcon = (awardType: string) => {
-    switch (awardType) {
-      case 'business_educator_of_the_year':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
-        );
-      case 'lifetime_achievement':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-          </svg>
-        );
-      case 'innovation':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        );
-      default:
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
-        );
-    }
-  };
+  const getAwardIcon = () => (
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+    </svg>
+  );
 
   return (
     <div
-      className={`nhbea-card-interactive overflow-hidden transition-all duration-700 hover:shadow-2xl hover:-translate-y-2 hover:border-primary/30 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl border border-gray-200 overflow-hidden transform transition-all duration-500 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+      } ${
+        isHovered ? 'scale-105' : 'scale-100'
       }`}
+      style={{ animationDelay: `${index * 100}ms` }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Card Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-card to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      {/* Elegant gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 via-white to-blue-50/30 opacity-60"></div>
       
-      {/* Content */}
-      <div className="relative p-8">
-        {/* Award Badges - Show all active awards */}
-        <div className="absolute top-4 right-4">
-          <div className="flex flex-col gap-1">
-            {member.activeAwards.slice(0, 2).map((award, idx) => (
-              <div key={award.awardId} className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${getAwardBadgeColor(award.category || 'general')} shadow-lg`}>
-                {getAwardIcon(award.category || 'general')}
-                <span className="ml-1">{award.year}</span>
+      {/* Premium accent border */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--nhbea-royal-blue)] via-[var(--nhbea-accent-gold)] to-[var(--nhbea-royal-blue)]"></div>
+      
+      <div className="relative z-10 p-8">
+        {/* Sophisticated member photo presentation */}
+        <div className="relative mb-8">
+          <div className="relative mx-auto w-36 h-36">
+            {/* Elegant photo frame with multiple layers */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[var(--nhbea-royal-blue)] to-[var(--nhbea-accent-gold)] p-1">
+              <div className="w-full h-full rounded-full bg-white p-1">
+                <MemberImage
+                  imagePath={member.imageUrl}
+                  memberName={member.name}
+                  className="w-full h-full object-cover rounded-full"
+                  containerClassName="w-full h-full rounded-full overflow-hidden shadow-lg"
+                  width={144}
+                  height={144}
+                />
               </div>
-            ))}
-            {member.activeAwards.length > 2 && (
-              <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-muted to-foreground shadow-lg">
-                <span>+{member.activeAwards.length - 2}</span>
+            </div>
+            
+            {/* Award badge positioned elegantly */}
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+              <div className="bg-[var(--nhbea-accent-gold)] text-white px-4 py-2 rounded-full shadow-lg border-2 border-white">
+                <div className="flex items-center space-x-2">
+                  {getAwardIcon()}
+                  <span className="text-sm font-bold">{member.inductionYear}</span>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-
-        {/* Member Photo */}
-        <div className="flex justify-center mb-6">
-          <div className="relative">
-            <MemberImage
-              imagePath={member.imageUrl}
-              memberName={member.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              containerClassName="w-32 h-32 rounded-full bg-gradient-to-br from-secondary to-muted shadow-lg ring-4 ring-card group-hover:ring-primary/20 transition-all duration-300 flex items-center justify-center"
-              width={128}
-              height={128}
-            />
-            {/* Decorative ring */}
-            <div className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-30 transition-opacity duration-300" style={{ padding: '2px' }}>
-              <div className="w-full h-full rounded-full bg-card"></div>
             </div>
           </div>
         </div>
 
-        {/* Member Info */}
-        <div className="text-center mb-6">
-          <h3 className="heading-4 mb-2 group-hover:text-primary transition-colors">
+        {/* Premium member information */}
+        <div className="text-center space-y-4">
+          <h3 className="text-2xl font-serif text-[var(--nhbea-royal-blue)] font-bold leading-tight">
             {member.name}
           </h3>
-          <div className="space-y-1 mb-1">
-            {member.activeAwards.map((award, idx) => (
-              <p key={award.awardId} className="text-primary font-semibold text-sm">
-                {award.awardName} ({award.year})
-              </p>
-            ))}
-          </div>
-          <p className="text-muted-foreground text-sm font-medium">
-            Inducted {member.inductionYear}
-          </p>
-        </div>
-
-        {/* Biography */}
-        {member.bio && (
-          <div className="mb-6">
-            <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all duration-300">
-              {member.bio}
-            </p>
-          </div>
-        )}
-
-        {/* Awards Details */}
-        {member.activeAwards && member.activeAwards.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="text-sm font-bold text-foreground flex items-center">
-              <svg className="w-4 h-4 mr-2 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Awards ({member.totalActiveAwards})
-            </h4>
-            <div className="space-y-2">
-              {member.activeAwards.slice(0, isHovered ? member.activeAwards.length : 2).map((award, idx) => (
-                <div key={award.awardId} className="flex items-start group-hover:transform group-hover:translate-x-1 transition-transform duration-200" style={{ transitionDelay: `${idx * 50}ms` }}>
-                  <div className="w-2 h-2 bg-gradient-to-r from-primary to-accent rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <div className="text-xs text-muted-foreground leading-relaxed">
-                    <div className="font-medium">{award.awardName}</div>
-                    <div className="text-primary">{award.year} • {award.category}</div>
-                  </div>
-                </div>
-              ))}
-              {!isHovered && member.activeAwards.length > 2 && (
-                <div className="text-primary font-medium text-xs pl-5">
-                  +{member.activeAwards.length - 2} more awards
-                </div>
-              )}
+          
+          {/* Primary award display with elegant styling */}
+          {member.activeAwards && member.activeAwards.length > 0 && (
+            <div className="inline-block">
+              <div className="bg-gradient-to-r from-[var(--nhbea-accent-gold)]/20 to-[var(--nhbea-accent-gold)]/10 border border-[var(--nhbea-accent-gold)]/30 rounded-xl px-4 py-2">
+                <span className="text-[var(--nhbea-accent-gold)] font-semibold text-sm">
+                  {member.activeAwards[0].awardName}
+                </span>
+              </div>
             </div>
-          </div>
-        )}
-
-        {/* Hover overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+          )}
+          
+          {/* Institution with subtle styling */}
+          {member.institution && (
+            <p className="text-gray-600 font-medium">
+              {member.institution}
+            </p>
+          )}
+          
+          {/* Biography with refined presentation */}
+          {member.bio && (
+            <div className="pt-6 border-t border-gray-200">
+              <p className="text-gray-700 leading-relaxed text-sm">
+                {member.bio}
+              </p>
+            </div>
+          )}
+          
+          {/* Achievement highlight */}
+          {member.achievement && (
+            <div className="pt-4">
+              <div className="bg-slate-50 rounded-xl p-4">
+                <div className="text-xs font-semibold text-[var(--nhbea-royal-blue)] mb-2 uppercase tracking-wide">
+                  Notable Achievement
+                </div>
+                <p className="text-gray-700 text-sm italic">
+                  {member.achievement}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+      
+      {/* Subtle hover glow effect */}
+      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-[var(--nhbea-royal-blue)]/5 to-[var(--nhbea-accent-gold)]/5 transition-opacity duration-300 ${
+        isHovered ? 'opacity-100' : 'opacity-0'
+      }`}></div>
     </div>
   );
 }
@@ -196,115 +138,56 @@ function LoadingCard({ index }: { index: number }) {
   }, [index]);
 
   return (
-    <div className={`nhbea-card p-8 transition-all duration-700 ${
-      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-    }`}>
-      <div className="animate-pulse">
-        <div className="w-32 h-32 bg-muted rounded-full mx-auto mb-6"></div>
-        <div className="space-y-3 mb-6">
-          <div className="h-6 bg-muted rounded mx-auto w-3/4"></div>
-          <div className="h-4 bg-muted rounded mx-auto w-1/2"></div>
-          <div className="h-3 bg-muted rounded mx-auto w-1/4"></div>
-        </div>
-        <div className="space-y-2 mb-6">
-          <div className="h-3 bg-muted rounded"></div>
-          <div className="h-3 bg-muted rounded"></div>
-          <div className="h-3 bg-muted rounded w-3/4"></div>
-        </div>
-        <div className="space-y-2">
-          <div className="h-4 bg-muted rounded w-1/2"></div>
-          <div className="h-3 bg-muted rounded"></div>
-          <div className="h-3 bg-muted rounded w-4/5"></div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Filter and sort controls
-function FilterControls({ 
-  members, 
-  onFilter, 
-  selectedFilter 
-}: { 
-  members: HallOfFameMember[]; 
-  onFilter: (filter: string) => void;
-  selectedFilter: string;
-}) {
-  const awardTypes = [...new Set(members.flatMap(m => m.activeAwards.map(a => a.category)))].filter(Boolean);
-  const years = [...new Set(members.map(m => m.inductionYear))].sort((a, b) => b - a);
-
-  const formatFilterLabel = (type: string) => {
-    switch (type) {
-      case 'all': return 'All Members';
-      case 'business_educator_of_the_year': return 'Business Educator';
-      case 'lifetime_achievement': return 'Lifetime Achievement';
-      case 'distinguished_service': return 'Distinguished Service';
-      case 'innovation': return 'Innovation';
-      default: return type;
-    }
-  };
-
-  return (
-    <div className="flex flex-col lg:flex-row gap-4 items-center justify-between mb-12">
-      <div className="flex flex-wrap gap-3">
-        <button
-          onClick={() => onFilter('all')}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-            selectedFilter === 'all'
-              ? 'bg-primary text-primary-foreground shadow-lg'
-              : 'bg-secondary text-secondary-foreground hover:bg-muted'
-          }`}
-        >
-          All Members ({members.length})
-        </button>
-        {awardTypes.map(type => {
-          const count = members.filter(m => m.activeAwards.some(a => a.category === type)).length;
-          return (
-            <button
-              key={type}
-              onClick={() => onFilter(type)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                selectedFilter === type
-                  ? 'bg-primary text-primary-foreground shadow-lg'
-                  : 'bg-secondary text-secondary-foreground hover:bg-muted'
-              }`}
-            >
-              {formatFilterLabel(type)} ({count})
-            </button>
-          );
-        })}
-      </div>
+    <div 
+      className={`relative bg-white rounded-2xl shadow-lg border-2 border-gray-300 p-8 transition-all duration-700 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      }`}
+      style={{ animationDelay: `${index * 150}ms` }}
+    >
+      {/* Premium card accent */}
+      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[var(--nhbea-royal-blue)] via-[var(--nhbea-royal-blue-dark)] to-[var(--nhbea-accent-gold)]"></div>
       
-      <div className="text-sm text-muted-foreground">
-        Showing {members.filter(m => selectedFilter === 'all' || m.activeAwards.some(a => a.category === selectedFilter)).length} of {members.length} members
+      <div className="animate-pulse">
+        <div className="w-32 h-32 bg-gray-200 rounded-full mx-auto mb-6"></div>
+        <div className="space-y-3 mb-6">
+          <div className="h-6 bg-gray-200 rounded mx-auto w-3/4"></div>
+          <div className="h-8 bg-gray-100 rounded-full mx-auto w-1/2"></div>
+          <div className="h-3 bg-gray-200 rounded mx-auto w-1/4"></div>
+        </div>
+        <div className="space-y-2 mb-6 pt-4 border-t border-gray-100">
+          <div className="h-3 bg-gray-200 rounded"></div>
+          <div className="h-3 bg-gray-200 rounded"></div>
+          <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+        </div>
+        <div className="space-y-2 pt-4 border-t border-gray-100">
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-3 bg-gray-200 rounded"></div>
+          <div className="h-3 bg-gray-200 rounded w-4/5"></div>
+        </div>
       </div>
     </div>
   );
 }
 
+
+// Premium Hall of Fame showcase with sophisticated design
 export default function EnhancedHallOfFameGrid({ members }: EnhancedHallOfFameGridProps) {
-  const [selectedFilter, setSelectedFilter] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 500);
+    const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
-  const filteredMembers = members.filter(member => 
-    selectedFilter === 'all' || member.activeAwards.some(a => a.category === selectedFilter)
-  );
-
   if (isLoading) {
     return (
-      <section className="nhbea-section bg-gradient-to-br from-background via-card to-secondary/10">
-        <div className="nhbea-container">
+      <section className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50">
+        <div className="container mx-auto px-6 py-24">
           <div className="text-center mb-16">
-            <div className="inline-block h-8 w-64 bg-muted rounded mb-4 animate-pulse"></div>
-            <div className="h-4 w-96 bg-muted rounded mx-auto animate-pulse"></div>
+            <div className="inline-block h-12 w-80 bg-gray-200 rounded-xl mb-6 animate-pulse"></div>
+            <div className="h-6 w-96 bg-gray-200 rounded-lg mx-auto animate-pulse"></div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {Array.from({ length: 6 }, (_, i) => (
               <LoadingCard key={i} index={i} />
             ))}
@@ -316,17 +199,17 @@ export default function EnhancedHallOfFameGrid({ members }: EnhancedHallOfFameGr
 
   if (members.length === 0) {
     return (
-      <section className="nhbea-section bg-gradient-to-br from-background via-card to-secondary/10">
-        <div className="nhbea-container-narrow text-center">
-          <div className="nhbea-card p-12">
-            <div className="w-24 h-24 bg-gradient-to-br from-primary/10 to-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <section className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50">
+        <div className="container mx-auto px-6 py-24">
+          <div className="text-center max-w-2xl mx-auto">
+            <div className="w-32 h-32 bg-gradient-to-br from-[var(--nhbea-royal-blue)]/10 to-[var(--nhbea-accent-gold)]/10 rounded-full flex items-center justify-center mx-auto mb-8">
+              <svg className="w-16 h-16 text-[var(--nhbea-royal-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 7a2 2 0 012-2h10a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
-            <h2 className="heading-2 mb-4">Hall of Fame Coming Soon</h2>
-            <p className="body-text text-lg leading-relaxed max-w-2xl mx-auto">
-              Our Hall of Fame honorees will be displayed here soon. These distinguished educators 
+            <h2 className="text-4xl font-serif text-[var(--nhbea-royal-blue)] mb-6">Hall of Fame Coming Soon</h2>
+            <p className="text-xl text-gray-600 leading-relaxed">
+              Our distinguished Hall of Fame honorees will be showcased here soon. These exceptional educators 
               represent the pinnacle of excellence in New Hampshire business education.
             </p>
           </div>
@@ -336,51 +219,44 @@ export default function EnhancedHallOfFameGrid({ members }: EnhancedHallOfFameGr
   }
 
   return (
-    <section className="nhbea-section bg-muted/30">
-      <div className="nhbea-container">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="heading-2 mb-4">
-            Distinguished Honorees
+    <section className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50">
+      <div className="container mx-auto px-6 py-24">
+        {/* Elegant Hero Section */}
+        <div className="text-center mb-20">
+          <h2 className="text-5xl md:text-6xl font-serif text-[var(--nhbea-royal-blue)] mb-6">
+            Hall of Fame
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Celebrating the exceptional educators who have shaped business education 
-            and inspired generations of students throughout New Hampshire.
+          <div className="w-24 h-1 bg-gradient-to-r from-[var(--nhbea-royal-blue)] to-[var(--nhbea-accent-gold)] mx-auto mb-8"></div>
+          <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            Celebrating Excellence in Business Education
           </p>
         </div>
 
-        {/* Filter Controls */}
-        <FilterControls 
-          members={members}
-          onFilter={setSelectedFilter}
-          selectedFilter={selectedFilter}
-        />
-
-        {/* Members Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredMembers.map((member, index) => (
-            <EnhancedMemberCard 
-              key={member.id} 
-              member={member} 
-              index={index}
-            />
-          ))}
+        {/* Premium Award Recipient Showcase */}
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {members.map((member, index) => (
+              <PremiumRecipientCard 
+                key={member.id} 
+                member={member} 
+                index={index}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* No results message */}
-        {filteredMembers.length === 0 && selectedFilter !== 'all' && (
-          <div className="text-center py-12">
-            <div className="nhbea-card p-8 max-w-md mx-auto">
-              <svg className="w-16 h-16 text-muted-foreground mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.137 0-4.146.832-5.636 2.172M12 15v2a3 3 0 01-3 3H7a3 3 0 01-3-3v-2c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10a9.955 9.955 0 01-5.636-1.672" />
-              </svg>
-              <h3 className="text-lg font-semibold text-foreground mb-2">No Members Found</h3>
-              <p className="text-muted-foreground text-sm">
-                No Hall of Fame members match the selected filter. Try selecting a different category.
-              </p>
-            </div>
+        {/* Elegant Footer */}
+        <div className="text-center mt-20 pt-16 border-t border-gray-200">
+          <div className="max-w-3xl mx-auto">
+            <h3 className="text-2xl font-serif text-[var(--nhbea-royal-blue)] mb-4">
+              Legacy of Excellence
+            </h3>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Each honoree represents years of dedication to business education excellence, 
+              inspiring countless students and advancing the profession throughout New Hampshire.
+            </p>
           </div>
-        )}
+        </div>
       </div>
     </section>
   );

@@ -1,8 +1,20 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+    // NHBEA Logo - explicitly public for all users
+    match /public/NHBEALogo.png {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
     // Public images - anyone can read, only authenticated users can write
     match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Conference images - make them public for display on website
+    match /conference_images/{allPaths=**} {
       allow read: if true;
       allow write: if request.auth != null;
     }

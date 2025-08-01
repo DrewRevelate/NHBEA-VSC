@@ -1,4 +1,5 @@
 import ProfessionalMembershipFormWrapper from '@/components/ProfessionalMembershipFormWrapper';
+import SocialProofSection from '@/components/SocialProofSection';
 
 export default function ProfessionalMembershipPage() {
   return (
@@ -8,6 +9,9 @@ export default function ProfessionalMembershipPage() {
         <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-gradient-to-br from-[var(--nhbea-royal-blue)]/10 to-transparent rounded-full animate-pulse delay-300"></div>
         <div className="absolute bottom-1/4 left-1/4 w-24 h-24 bg-gradient-to-br from-[var(--nhbea-royal-blue-light)]/10 to-transparent rounded-full animate-pulse delay-700"></div>
       </div>
+
+      {/* Compact social proof at the top */}
+      <SocialProofSection variant="compact" showTestimonials={false} className="relative z-10" />
 
       <div className="relative container mx-auto px-6 py-12">
         <ProfessionalMembershipFormWrapper />

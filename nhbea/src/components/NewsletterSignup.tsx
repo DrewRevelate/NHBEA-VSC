@@ -64,35 +64,24 @@ export default function NewsletterSignup({
 
   return (
     <section 
-      className={`relative ${isCompact ? 'py-8' : 'py-16 lg:py-24'} ${className}`}
+      className={`relative ${isCompact ? 'py-8' : 'py-24'} ${className}`}
       role="region"
       aria-label="Newsletter subscription"
     >
-      {/* Brand-consistent background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-bg-primary)] via-[var(--nhbea-royal-blue-subtle)]/20 to-[var(--color-bg-secondary)]">
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent"></div>
-      </div>
+      {/* Clean professional background with clear differentiation */}
+      <div className="absolute inset-0 bg-[var(--nhbea-gray-100)] border-t border-[var(--nhbea-gray-200)]"></div>
       
-      {/* Animated background elements */}
-      <div 
-        className="absolute inset-0 overflow-hidden pointer-events-none" 
-        aria-hidden="true"
-        role="presentation"
-      >
-        <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-gradient-to-br from-[var(--nhbea-royal-blue)]/10 to-transparent rounded-full animate-pulse delay-300 [will-change:opacity]"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-24 h-24 bg-gradient-to-br from-[var(--nhbea-royal-blue-light)]/10 to-transparent rounded-full animate-pulse delay-700 [will-change:opacity]"></div>
-      </div>
 
       <div className="relative container mx-auto px-6">
-        <div className={`max-w-2xl mx-auto text-center ${isCompact ? 'space-y-4' : 'space-y-6'}`}>
+        <div className={`max-w-2xl mx-auto text-center ${isCompact ? 'space-y-6' : 'space-y-8'}`}>
           {/* Header */}
-          <div className="space-y-3">
-            <h2 className={`font-bold ${isCompact ? 'text-xl' : 'text-3xl lg:text-4xl'}`}>
-              <span className="text-[var(--nhbea-royal-blue-deeper)]">
+          <div className="space-y-5">
+            <h2 className={`font-black ${isCompact ? 'text-2xl' : 'text-4xl lg:text-5xl'}`}>
+              <span className="text-[var(--nhbea-royal-blue)]">
                 Never Miss an Opportunity
               </span>
             </h2>
-            <p className={`text-[var(--color-text-secondary)] max-w-lg mx-auto leading-relaxed ${isCompact ? 'text-sm' : 'text-lg'}`}>
+            <p className={`text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed font-light ${isCompact ? 'text-base' : 'text-xl'}`}>
               Get exclusive access to professional development opportunities, networking events, and resources that advance your career in business education.
             </p>
             
@@ -113,8 +102,8 @@ export default function NewsletterSignup({
             </div>
           </div>
 
-          {/* Newsletter Form with brand styling */}
-          <div className={`p-6 ${isCompact ? 'lg:p-8' : 'lg:p-10'} rounded-2xl bg-white border-2 border-[var(--color-border-primary)] shadow-lg hover:border-[var(--nhbea-royal-blue)]/30 transition-all duration-300`}>
+          {/* Newsletter Form with professional styling */}
+          <div className={`p-8 ${isCompact ? 'lg:p-10' : 'lg:p-12'} rounded-xl bg-white border border-[var(--nhbea-gray-200)] shadow-lg hover:shadow-xl transition-all duration-300`}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate role="form">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1">
@@ -128,12 +117,12 @@ export default function NewsletterSignup({
                     {...register('email')}
                     disabled={isSubmitting}
                     className={`
-                      w-full px-4 py-3 rounded-xl border-2 bg-[var(--color-bg-primary)]
-                      placeholder:text-[var(--color-text-muted)] text-[var(--color-text-primary)]
+                      w-full px-4 py-3 rounded-lg border bg-white
+                      placeholder:text-[var(--nhbea-gray-400)] text-[var(--nhbea-gray-900)]
                       focus:outline-none focus:ring-2 focus:ring-[var(--nhbea-royal-blue)]/20 focus:border-[var(--nhbea-royal-blue)]
                       disabled:opacity-50 disabled:cursor-not-allowed
                       transition-all duration-200 ease-out
-                      ${errors.email ? 'border-[var(--nhbea-error)] focus:border-[var(--nhbea-error)] focus:ring-[var(--nhbea-error)]/20' : 'border-[var(--color-border-primary)]'}
+                      ${errors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20' : 'border-[var(--nhbea-gray-300)]'}
                     `}
                     aria-invalid={errors.email ? 'true' : 'false'}
                     aria-describedby={errors.email ? 'email-error' : undefined}
@@ -153,35 +142,42 @@ export default function NewsletterSignup({
                   type="submit"
                   disabled={isSubmitting}
                   className={`
-                    px-6 py-3 rounded-xl font-semibold text-white
-                    bg-gradient-to-r from-[var(--nhbea-accent-orange)] to-[var(--nhbea-accent-orange-dark)]
-                    hover:from-[var(--nhbea-accent-orange-dark)] hover:to-[var(--nhbea-accent-orange)]
-                    focus:outline-none focus:ring-2 focus:ring-[var(--nhbea-accent-orange)]/50 focus:ring-offset-2 focus:ring-offset-white
-                    disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-[var(--nhbea-accent-orange)] disabled:hover:to-[var(--nhbea-accent-orange-dark)]
+                    px-8 py-4 rounded-lg font-light text-white
+                    bg-[var(--nhbea-royal-blue)]
+                    hover:bg-[var(--nhbea-royal-blue-dark)]
+                    focus:outline-none focus:ring-2 focus:ring-[var(--nhbea-royal-blue)]/20 focus:ring-offset-2 focus:ring-offset-white
+                    disabled:opacity-50 disabled:cursor-not-allowed
                     transition-all duration-200 ease-out
-                    shadow-lg hover:shadow-xl
-                    transform hover:scale-105 disabled:hover:scale-100
-                    [will-change:transform]
+                    shadow-sm hover:shadow-md
+                    min-h-[48px] flex items-center justify-center
                     ${isCompact ? 'text-sm' : 'text-base'}
                   `}
                   aria-label={isSubmitting ? 'Subscribing to newsletter...' : 'Subscribe to newsletter'}
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
-                      <svg 
-                        className="animate-spin h-4 w-4" 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        fill="none" 
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                      >
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Subscribing...
+                      <div className="relative">
+                        <svg 
+                          className="animate-spin h-5 w-5" 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          fill="none" 
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <div className="absolute inset-0 animate-ping rounded-full bg-white/20"></div>
+                      </div>
+                      <span className="animate-pulse">Subscribing...</span>
                     </span>
                   ) : (
-                    'Subscribe'
+                    <span className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      Subscribe
+                    </span>
                   )}
                 </button>
               </div>
@@ -198,7 +194,7 @@ export default function NewsletterSignup({
                 role={submissionResult.success ? 'status' : 'alert'}
                 aria-live="polite"
               >
-                <p className="text-sm font-medium">
+                <p className="text-sm font-light">
                   {submissionResult.message}
                 </p>
               </div>

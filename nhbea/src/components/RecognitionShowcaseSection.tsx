@@ -71,13 +71,13 @@ function RecognitionCard({ item, index }: { item: RecognitionItem; index: number
         <div className="flex flex-col h-full">
           {/* Icon and Highlight */}
           <div className="flex items-center justify-between mb-6">
-            <div className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300" style={{ background: `linear-gradient(to bottom right, var(--nhbea-royal-blue), var(--nhbea-royal-blue-dark))` }}>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-gray-600 to-gray-700">
               {item.icon}
             </div>
             <div className="text-right">
-              <div className="inline-flex items-center px-3 py-1 backdrop-blur-sm rounded-full border" style={{ backgroundColor: `var(--nhbea-royal-blue-subtle)80`, borderColor: `var(--nhbea-royal-blue-lighter)80` }}>
-                <div className="w-2 h-2 rounded-full mr-2 animate-pulse" style={{ backgroundColor: `var(--nhbea-royal-blue)` }}></div>
-                <span className="font-semibold text-sm" style={{ color: `var(--nhbea-royal-blue-dark)` }}>{item.highlight}</span>
+              <div className="inline-flex items-center px-3 py-1 bg-gray-200 rounded-full border border-gray-300">
+                <div className="w-2 h-2 bg-gray-600 rounded-full mr-2 animate-pulse"></div>
+                <span className="font-semibold text-sm text-gray-700">{item.highlight}</span>
               </div>
             </div>
           </div>
@@ -95,30 +95,28 @@ function RecognitionCard({ item, index }: { item: RecognitionItem; index: number
 
 export default function RecognitionShowcaseSection() {
   return (
-    <section id="why-nominate" className="py-16 lg:py-24 relative overflow-hidden bg-gradient-to-br from-[var(--color-bg-primary)] via-white to-[var(--nhbea-royal-blue-subtle)]/5">
+    <section id="why-nominate" className="py-16 lg:py-24 relative overflow-hidden bg-white">
       {/* Subtle background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/4 -right-32 w-64 h-64 bg-gradient-to-br from-[var(--nhbea-royal-blue)]/10 to-transparent rounded-full animate-pulse delay-1000"></div>
-        <div className="absolute bottom-1/4 -left-32 w-64 h-64 bg-gradient-to-br from-[var(--nhbea-academic-gold)]/10 to-transparent rounded-full animate-pulse delay-500"></div>
+        <div className="absolute top-1/4 -right-32 w-64 h-64 bg-gradient-to-br from-gray-200/40 to-transparent rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute bottom-1/4 -left-32 w-64 h-64 bg-gradient-to-br from-gray-300/30 to-transparent rounded-full animate-pulse delay-500"></div>
       </div>
       
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         {/* User-centered headline */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center px-4 py-2 bg-[var(--nhbea-royal-blue)]/10 rounded-full mb-6">
-            <div className="w-2 h-2 bg-[var(--nhbea-royal-blue)] rounded-full mr-2 animate-pulse"></div>
-            <span className="text-[var(--nhbea-royal-blue)] font-semibold text-sm tracking-wide uppercase">Why Nominate</span>
+          <div className="inline-flex items-center px-4 py-2 bg-gray-200 rounded-full mb-6">
+            <div className="w-2 h-2 bg-gray-600 rounded-full mr-2 animate-pulse"></div>
+            <span className="text-gray-700 font-semibold text-sm tracking-wide uppercase">Why Nominate</span>
           </div>
           
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-[var(--color-text-primary)]">
-            <span className="bg-gradient-to-r from-[var(--nhbea-royal-blue)] via-[var(--nhbea-royal-blue-dark)] to-[var(--nhbea-royal-blue-deeper)] bg-clip-text text-transparent">
-              Your Nomination Makes a Difference
-            </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-gray-800">
+            Your Nomination Makes a Difference
           </h2>
           <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed text-[var(--color-text-secondary)]">
             Recognize the educators who inspire excellence, drive innovation, and shape the future of business education in New Hampshire.
           </p>
-          <div className="mt-8 w-24 h-1 bg-gradient-to-r from-[var(--nhbea-royal-blue)] to-[var(--nhbea-royal-blue-dark)] rounded-full mx-auto"></div>
+          <div className="mt-8 w-24 h-1 bg-gray-300 rounded-full mx-auto"></div>
         </div>
 
         {/* Value proposition grid - now with clearer benefits */}
@@ -136,7 +134,7 @@ export default function RecognitionShowcaseSection() {
         <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/30 shadow-lg mb-16">
           <div className="text-center mb-8">
             <h3 className="text-2xl md:text-3xl font-bold mb-4 text-[var(--color-text-primary)]">
-              <span className="bg-gradient-to-r from-[var(--nhbea-royal-blue)] to-[var(--nhbea-royal-blue-dark)] bg-clip-text text-transparent">
+              <span className="text-gray-800">
                 Join a Legacy of Excellence
               </span>
             </h3>
@@ -147,11 +145,11 @@ export default function RecognitionShowcaseSection() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold mb-2 text-[var(--nhbea-royal-blue)] group-hover:scale-110 transition-transform duration-300">102</div>
+              <div className="text-3xl md:text-4xl font-bold mb-2 text-gray-800 group-hover:scale-110 transition-transform duration-300">102</div>
               <div className="font-medium text-[var(--color-text-secondary)]">Years of Tradition</div>
             </div>
             <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold mb-2 text-[var(--nhbea-royal-blue-dark)] group-hover:scale-110 transition-transform duration-300">2</div>
+              <div className="text-3xl md:text-4xl font-bold mb-2 text-gray-800 group-hover:scale-110 transition-transform duration-300">2</div>
               <div className="font-medium text-[var(--color-text-secondary)]">Award Categories</div>
             </div>
             <div className="text-center group">
@@ -159,14 +157,14 @@ export default function RecognitionShowcaseSection() {
               <div className="font-medium text-[var(--color-text-secondary)]">Minutes to Nominate</div>
             </div>
             <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold mb-2 text-[var(--nhbea-royal-blue)] group-hover:scale-110 transition-transform duration-300">∞</div>
+              <div className="text-3xl md:text-4xl font-bold mb-2 text-gray-800 group-hover:scale-110 transition-transform duration-300">∞</div>
               <div className="font-medium text-[var(--color-text-secondary)]">Lasting Impact</div>
             </div>
           </div>
         </div>
 
         {/* Enhanced CTA with urgency and clarity */}
-        <div className="text-center bg-gradient-to-r from-[var(--nhbea-royal-blue)]/5 to-[var(--nhbea-royal-blue-dark)]/5 rounded-2xl p-8 md:p-12">
+        <div className="text-center bg-gray-50 rounded-2xl p-8 md:p-12">
           <div className="mb-8">
             <h3 className="text-2xl md:text-3xl font-bold mb-4 text-[var(--color-text-primary)]">
               Ready to Nominate an Outstanding Educator?
@@ -195,7 +193,7 @@ export default function RecognitionShowcaseSection() {
             
             <a 
               href="#available-awards"
-              className="px-8 py-4 bg-white/80 backdrop-blur-sm text-[var(--nhbea-royal-blue)] font-semibold text-lg rounded-xl border-2 border-white/40 hover:bg-white hover:border-white/60 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/30"
+              className="px-8 py-4 bg-white text-gray-700 font-semibold text-lg rounded-xl border-2 border-gray-300 hover:bg-gray-100 hover:border-gray-400 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300/30"
             >
               <span className="flex items-center">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
