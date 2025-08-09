@@ -21,7 +21,7 @@ export default function FooterNewsletterSignup() {
     if (!isReady) {
       setResult({
         success: false,
-        message: 'Please wait, the form is loading...',
+        message: 'Please wait...',
         error: 'Not ready'
       });
       return;
@@ -59,59 +59,41 @@ export default function FooterNewsletterSignup() {
   };
 
   return (
-    <div className="space-y-[var(--spacing-4)]">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-[var(--spacing-3)]">
-        <div>
-          <label htmlFor="newsletter-email" className="block text-small font-medium text-[var(--nhbea-gray-50)]/90 mb-[var(--spacing-2)]">
-            Email Address
-          </label>
-          <input
-            id="newsletter-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="your.email@example.com"
-            disabled={isSubmitting || !isReady}
-            required
-            className="w-full px-[var(--spacing-4)] py-[var(--spacing-3)] rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-[var(--nhbea-gray-50)] placeholder:text-[var(--nhbea-gray-50)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--nhbea-royal-blue)]/50 focus:border-[var(--nhbea-royal-blue)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] touch-manipulation"
-            aria-describedby="newsletter-description newsletter-status"
-          />
-        </div>
+    <div className="space-y-3">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <input
+          id="newsletter-email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          disabled={isSubmitting || !isReady}
+          required
+          className="w-full px-3 py-2 text-sm rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--nhbea-accent-gold)] focus:border-[var(--nhbea-accent-gold)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Email address for newsletter"
+        />
         <button
           type="submit"
           disabled={isSubmitting}
-          className="nhbea-button-cta w-full min-h-[48px] flex items-center justify-center touch-manipulation"
+          className="w-full px-3 py-2 text-sm font-medium bg-[var(--nhbea-accent-gold)] hover:bg-[var(--nhbea-accent-gold-dark)] text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? (
-            <span className="flex items-center gap-[var(--spacing-2)]">
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Subscribing...
-            </span>
-          ) : (
-            'Subscribe'
-          )}
+          {isSubmitting ? 'Subscribing...' : 'Subscribe'}
         </button>
       </form>
       
       {/* Success/Error Messages */}
-      <div id="newsletter-status" aria-live="polite">
-        {result && (
-          <div 
-            className={`p-[var(--spacing-3)] rounded-lg text-small ${
-              result.success 
-                ? 'bg-green-500/20 border border-green-400/30 text-green-300' 
-                : 'bg-red-500/20 border border-red-400/30 text-red-300'
-            }`}
-            role={result.success ? 'status' : 'alert'}
-          >
-            {result.message}
-          </div>
-        )}
-      </div>
-      
-      <p id="newsletter-description" className="text-[var(--nhbea-gray-50)]/60 text-caption">
-        Get updates on events, opportunities, and industry insights. No spam, unsubscribe anytime.
-      </p>
+      {result && (
+        <div 
+          className={`p-2 rounded-lg text-xs ${
+            result.success 
+              ? 'bg-green-500/20 border border-green-400/30 text-green-300' 
+              : 'bg-red-500/20 border border-red-400/30 text-red-300'
+          }`}
+          role={result.success ? 'status' : 'alert'}
+        >
+          {result.message}
+        </div>
+      )}
     </div>
   );
 }
