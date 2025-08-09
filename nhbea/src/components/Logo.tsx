@@ -2,8 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface LogoProps {
-  variant?: 'default' | 'white' | 'dark';
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'default' | 'white';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   showText?: boolean;
   linkToHome?: boolean;
   className?: string;
@@ -18,12 +18,13 @@ export default function Logo({
   linkToHome = true,
   className = ''
 }: LogoProps) {
-  // Size configurations
+  // Size configurations - optimized for better visual balance
   const sizeConfig = {
-    sm: { width: 32, height: 32, textSize: 'text-lg' },
-    md: { width: 48, height: 48, textSize: 'text-xl' },
-    lg: { width: 64, height: 64, textSize: 'text-2xl' },
-    xl: { width: 80, height: 80, textSize: 'text-3xl' }
+    xs: { width: 32, height: 32, textSize: 'text-base' },
+    sm: { width: 40, height: 40, textSize: 'text-lg' },
+    md: { width: 56, height: 56, textSize: 'text-xl' },
+    lg: { width: 72, height: 72, textSize: 'text-2xl' },
+    xl: { width: 88, height: 88, textSize: 'text-3xl' }
   };
 
   const { width, height, textSize } = sizeConfig[size];
@@ -35,19 +36,15 @@ export default function Logo({
       hoverColor: 'hover:text-[var(--nhbea-royal-blue-dark)]'
     },
     white: {
-      textColor: 'text-white',
-      hoverColor: 'hover:text-white/90'
-    },
-    dark: {
-      textColor: 'text-gray-900',
-      hoverColor: 'hover:text-gray-800'
+      textColor: 'text-[var(--nhbea-gray-50)]',
+      hoverColor: 'hover:text-[var(--nhbea-gray-50)]/90'
     }
   };
 
   const { textColor, hoverColor } = colorConfig[variant];
 
   const LogoContent = () => (
-    <div className={`flex items-center gap-3 ${className}`}>
+    <div className={`flex items-center ${size === 'xs' || size === 'sm' ? 'gap-3' : 'gap-4'} ${className}`}>
       {/* Logo Image */}
       <div className="relative flex-shrink-0">
         <Image
@@ -55,7 +52,7 @@ export default function Logo({
           alt="NHBEA Logo"
           width={width}
           height={height}
-          className="object-contain"
+          className="object-contain drop-shadow-sm"
           priority={size === 'lg' || size === 'xl'}
         />
       </div>
@@ -65,7 +62,7 @@ export default function Logo({
         <div className={`font-bold ${textSize} ${textColor} leading-tight`}>
           <div className="tracking-tight">NHBEA</div>
           {size === 'lg' || size === 'xl' ? (
-            <div className="text-sm font-medium text-current opacity-80 leading-none mt-1">
+            <div className="text-sm font-medium text-current opacity-75 leading-none mt-1">
               Business Education Association
             </div>
           ) : null}
@@ -78,7 +75,7 @@ export default function Logo({
     return (
       <Link 
         href="/" 
-        className={`inline-flex transition-colors duration-200 ${hoverColor} focus:outline-none focus:ring-2 focus:ring-[var(--nhbea-accent-gold)]/50 focus:ring-offset-2 rounded-lg`}
+        className={`inline-flex transition-all duration-200 ${hoverColor} hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--nhbea-royal-blue)]/30 focus:ring-offset-2 rounded-lg p-1`}
         aria-label="Go to NHBEA homepage"
       >
         <LogoContent />
@@ -92,13 +89,16 @@ export default function Logo({
 // Specialized logo variants for common use cases
 export function HeaderLogo({ className }: { className?: string }) {
   return (
-    <Logo
-      size="md"
-      showText={true}
-      linkToHome={true}
-      variant="default"
-      className={className}
-    />
+    <div className={`flex-shrink-0 ${className}`}>
+      {/* Consistent header logo across all screen sizes - optimized for navigation bar */}
+      <Logo
+        size="sm"
+        showText={true}
+        linkToHome={true}
+        variant="default"
+        className="max-h-12"
+      />
+    </div>
   );
 }
 
