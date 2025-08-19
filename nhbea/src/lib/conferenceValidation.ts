@@ -9,8 +9,8 @@ const US_STATES = [
   'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
 ] as const;
 
-// Phone number regex - allows various formats (reused from membershipValidation)
-const phoneRegex = /^[\+]?[1]?[\s\-\.]?[\(]?[\d]{3}[\)]?[\s\-\.]?[\d]{3}[\s\-\.]?[\d]{4}$/;
+// Phone number regex - Safari compatible version
+const phoneRegex = /^[\+]?[1]?[\s\-.]?[(]?[\d]{3}[)]?[\s\-.]?[\d]{3}[\s\-.]?[\d]{4}$/;
 
 // Registration types based on conference pricing tiers
 export const registrationTypes = ['regular', 'early_bird', 'student', 'speaker'] as const;
@@ -25,7 +25,7 @@ export const conferenceRegistrationSchema = z.object({
     .string()
     .min(1, 'Full name is required')
     .max(100, 'Full name must be less than 100 characters')
-    .regex(/^[a-zA-Z\s\-'\.]+$/, 'Full name contains invalid characters'),
+    .regex(/^[a-zA-Z\s\-'.]+$/, 'Full name can only contain letters, spaces, hyphens, apostrophes, and periods'),
     
   email: z
     .string()
@@ -36,7 +36,7 @@ export const conferenceRegistrationSchema = z.object({
   phone: z
     .string()
     .optional()
-    .refine((val) => !val || phoneRegex.test(val), {
+    .refine((val) => !val || val.trim() === '' || phoneRegex.test(val), {
       message: 'Please enter a valid phone number'
     }),
     
@@ -189,14 +189,33 @@ export function validateConferenceRegistrationForm(data: unknown): {
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
+      const errors = error.issues.map(err => {
+        // Safari-specific error message handling
+        const path = err.path.length > 0 ? `${err.path.join('.')}: ` : '';
+        let message = err.message;
+        
+        // Make error messages more user-friendly for Safari
+        if (message.includes('did not match')) {
+          if (err.path.includes('fullName')) {
+            message = 'Full name can only contain letters, spaces, hyphens, apostrophes, and periods';
+          } else if (err.path.includes('phone')) {
+            message = 'Please enter a valid phone number format (e.g., 555-123-4567)';
+          } else {
+            message = 'Please check the format of this field';
+          }
+        }
+        
+        return `${path}${message}`;
+      });
+      
       return {
         isValid: false,
-        errors: error.issues.map(err => `${err.path.join('.')}: ${err.message}`)
+        errors
       };
     }
     return {
       isValid: false,
-      errors: ['Unknown validation error']
+      errors: ['Validation error occurred. Please check all fields and try again.']
     };
   }
 }
@@ -390,7 +409,7 @@ export const conferenceValidationUtils = {
    * Validates phone number format
    */
   isValidPhone(phone: string): boolean {
-    const phoneRegex = /^[\+]?[1]?[\s\-\.]?[\(]?[\d]{3}[\)]?[\s\-\.]?[\d]{3}[\s\-\.]?[\d]{4}$/;
+    const phoneRegex = /^[\+]?[1]?[\s\-.]?[(]?[\d]{3}[)]?[\s\-.]?[\d]{3}[\s\-.]?[\d]{4}$/;
     return phoneRegex.test(phone);
   }
 };
