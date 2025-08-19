@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ConferenceRegistrationFormData } from '@/lib/conferenceValidation';
-import ConferenceRegistrationForm from './ConferenceRegistrationForm';
+import ConferenceRegistrationFormUX from './ConferenceRegistrationFormUX';
 import { Conference } from '@/types/conference';
 
 interface ConferenceRegistrationFormWrapperProps {
@@ -104,9 +104,7 @@ export default function ConferenceRegistrationFormWrapper({
 
       // Call Firebase Function to process registration and payment
       const functionsUrl = process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_URL || 
-        (process.env.NODE_ENV === 'production' 
-          ? 'https://us-central1-nhbea-64cab.cloudfunctions.net/api'
-          : 'http://127.0.0.1:5001/nhbea-64cab/us-central1/api/api');
+        'https://us-central1-nhbea-64cab.cloudfunctions.net/api/api';
       
       const response = await fetch(`${functionsUrl}/conference/register`, {
         method: 'POST',
@@ -160,25 +158,25 @@ export default function ConferenceRegistrationFormWrapper({
   return (
     <div className="max-w-4xl mx-auto">
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+        <div className="mb-6 p-4 bg-[var(--nhbea-error)]/5 border border-[var(--nhbea-error)]/30 rounded-md">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-5 w-5 text-[var(--nhbea-error)]" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
+              <h3 className="text-sm font-medium text-[var(--nhbea-error)]">
                 Registration Error
               </h3>
-              <div className="mt-2 text-sm text-red-700">
+              <div className="mt-2 text-sm text-[var(--nhbea-error)]">
                 <p>{error}</p>
               </div>
               <div className="mt-4">
                 <div className="-mx-2 -my-1.5 flex">
                   <button
                     type="button"
-                    className="bg-red-50 px-2 py-1.5 rounded-md text-sm font-medium text-red-800 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-50 focus:ring-red-600"
+                    className="bg-[var(--nhbea-error)]/5 px-2 py-1.5 rounded-md text-sm font-medium text-[var(--nhbea-error)] hover:bg-[var(--nhbea-error)]/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--nhbea-error)]/5 focus:ring-[var(--nhbea-error)]"
                     onClick={() => setError(null)}
                   >
                     Dismiss
@@ -190,7 +188,7 @@ export default function ConferenceRegistrationFormWrapper({
         </div>
       )}
 
-      <ConferenceRegistrationForm
+      <ConferenceRegistrationFormUX
         conference={conference}
         onSubmit={handleSubmit}
         isLoading={isLoading}
