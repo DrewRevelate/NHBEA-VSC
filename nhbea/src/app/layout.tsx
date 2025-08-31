@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import FloatingConferenceButton from "@/components/FloatingConferenceButton";
 import { Suspense } from "react";
 import { initPerformanceMonitoring } from "@/lib/performance";
 
@@ -82,21 +81,32 @@ export default function RootLayout({
           rel="preload"
           as="style"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-          onLoad="this.onload=null;this.rel='stylesheet'"
+        />
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&display=swap"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              document.addEventListener('DOMContentLoaded', function() {
+                const preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
+                preloadLinks.forEach(function(link) {
+                  link.addEventListener('load', function() {
+                    this.onload = null;
+                    this.rel = 'stylesheet';
+                  });
+                });
+              });
+            `
+          }}
         />
         <noscript>
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
           />
-        </noscript>
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&display=swap"
-          onLoad="this.onload=null;this.rel='stylesheet'"
-        />
-        <noscript>
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&display=swap"
@@ -163,8 +173,6 @@ export default function RootLayout({
         </main>
         <Footer />
         
-        {/* Floating Conference Button - Shows on all pages */}
-        <FloatingConferenceButton />
         
         {/* Initialize performance monitoring after DOM load */}
         <script
